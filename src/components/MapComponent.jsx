@@ -1,4 +1,3 @@
-import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer } from "react-leaflet";
 import { uid } from "react-uid";
 import useMapContext from "../contexts/MapContext/useMapContext";
