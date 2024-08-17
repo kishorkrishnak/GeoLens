@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./Sidebar.css";
-import useMapContext from "../../contexts/MapContext/useMapContext";
+import {useMapContext} from "../../contexts/MapContext";
 
 function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -22,7 +22,7 @@ function Sidebar() {
       <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
         <div className="sidebar-title">
           <img src="logo.svg" alt="logo" />
-          <h2>LocalLens</h2>
+          <h2>GeoLens</h2>
         </div>
         <p className="sidebar-totalmarkers">
           Total Markers:{" "}

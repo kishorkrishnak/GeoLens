@@ -1,9 +1,9 @@
 import { MapContainer, TileLayer } from "react-leaflet";
 import { uid } from "react-uid";
-import useMapContext from "../contexts/MapContext/useMapContext";
-import MapClickHandler from "./MapClickHandler";
-import MarkerComponent from "./MarkerComponent";
-import MarkerModal from "./MarkerModal/MarkerModal";
+import { useMapContext } from "../../contexts/MapContext";
+import MapClickHandler from "../MapClickHandler";
+import MarkerComponent from "../Marker/MarkerComponent";
+import MarkerModal from "../MarkerModal/MarkerModal";
 
 function MapComponent() {
   const { putturCenterLatLong, maxBounds, modalVisible, markers } =

@@ -1,4 +1,4 @@
-import useMapContext from "../../contexts/MapContext/useMapContext";
+import { useMapContext } from "../../contexts/MapContext";
 import "./MarkerModal.css";
 
 const MarkerModal = () => {
@@ -35,8 +35,10 @@ const MarkerModal = () => {
           }
           placeholder="Enter Title"
         />
-        <input
+        <textarea
           type="text"
+          rows={5}
+    
           value={markerData?.description}
           onChange={(e) =>
             setMarkerData({ ...markerData, description: e.target.value })
@@ -51,7 +53,7 @@ const MarkerModal = () => {
           }
           placeholder="Enter Category"
         />
-        <button onClick={addMarker} className="btn">
+        <button onClick={addMarker} className="btn btn-marker-submit">
           Submit
         </button>
       </div>

@@ -1,5 +1,5 @@
-import MapComponent from "../components/MapComponent";
-import Sidebar from "../components/Sidebar/Sidebar";
+import MapComponent from "../../components/Map/MapComponent";
+import Sidebar from "../../components/Sidebar/Sidebar";
 
 const Home = () => {
   return (

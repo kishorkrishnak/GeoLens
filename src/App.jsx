@@ -1,9 +1,9 @@
 import { lazy } from "react";
+import { Toaster } from "react-hot-toast";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { Toaster } from "react-hot-toast";
+import { MapProvider } from "./contexts/MapContext";
 const LazyHome = lazy(() => import("./pages/Home"));
-import MapProvider from "./contexts/MapContext/MapProvider";
 
 const App = () => {
   return (

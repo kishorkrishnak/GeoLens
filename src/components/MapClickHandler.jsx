@@ -1,9 +1,9 @@
 import { useMapEvents } from "react-leaflet";
-import useMapContext from "../contexts/MapContext/useMapContext";
+import { useMapContext } from "../contexts/MapContext";
 
 function MapClickHandler() {
-
-  const {modalVisible,setMarkerData,markerData,setModalVisible } = useMapContext();
+  const { modalVisible, setMarkerData, markerData, setModalVisible } =
+    useMapContext();
 
   useMapEvents({
     click: ({ latlng: { lat, lng } }) => {

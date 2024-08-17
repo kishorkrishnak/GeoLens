@@ -1,7 +1,7 @@
-import { Marker, Popup } from "react-leaflet";
-import "./MarkerComponent.css";
 import { useMemo, useRef } from "react";
-import useMapContext from "../contexts/MapContext/useMapContext";
+import { Marker, Popup } from "react-leaflet";
+import { useMapContext } from "../../contexts/MapContext";
+import "./MarkerComponent.css";
 
 const MarkerComponent = ({ marker }) => {
   const position = [marker.lat, marker.lng];

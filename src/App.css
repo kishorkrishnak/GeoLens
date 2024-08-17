@@ -4,25 +4,18 @@
   box-sizing: border-box;
 }
 
-body,
+body {
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+textarea {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 .map {
   width: 100%;
-  font-family: Arial, Helvetica, sans-serif;
   height: 100vh;
   overflow: hidden;
-}
-
-#map {
   z-index: 1;
 }
-
-
-.btn {
-  background-color: green;
-  color: white;
-  border: none;
-  padding: 0.61rem 1rem;
-}
-
-
-
