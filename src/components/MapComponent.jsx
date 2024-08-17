@@ -1,80 +1,63 @@
-import { useState } from "react";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
+import { uid } from "react-uid";
+import MapClickHandler from "./MapClickHandler";
+import MarkerComponent from "./MarkerComponent";
+import MarkerModal from "./MarkerModal/MarkerModal";
 
-// delete L.Icon.Default.prototype._getIconUrl;
-
-// L.Icon.Default.mergeOptions({
-//   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-//   iconUrl: require('leaflet/dist/images/marker-icon.png'),
-//   shadowUrl: require('leaflet/dist/images/marker-shadow.png')
-// });
-
-function MapComponent() {
-  const position = [51.505, -0.09];
+function MapComponent({
+  modalVisible,
+  setModalVisible,
+  markers,
+  center,
+  maxBounds,
+  setMarkerData,
+  addMarker,
+  deleteMarker,
+  markerData,
+  updateMarkerPosition
+}) {
   return (
     <>
       <MapContainer
         className="map"
-        center={position}
-        zoom={13}
-        scrollWheelZoom={false}
-        zoomControl ={false}
+        center={center}
+        maxBounds={maxBounds}
+        zoom={14}
+        minZoom={14}
+        scrollWheelZoom={true}
+        zoomControl={false}
         maxBoundsViscosity={1}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={position}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
+
+        {markers.map((marker) => (
+          <MarkerComponent
+            key={uid(marker)}
+            marker={marker}
+            deleteMarker={deleteMarker}
+            updateMarkerPosition={updateMarkerPosition}
+          />
+        ))}
+        {modalVisible && (
+          <MarkerModal
+            markerData={markerData}
+            setMarkerData={setMarkerData}
+            addMarker={addMarker}
+            setModalVisible={setModalVisible}
+          />
+        )}
+
+        <MapClickHandler
+          modalVisible={modalVisible}
+          markerData={markerData}
+          setMarkerData={setMarkerData}
+          setModalVisible={setModalVisible}
+        />
       </MapContainer>
-      ,
-      {/* <div id="map" onClick={handleMapClick}></div>
-      {modalVisible && (
-        <div className="modal">
-          <div className="modal-content">
-            <span
-              className="close-button"
-              onClick={() => setModalVisible(false)}
-            >
-              &times;
-            </span>
-            <h2>Enter Marker Details</h2>
-            <input
-              type="text"
-              value={markerData.title}
-              onChange={(e) =>
-                setMarkerData({ ...markerData, title: e.target.value })
-              }
-              placeholder="Enter Title"
-            />
-            <input
-              type="text"
-              value={markerData.description}
-              onChange={(e) =>
-                setMarkerData({ ...markerData, description: e.target.value })
-              }
-              placeholder="Enter Description"
-            />
-            <input
-              type="text"
-              value={markerData.category}
-              onChange={(e) =>
-                setMarkerData({ ...markerData, category: e.target.value })
-              }
-              placeholder="Enter Category"
-            />
-            <button onClick={addMarker} className="btn">
-              Submit
-            </button>
-          </div>
-        </div>
-      )} */}
     </>
   );
 }

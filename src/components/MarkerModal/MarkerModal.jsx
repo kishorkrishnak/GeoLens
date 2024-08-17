@@ -1,16 +1,36 @@
-import React from "react";
+import "./MarkerModal.css";
 
-function Modal({ markerData, setMarkerData, addMarker }) {
+const MarkerModal = ({
+  markerData,
+  setMarkerData,
+  addMarker,
+  setModalVisible,
+}) => {
   return (
-    <div className="modal">
-      <div className="modal-content">
-        <span className="close-button" onClick={() => setMarkerData(null)}>
+    <div
+      onClick={() => {
+        setModalVisible(false);
+      }}
+      className="modal"
+    >
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+        className="modal-content"
+      >
+        <span
+          className="close-button"
+          onClick={() => {
+            setModalVisible(false);
+          }}
+        >
           &times;
         </span>
-        <h2>Enter Marker Details</h2>
+        <h1>Enter Marker Details</h1>
         <input
           type="text"
-          value={markerData.title}
+          value={markerData?.title}
           onChange={(e) =>
             setMarkerData({ ...markerData, title: e.target.value })
           }
@@ -18,7 +38,7 @@ function Modal({ markerData, setMarkerData, addMarker }) {
         />
         <input
           type="text"
-          value={markerData.description}
+          value={markerData?.description}
           onChange={(e) =>
             setMarkerData({ ...markerData, description: e.target.value })
           }
@@ -26,7 +46,7 @@ function Modal({ markerData, setMarkerData, addMarker }) {
         />
         <input
           type="text"
-          value={markerData.category}
+          value={markerData?.category}
           onChange={(e) =>
             setMarkerData({ ...markerData, category: e.target.value })
           }
@@ -38,6 +58,6 @@ function Modal({ markerData, setMarkerData, addMarker }) {
       </div>
     </div>
   );
-}
+};
 
-export default Modal;
+export default MarkerModal;

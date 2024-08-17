@@ -1,17 +1,18 @@
-import { useState } from "react";
-import MapComponent from "./components/MapComponent";
-import Sidebar from "./components/Sidebar";
+import { lazy } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
+import { Toaster } from "react-hot-toast";
+const LazyHome = lazy(() => import("./pages/Home"));
 
-function App() {
-  const [markerCount, setMarkerCount] = useState(0);
-
+const App = () => {
   return (
-    <div className="App">
-      <Sidebar markerCount={markerCount} />
-      <MapComponent setMarkerCount={setMarkerCount} />
-    </div>
+    <BrowserRouter>
+      <Toaster position="top-right" containerStyle={{ zIndex: 99999 }} />
+      <Routes>
+        <Route path="/" element={<LazyHome />} />
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
