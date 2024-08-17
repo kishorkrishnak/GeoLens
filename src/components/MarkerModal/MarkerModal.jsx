@@ -1,11 +1,10 @@
+import useMapContext from "../../contexts/MapContext/useMapContext";
 import "./MarkerModal.css";
 
-const MarkerModal = ({
-  markerData,
-  setMarkerData,
-  addMarker,
-  setModalVisible,
-}) => {
+const MarkerModal = () => {
+  const { markerData, setMarkerData, addMarker, setModalVisible } =
+    useMapContext();
+
   return (
     <div
       onClick={() => {

@@ -1,8 +1,10 @@
 import { useState } from "react";
 import "./Sidebar.css";
+import useMapContext from "../../contexts/MapContext/useMapContext";
 
-function Sidebar({ markerCount }) {
+function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const { markerCount } = useMapContext();
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);

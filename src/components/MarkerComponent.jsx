@@ -1,9 +1,11 @@
 import { Marker, Popup } from "react-leaflet";
 import "./MarkerComponent.css";
 import { useMemo, useRef } from "react";
+import useMapContext from "../contexts/MapContext/useMapContext";
 
-const MarkerComponent = ({ marker, updateMarkerPosition, deleteMarker }) => {
+const MarkerComponent = ({ marker }) => {
   const position = [marker.lat, marker.lng];
+  const { updateMarkerPosition, deleteMarker } = useMapContext();
   const eventHandlers = useMemo(
     () => ({
       dragend() {

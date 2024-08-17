@@ -1,27 +1,19 @@
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer } from "react-leaflet";
 import { uid } from "react-uid";
+import useMapContext from "../contexts/MapContext/useMapContext";
 import MapClickHandler from "./MapClickHandler";
 import MarkerComponent from "./MarkerComponent";
 import MarkerModal from "./MarkerModal/MarkerModal";
 
-function MapComponent({
-  modalVisible,
-  setModalVisible,
-  markers,
-  center,
-  maxBounds,
-  setMarkerData,
-  addMarker,
-  deleteMarker,
-  markerData,
-  updateMarkerPosition
-}) {
+function MapComponent() {
+  const { putturCenterLatLong, maxBounds, modalVisible, markers } =
+    useMapContext();
   return (
     <>
       <MapContainer
         className="map"
-        center={center}
+        center={putturCenterLatLong}
         maxBounds={maxBounds}
         zoom={14}
         minZoom={14}
@@ -35,28 +27,11 @@ function MapComponent({
         />
 
         {markers.map((marker) => (
-          <MarkerComponent
-            key={uid(marker)}
-            marker={marker}
-            deleteMarker={deleteMarker}
-            updateMarkerPosition={updateMarkerPosition}
-          />
+          <MarkerComponent key={uid(marker)} marker={marker} />
         ))}
-        {modalVisible && (
-          <MarkerModal
-            markerData={markerData}
-            setMarkerData={setMarkerData}
-            addMarker={addMarker}
-            setModalVisible={setModalVisible}
-          />
-        )}
+        {modalVisible && <MarkerModal />}
 
-        <MapClickHandler
-          modalVisible={modalVisible}
-          markerData={markerData}
-          setMarkerData={setMarkerData}
-          setModalVisible={setModalVisible}
-        />
+        <MapClickHandler />
       </MapContainer>
     </>
   );
