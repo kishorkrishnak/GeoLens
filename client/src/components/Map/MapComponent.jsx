@@ -1,15 +1,17 @@
+import L from "leaflet";
+import { OpenStreetMapProvider } from "leaflet-geosearch";
 import { MapContainer, TileLayer } from "react-leaflet";
 import { uid } from "react-uid";
 import { useMapContext } from "../../contexts/MapContext";
+import useRoutingMachine from "../../hooks/useRoutingMachine";
 import MapClickHandler from "../MapClickHandler";
 import MarkerComponent from "../Marker/MarkerComponent";
 import MarkerModal from "../MarkerModal/MarkerModal";
-import useRoutingMachine from "../../hooks/useRoutingMachine";
-import L from "leaflet";
 
 function MapComponent() {
   const { centerLatLong, maxBounds, modalVisible, markers, routingMode } =
     useMapContext();
+  const prov = new OpenStreetMapProvider();
 
   const wayPoints = markers.map((marker) => L.latLng(marker.lat, marker.lng));
 
@@ -37,6 +39,7 @@ function MapComponent() {
             marker={marker}
           />
         ))}
+   
         {modalVisible && <MarkerModal />}
         {routingMode && <RoutingMachineLayer waypoints={wayPoints} />}
         <MapClickHandler />

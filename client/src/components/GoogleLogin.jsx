@@ -9,7 +9,6 @@ const GoogleLogin = () => {
     try {
       if (authResult["code"]) {
         const result = await googleAuth(authResult.code);
-        console.log(result);
         setUser(result.data.data.user);
         alert("successfuly logged in");
       } else {
@@ -31,7 +30,7 @@ const GoogleLogin = () => {
     <Button
       onClick={googleLogin}
       type="submit"
-      fullWidth
+      color="error"
       variant="contained"
       sx={{ mt: 3, mb: 2 }}
     >

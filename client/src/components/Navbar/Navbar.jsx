@@ -13,11 +13,13 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthContext from "../../contexts/AuthContext/useAuthContext";
+import { logoutUser } from "../../api/auth";
+import GoogleLogin from "../GoogleLogin";
 
 const pages = ["Dashboard", "About"];
 
 function Navbar() {
-  const { user, logoutUser, setUser } = useAuthContext();
+  const { user, setUser } = useAuthContext();
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -36,7 +38,7 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  console.log(user);
+
   const settings = [
     {
       setting: "Profile",
@@ -45,9 +47,10 @@ function Navbar() {
 
     {
       setting: "Logout",
-      action: () => {
-        logoutUser();
+      action: async () => {
+        await logoutUser();
         setUser(null);
+        window.location.reload();
       },
     },
   ];
@@ -159,41 +162,47 @@ function Navbar() {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={user?.name} src={user?.image} />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting.setting}
-                  onClick={() => {
-                    setting.action();
-                    handleCloseUserMenu();
-                  }}
-                >
-                  <Typography textAlign="center">{setting.setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          {user ? (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt={user?.name} src={user?.image} />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting.setting}
+                    onClick={() => {
+                      setting.action();
+                      handleCloseUserMenu();
+                    }}
+                  >
+                    <Typography textAlign="center">
+                      {setting.setting}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          ) : (
+            <GoogleLogin />
+          )}
         </Toolbar>
       </Container>
     </AppBar>

@@ -18,11 +18,8 @@ export default function Login() {
       password: data.get("password"),
     });
   };
-  const { user } = useAuthContext();
-
   return (
     <>
-      <h1>{user && JSON.stringify(user, null, 2)}</h1>
       <Grid
         container
         component="main"
@@ -56,9 +53,9 @@ export default function Login() {
               alignItems: "center",
             }}
           >
-        <Avatar alt="logo" src="/logo.svg" />
+            <Avatar alt="logo" src="/logo.svg" />
             <Typography color={"secondary"} component="h1" variant="h5">
-            GeoLens
+              GeoLens
             </Typography>
 
             <Box

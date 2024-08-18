@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const app = express();
 
 const authRouter = require('./routes/authRoutes');
+const lensRouter = require('./routes/lensRoutes');
+
 const cookieParser = require("cookie-parser");
 require("./config/dbConnect");
 
@@ -20,6 +22,7 @@ app.use(cors({ credentials: true, origin: process.env.REMOTE }));
 app.options(process.env.REMOTE, cors());
 
 app.use('/api/v1/auth/', authRouter);
+app.use('/api/v1/lens/', lensRouter);
 
 const port = process.env.PORT || 5000;
 

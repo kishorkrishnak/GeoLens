@@ -25,7 +25,9 @@ function UserProfile() {
           <img src={user?.image} alt="profile" />
           <div className="userProfileContainer__header">
             <h2>{user?.name}</h2>
-            <Button type="button">Logout</Button>
+            <Button variant="contained" color="error">
+              Logout
+            </Button>
           </div>
           <div className="userProfileContainer__Details">
             <div className="userProfileContainer__DetailsHeading">
