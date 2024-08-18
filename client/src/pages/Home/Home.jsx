@@ -1,9 +1,9 @@
 import { Box, Typography } from "@mui/material";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../../components/Footer/Footer";
 import Navbar from "../../components/Navbar/Navbar";
 import LensTable from "./Table";
-import { useState } from "react";
 
 const Home = () => {
   const [lenses, setLenses] = useState([

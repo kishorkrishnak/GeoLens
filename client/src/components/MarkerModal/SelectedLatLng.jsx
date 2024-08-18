@@ -15,7 +15,7 @@ const SelectedLatLng = ({ latlng }) => {
       }
     };
 
-    // reverseGeoCodeSelectedPoint();
+    reverseGeoCodeSelectedPoint();
   }, [latlng]);
 
   return (
@@ -29,7 +29,7 @@ const SelectedLatLng = ({ latlng }) => {
       </Typography>
 
       <Typography variant="p" fontSize={18}>
-        Geocoded Address: {address}
+        Address: {address}
       </Typography>
     </Box>
   );

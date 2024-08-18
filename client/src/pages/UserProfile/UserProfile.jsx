@@ -14,7 +14,6 @@ function UserProfile() {
 
   const [studentName, setStudentName] = useState(user?.name || "");
   const [email, setEmail] = useState(user?.email || "");
-  const [phone, setPhone] = useState(user?.phone || "");
 
   return (
     <>
@@ -23,18 +22,15 @@ function UserProfile() {
       <div className="userProfile">
         <div className="userProfileContainer">
           <img src={user?.image} alt="profile" />
-          <div className="userProfileContainer__header">
-            <h2>{user?.name}</h2>
-            <Button variant="contained" color="error">
-              Logout
-            </Button>
-          </div>
+
           <div className="userProfileContainer__Details">
             <div className="userProfileContainer__DetailsHeading">
-              <h3>Personal Details</h3>
               <IconButton onClick={() => setEditProfile((ele) => !ele)}>
                 {editProfile ? <CloseRoundedIcon /> : <EditRoundedIcon />}
               </IconButton>
+              <Button type="button" variant="contained" color="error">
+                Logout
+              </Button>
             </div>
             <div className="userProfileContainer__DetailsRow">
               <p>Full Name</p>
@@ -74,7 +70,9 @@ function UserProfile() {
           </div>
 
           {editProfile && (
-            <Button className="userProfileSave__button">Save</Button>
+             <Button type="button" variant="contained" color="success">
+           Save
+           </Button>
           )}
         </div>
       </div>

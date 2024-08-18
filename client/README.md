@@ -1,1 +1,1 @@
-# GeoLens
+# GeoLens Frontend

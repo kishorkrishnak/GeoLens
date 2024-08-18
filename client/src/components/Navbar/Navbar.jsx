@@ -16,7 +16,7 @@ import useAuthContext from "../../contexts/AuthContext/useAuthContext";
 import { logoutUser } from "../../api/auth";
 import GoogleLogin from "../GoogleLogin";
 
-const pages = ["Dashboard", "About"];
+const pages = ["Your Lenses", "Explore"];
 
 function Navbar() {
   const { user, setUser } = useAuthContext();
@@ -42,7 +42,7 @@ function Navbar() {
   const settings = [
     {
       setting: "Profile",
-      action: () => navigate(`profile/${user?._id}`),
+      action: () => navigate(`/profile/${user?._id}`),
     },
 
     {

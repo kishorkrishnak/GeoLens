@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { generateUniqueId } from "../../utils";
 import MapContext from "./MapContext";
@@ -6,7 +6,24 @@ import MapContext from "./MapContext";
 export const MapProvider = ({ children }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [routingMode, setRoutingMode] = useState(false);
+  const [centerLatLong, setCenterLatLong] = useState([1, 15]);
 
+  const maxBounds = [
+    [12.74116988678989, 75.09318351745607],
+    [12.797405423615684, 75.22253036499025],
+  ];
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      ({ coords: { latitude, longitude } }) => {
+        setCenterLatLong([latitude, longitude]);
+      }
+    );
+  }, []);
+
+  useEffect(()=>{
+    console.log(centerLatLong)
+  },[centerLatLong])
   const [markers, setMarkers] = useState(getSavedMarkers());
 
   function getSavedMarkers() {
@@ -47,14 +64,8 @@ export const MapProvider = ({ children }) => {
     setMarkers([...updatedMarkers]);
     setSavedMarkers(updatedMarkers);
     toast.success("Marker deleted");
-    setRoutingMode(false)
+    setRoutingMode(false);
   }
-
-  const centerLatLong = [12.762846155546352, 75.2016619004097];
-  const maxBounds = [
-    [12.74116988678989, 75.09318351745607],
-    [12.797405423615684, 75.22253036499025],
-  ];
 
   const [markerData, setMarkerData] = useState({
     lat: null,

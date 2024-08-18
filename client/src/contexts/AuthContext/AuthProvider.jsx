@@ -4,7 +4,7 @@ import { verifyToken } from "../../api/auth";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-
+  const [authCheckComplete,setAuthCheckComplete] = useState(false);
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -13,6 +13,8 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         console.log("Not authenticated", error);
         setUser(null);
+      }finally{
+        setAuthCheckComplete(true)
       }
     };
 
@@ -22,6 +24,7 @@ export const AuthProvider = ({ children }) => {
   const contextValue = {
     user,
     setUser,
+    authCheckComplete
   };
 
   return (

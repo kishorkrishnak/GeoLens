@@ -1,7 +1,6 @@
-/* Custom styles for the search bar */
 .leaflet-control-geosearch .glass {
-  font-size: 18px !important; /* Increase font size */
-  padding: 20px 6px !important; /* Increase padding */
+  font-size: 18px !important; 
+  padding: 20px 6px !important; 
 }
 
 .leaflet-control-geosearch button.reset {

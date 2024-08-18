@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
 
-const Recenter = ({ lat, lng, zoom = 14 }) => {
+const RecenterMap = ({ lat, lng, zoom = 14 }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -11,4 +11,4 @@ const Recenter = ({ lat, lng, zoom = 14 }) => {
   return null;
 };
 
-export default Recenter;
+export default RecenterMap;

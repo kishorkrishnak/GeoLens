@@ -8,44 +8,25 @@
 }
 
 .userProfileContainer {
-  margin-top: 10vh;
+  margin-top: 8vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 2rem 0;
   width: 60%;
+  box-shadow: 0 2px 40px 0 rgba(0, 0, 0, 0.19);
   height: 100%;
   margin-bottom: 2rem;
 }
 .userProfileContainer > img {
-  width:180px;
+  width: 150px;
   border-radius: 999px;
-
-}
-.userProfileContainer__header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding-bottom: 4rem;
-  border-bottom: 2px solid rgba(151, 151, 151, 0.7);
-  font-weight: 500;
-}
-
-.userProfileContainer__header > button {
-  font-size: 1rem;
-  color: #000;
-  text-transform: capitalize;
-  cursor: pointer;
-  font-weight: 500;
-  letter-spacing: 0;
 }
 
 .userProfileContainer__Details {
   width: 100%;
-  margin-top: 3rem;
-  box-shadow: 0 2px 40px 0 rgba(0, 0, 0, 0.19);
+  margin-top: 1rem;
   border-radius: 26px;
   padding: 2rem 3rem;
 }
@@ -55,7 +36,6 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-bottom: 2rem;
 }
 
 .userProfileContainer__DetailsRow {
@@ -67,15 +47,7 @@
 }
 
 .userProfileContainer__DetailsRow input {
-  width: 40%;
-}
-
-.userProfileContainer__DetailsRow .ReactSelect {
-  width: 330px;
-}
-
-.userProfileContainer__DetailsRow .htmlSelect {
-  width: 40% !important;
+  width: 50%;
 }
 
 .userProfileContainer__DetailsRow > p {
@@ -87,60 +59,22 @@
   font-weight: 500;
 }
 
-.userProfileContaienr__academyDetails {
-  width: 100%;
-  display: flex;
-}
-
-.userProfileContainer__shareRow,
-.userProfileContainer__copyRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.userProfileContainer__shareRow > button {
-  gap: 1rem;
-}
-
-.userProfileSave__button {
-  margin-top: 2rem;
-  color: #000;
-  font-size: 0.8rem;
-  font-weight: 500;
-  letter-spacing: 0;
-  border-radius: 9px;
-  padding: 0.5rem 2rem;
-  border: 1px solid #000;
-}
-
 @media (max-width: 768px) {
+
+  .userProfileContainer__Details {
+    width: 100%;
+    margin-top: 1rem;
+    border-radius: 26px;
+    padding: 2rem 1.4rem;
+  }
+  
   .userProfileContainer {
-    width: 95%;
-    margin-top: 10vh;
+    width: 100%;
+    box-shadow: none;
+    padding: 0;
   }
 
-  .userProfileContainer > img {
-    width: 50vw;
-    height: auto;
-    margin-bottom: 2rem;
-  }
-
-  .userProfileContainer__header > h1 {
-    font-size: 1.2rem;
-  }
-  .userProfileContaienr__academyDetails {
-    flex-direction: column;
-  }
-  .userProfileContainer__shareRow {
-    flex-direction: column;
-  }
   .userProfileContainer__DetailsRow > input {
     width: 100%;
-  }
-  .userProfileContainer__DetailsRow .ReactSelect {
-    width: 250px;
   }
 }

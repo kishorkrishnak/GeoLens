@@ -1,19 +1,8 @@
-import { createControlComponent } from "@react-leaflet/core";
-import L from "leaflet";
-import "leaflet-routing-machine";
+import useRoutingMachine from "../../hooks/useRoutingMachine";
 
-const createRoutineMachineLayer = ({ waypoints }) => {
-  const instance = L.Routing.control({
-    waypoints,
-    createMarker: function () {
-      return null;
-    },
-    addWaypoints: false,
-  });
-
-  return instance;
-};
-
-const RoutingMachine = createControlComponent(createRoutineMachineLayer);
+function RoutingMachine({ waypoints }) {
+  useRoutingMachine(waypoints);
+  return null;
+}
 
 export default RoutingMachine;

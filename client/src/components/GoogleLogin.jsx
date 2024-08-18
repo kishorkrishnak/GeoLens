@@ -30,9 +30,8 @@ const GoogleLogin = () => {
     <Button
       onClick={googleLogin}
       type="submit"
-      color="error"
+      color="success"
       variant="contained"
-      sx={{ mt: 3, mb: 2 }}
     >
       Sign In Using Google
     </Button>

@@ -1,5 +1,4 @@
 import L from "leaflet";
-import { OpenStreetMapProvider } from "leaflet-geosearch";
 import { MapContainer, TileLayer } from "react-leaflet";
 import { uid } from "react-uid";
 import { useMapContext } from "../../contexts/MapContext";
@@ -7,11 +6,11 @@ import useRoutingMachine from "../../hooks/useRoutingMachine";
 import MapClickHandler from "../MapClickHandler";
 import MarkerComponent from "../Marker/MarkerComponent";
 import MarkerModal from "../MarkerModal/MarkerModal";
+import RecenterMap from "../RecenterMap";
+import RoutingMachine from "../RoutingMachine/RoutingMachine";
 
 function MapComponent() {
-  const { centerLatLong, maxBounds, modalVisible, markers, routingMode } =
-    useMapContext();
-  const prov = new OpenStreetMapProvider();
+  const { centerLatLong, modalVisible, markers, routingMode } = useMapContext();
 
   const wayPoints = markers.map((marker) => L.latLng(marker.lat, marker.lng));
 
@@ -20,17 +19,20 @@ function MapComponent() {
       <MapContainer
         className="map"
         center={centerLatLong}
-        maxBounds={maxBounds}
         zoom={14}
-        minZoom={14}
         scrollWheelZoom={true}
         zoomControl={false}
         maxBoundsViscosity={1}
       >
+        {/* forcefully recenter map when coordinates changes */}
+        <RecenterMap lat={centerLatLong[0]} lng={centerLatLong[1]} />
+
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+
+        {/* render all the markers associated with the lens */}
         {markers.map((marker, index) => (
           <MarkerComponent
             totalMarkers={markers.length}
@@ -39,18 +41,13 @@ function MapComponent() {
             marker={marker}
           />
         ))}
-   
-        {modalVisible && <MarkerModal />}
-        {routingMode && <RoutingMachineLayer waypoints={wayPoints} />}
+
+<MarkerModal  modalVisible={modalVisible}/>
+        {routingMode && <RoutingMachine waypoints={wayPoints} />}
         <MapClickHandler />
       </MapContainer>
     </>
   );
-}
-
-function RoutingMachineLayer({ waypoints }) {
-  useRoutingMachine(waypoints);
-  return null;
 }
 
 export default MapComponent;

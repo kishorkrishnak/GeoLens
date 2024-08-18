@@ -1,11 +1,11 @@
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import {ThumbDown,ThumbUp} from '@mui/icons-material/';
+import { Box, Typography } from "@mui/material";
+import L from "leaflet";
 import { useCallback, useMemo, useRef } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { Marker, Popup } from "react-leaflet";
 import { useMapContext } from "../../contexts/MapContext";
-import "./MarkerComponent.css";
-import { Button } from "@mui/material";
-import L from "leaflet";
-import { renderToStaticMarkup } from "react-dom/server";
-
 const MarkerComponent = ({ marker, index, totalMarkers }) => {
   const { updateMarkerPosition, deleteMarker, routingMode } = useMapContext();
   const markerRef = useRef(null);
@@ -57,7 +57,9 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
       </div>
     ),
   });
+
   const icon = routingMode ? customIcon : new L.Icon.Default();
+
   return (
     <Marker
       eventHandlers={eventHandlers}
@@ -66,15 +68,52 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
       icon={icon}
       position={[marker.lat, marker.lng]}
     >
-      <Popup >
-        <h3 className="marker-title">{marker.title}</h3>
-        <p className="marker-description">{marker.description}</p>
-        <p className="marker-category">
-          <span>Category:</span> {marker.category}
-        </p>
-        <Button onClick={handleDeleteClick} variant="contained" color="error">
-          Delete
-        </Button>
+      <Popup>
+        <Typography variant="h6">{marker.title}</Typography>
+        <Typography variant="subtitle1">{marker.description}</Typography>
+        <Typography marginBottom={2} variant="subtitle2" display={"block"}>
+          <Typography variant="span" fontWeight={600}>
+            Category:{" "}
+          </Typography>
+          {marker.category}
+        </Typography>
+        {marker?.image && (
+          <img
+            src={marker.image}
+            style={{ maxWidth: "130px" }}
+            alt="marker-image"
+          />
+        )}
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            gap:3
+          }}
+        >
+       
+          <Typography variant="body1" noWrap>
+            <ThumbUp
+              fontSize="small"
+              sx={{ verticalAlign: "middle", marginRight: 1.5 }}
+            />
+            {77}
+          </Typography>
+          <Typography variant="body1" noWrap>
+            <ThumbDown
+              fontSize="small"
+              sx={{ verticalAlign: "middle", marginRight: 1.5 }}
+            />
+            {77}
+          </Typography>
+        </Box>
+        <DeleteForeverIcon
+          color="error"
+          onClick={handleDeleteClick}
+          fontSize="small"
+        />
       </Popup>
     </Marker>
   );
