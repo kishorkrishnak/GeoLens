@@ -1,7 +1,7 @@
-import { useGoogleLogin } from "@react-oauth/google";
-import { googleAuth } from "../services/api";
 import { Button } from "@mui/material";
+import { useGoogleLogin } from "@react-oauth/google";
 import useAuthContext from "../contexts/AuthContext/useAuthContext";
+import { googleAuth } from "../api/auth";
 
 const GoogleLogin = () => {
   const { setUser } = useAuthContext();
@@ -29,14 +29,14 @@ const GoogleLogin = () => {
 
   return (
     <Button
-    onClick={googleLogin}
-    type="submit"
-    fullWidth
-    variant="contained"
-    sx={{ mt: 3, mb: 2 }}
-  >
-    Sign In Using Google
-  </Button>
+      onClick={googleLogin}
+      type="submit"
+      fullWidth
+      variant="contained"
+      sx={{ mt: 3, mb: 2 }}
+    >
+      Sign In Using Google
+    </Button>
   );
 };
 

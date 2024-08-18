@@ -4,7 +4,7 @@ const LensSchema = new Schema(
     {
         name: {
             type: String,
-            required: [true, 'Lens must have a name. Please provide name'],
+            required: [true, 'Lens must have a title.'],
             trim: true,
         },
 
@@ -28,7 +28,7 @@ const LensSchema = new Schema(
         creator: {
             type: Schema.Types.ObjectId,
             ref: 'User',
-            required: [true, 'Lens must have a creator. Please provide the creator'],
+            required: [true, 'Lens must have a creator.'],
         },
 
         image: {

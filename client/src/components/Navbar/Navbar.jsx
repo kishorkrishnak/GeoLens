@@ -14,7 +14,7 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthContext from "../../contexts/AuthContext/useAuthContext";
 
-const pages = ["Dashboard", "About", "Blog"];
+const pages = ["Dashboard", "About"];
 
 function Navbar() {
   const { user, logoutUser, setUser } = useAuthContext();
@@ -75,7 +75,7 @@ function Navbar() {
               ml: 1,
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontWeight: 700,
+              fontWeight: 600,
               color: "inherit",
               textDecoration: "none",
             }}
@@ -126,7 +126,7 @@ function Navbar() {
             sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
           >
             <img
-              src="logo.svg"
+              src="/logo.svg"
               alt="description"
               style={{ width: "30px", height: "auto", borderRadius: "8px" }}
             />
@@ -140,7 +140,7 @@ function Navbar() {
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontWeight: 700,
+              fontWeight: 600,
               color: "inherit",
               textDecoration: "none",
             }}

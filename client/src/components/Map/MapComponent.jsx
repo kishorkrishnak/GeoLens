@@ -4,15 +4,20 @@ import { useMapContext } from "../../contexts/MapContext";
 import MapClickHandler from "../MapClickHandler";
 import MarkerComponent from "../Marker/MarkerComponent";
 import MarkerModal from "../MarkerModal/MarkerModal";
+import useRoutingMachine from "../../hooks/useRoutingMachine";
+import L from "leaflet";
 
 function MapComponent() {
-  const { putturCenterLatLong, maxBounds, modalVisible, markers } =
+  const { centerLatLong, maxBounds, modalVisible, markers, routingMode } =
     useMapContext();
+
+  const wayPoints = markers.map((marker) => L.latLng(marker.lat, marker.lng));
+
   return (
     <>
       <MapContainer
         className="map"
-        center={putturCenterLatLong}
+        center={centerLatLong}
         maxBounds={maxBounds}
         zoom={14}
         minZoom={14}
@@ -24,16 +29,25 @@ function MapComponent() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-
-        {markers.map((marker) => (
-          <MarkerComponent key={uid(marker)} marker={marker} />
+        {markers.map((marker, index) => (
+          <MarkerComponent
+            totalMarkers={markers.length}
+            index={index}
+            key={uid(marker)}
+            marker={marker}
+          />
         ))}
         {modalVisible && <MarkerModal />}
-
+        {routingMode && <RoutingMachineLayer waypoints={wayPoints} />}
         <MapClickHandler />
       </MapContainer>
     </>
   );
+}
+
+function RoutingMachineLayer({ waypoints }) {
+  useRoutingMachine(waypoints);
+  return null;
 }
 
 export default MapComponent;

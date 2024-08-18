@@ -1,11 +1,3 @@
 .marker-category span {
   font-weight: 600;
 }
-
-.btn.btn-delete {
-  background-color: #fc4747;
-}
-
-.btn.btn-delete:hover {
-  background-color: rgb(203, 13, 13) 4747;
-}

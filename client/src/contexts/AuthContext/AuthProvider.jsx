@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { verifyToken } from "../../services/api";
 import AuthContext from "./AuthContext";
+import { verifyToken } from "../../api/auth";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

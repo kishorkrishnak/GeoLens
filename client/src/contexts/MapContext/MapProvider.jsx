@@ -5,6 +5,8 @@ import MapContext from "./MapContext";
 
 export const MapProvider = ({ children }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [routingMode, setRoutingMode] = useState(false);
+
   const [markers, setMarkers] = useState(getSavedMarkers());
 
   function getSavedMarkers() {
@@ -45,9 +47,10 @@ export const MapProvider = ({ children }) => {
     setMarkers([...updatedMarkers]);
     setSavedMarkers(updatedMarkers);
     toast.success("Marker deleted");
+    setRoutingMode(false)
   }
 
-  const putturCenterLatLong = [12.762846155546352, 75.2016619004097];
+  const centerLatLong = [12.762846155546352, 75.2016619004097];
   const maxBounds = [
     [12.74116988678989, 75.09318351745607],
     [12.797405423615684, 75.22253036499025],
@@ -59,6 +62,7 @@ export const MapProvider = ({ children }) => {
     title: "",
     description: "",
     category: "",
+    image: "",
   });
 
   const updateMarkerPosition = (id, { lat, lng }) => {
@@ -96,9 +100,11 @@ export const MapProvider = ({ children }) => {
     addMarker,
     deleteMarker,
     updateMarkerPosition,
-    putturCenterLatLong,
+    centerLatLong,
     maxBounds,
     markerCount: markers.length,
+    routingMode,
+    setRoutingMode,
   };
 
   return (

@@ -56,7 +56,7 @@ export default function Login() {
               alignItems: "center",
             }}
           >
-        <Avatar alt="logo" src="logo.svg" />
+        <Avatar alt="logo" src="/logo.svg" />
             <Typography color={"secondary"} component="h1" variant="h5">
             GeoLens
             </Typography>
