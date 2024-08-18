@@ -17,6 +17,7 @@
 }
 
 .modal-content {
+  cursor: pointer;
   border-radius: 5px;
   background-color: #fefefe;
   padding: 20px;

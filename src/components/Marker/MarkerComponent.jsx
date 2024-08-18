@@ -2,6 +2,7 @@ import { useMemo, useRef } from "react";
 import { Marker, Popup } from "react-leaflet";
 import { useMapContext } from "../../contexts/MapContext";
 import "./MarkerComponent.css";
+import { Button } from "@mui/material";
 
 const MarkerComponent = ({ marker }) => {
   const position = [marker.lat, marker.lng];
@@ -32,16 +33,17 @@ const MarkerComponent = ({ marker }) => {
         <p className="marker-category">
           <span>Category:</span> {marker.category}
         </p>
-
-        <button
+        <Button
           onClick={(e) => {
             e.stopPropagation();
             deleteMarker(marker.id);
           }}
-          className="btn btn-delete"
+          variant="contained"
+          color="error"
         >
           Delete
-        </button>
+        </Button>
+        ;
       </Popup>
     </Marker>
   );

@@ -36,6 +36,7 @@ export const MapProvider = ({ children }) => {
     savedMarkers.push(newMarker);
     setSavedMarkers(savedMarkers);
     setModalVisible(false);
+    toast.success("Marker added");
     setMarkerData({});
   }
 
@@ -43,6 +44,7 @@ export const MapProvider = ({ children }) => {
     const updatedMarkers = markers.filter((marker) => marker.id !== id);
     setMarkers([...updatedMarkers]);
     setSavedMarkers(updatedMarkers);
+    toast.success("Marker deleted");
   }
 
   const putturCenterLatLong = [12.762846155546352, 75.2016619004097];

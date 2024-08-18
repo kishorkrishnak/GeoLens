@@ -1,0 +1,7 @@
+.htmlInput__input {
+  outline-width: 0;
+  border: 1px solid gray;
+  padding: 10px 20px;
+  border-radius: 8px;
+  width: 100%;
+}
