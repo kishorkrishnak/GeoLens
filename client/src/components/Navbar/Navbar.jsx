@@ -36,7 +36,7 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  console.log(user)
+  console.log(user);
   const settings = [
     {
       setting: "Profile",
@@ -55,9 +55,13 @@ function Navbar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box sx={{ display: { xs: "none", md: "block" } }}>
+          <Box
+            component="a"
+            href="/"
+            sx={{ display: { xs: "none", md: "block" } }}
+          >
             <img
-              src="logo.svg"
+              src="/logo.svg"
               alt="description"
               style={{ width: "30px", height: "auto", borderRadius: "8px" }}
             />
@@ -66,10 +70,10 @@ function Navbar() {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               ml: 1,
-              mr:2,
+              mr: 2,
               display: { xs: "none", md: "flex" },
               fontWeight: 700,
               color: "inherit",
@@ -116,7 +120,11 @@ function Navbar() {
             </Menu>
           </Box>
 
-          <Box sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}>
+          <Box
+            component="a"
+            href="/"
+            sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
+          >
             <img
               src="logo.svg"
               alt="description"
@@ -124,10 +132,10 @@ function Navbar() {
             />
           </Box>
           <Typography
+            component="a"
+            href="/"
             variant="h6"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
