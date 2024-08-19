@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose
+
 const LensSchema = new Schema(
 
     {
@@ -12,7 +13,9 @@ const LensSchema = new Schema(
         description: {
             type: String,
         },
-
+        thumbnail: {
+            type: String,
+        },
         location: {
             type: {
                 type: String,
@@ -49,12 +52,13 @@ const LensSchema = new Schema(
 
         views: {
             type: Number,
-            default: 0
+            default: 0, index: true,
         },
 
         likes: {
             type: Number,
-            default: 0
+            default: 0,
+            index: true,
         },
 
     },

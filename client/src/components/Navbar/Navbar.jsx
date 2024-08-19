@@ -16,9 +16,18 @@ import useAuthContext from "../../contexts/AuthContext/useAuthContext";
 import { logoutUser } from "../../api/auth";
 import GoogleLogin from "../GoogleLogin";
 
-const pages = ["Explore", "About"];
+const pages = [
+  {
+    label: "Explore",
+    link: "/lenses",
+  },
+  {
+    label: "About",
+    link: "/about",
+  },
+];
 
-const Navbar = () => {
+const Navbar = ({ home }) => {
   const { user, setUser } = useAuthContext();
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -58,7 +67,12 @@ const Navbar = () => {
     },
   ];
   return (
-    <AppBar color="info" elevation={0} position="static" sx={{ py: 0.5 }}>
+    <AppBar
+      color="info"
+      elevation={0}
+      position="static"
+      sx={{ py: 0.5, position: home ? "sticky" : "", top: home ? 0 : "",zIndex:100 }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box
@@ -118,8 +132,14 @@ const Navbar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem
+                  key={page.label}
+                  onClick={() => {
+                    navigate(page.link);
+                    handleCloseNavMenu();
+                  }}
+                >
+                  <Typography textAlign="center">{page.label}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -155,8 +175,11 @@ const Navbar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
+                key={page.label}
+                onClick={() => {
+                  navigate(page.link);
+                  handleCloseNavMenu();
+                }}
                 sx={{
                   mt: 0.4,
                   color: "white",
@@ -164,7 +187,7 @@ const Navbar = () => {
                   textTransform: "none",
                 }}
               >
-                {page}
+                {page.label}
               </Button>
             ))}
           </Box>
@@ -172,7 +195,10 @@ const Navbar = () => {
           {user ? (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0,border:"2px solid white" }}>
+                <IconButton
+                  onClick={handleOpenUserMenu}
+                  sx={{ p: 0, border: "2px solid white" }}
+                >
                   <Avatar alt={user?.name} src={user?.image} />
                 </IconButton>
               </Tooltip>

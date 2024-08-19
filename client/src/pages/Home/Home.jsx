@@ -1,21 +1,14 @@
-import {
-  Box,
-  Typography,
-  Button,
-  Container,
-  Grid,
-  Paper,
-  Avatar,
-} from "@mui/material";
+import ExploreIcon from "@mui/icons-material/Explore";
+import RoomIcon from "@mui/icons-material/Room";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getLenses } from "../../api/lens";
 import Footer from "../../components/Footer/Footer";
 import Navbar from "../../components/Navbar/Navbar";
 import LensesGrid from "../Lenses/LensesGrid";
-import { getLenses } from "../../api/lens";
-import ExploreIcon from "@mui/icons-material/Explore";
 import HowItWorks from "./HowItWorks";
-
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 const Home = () => {
   const [lenses, setLenses] = useState([]);
 
@@ -31,6 +24,7 @@ const Home = () => {
 
     fetchLenses();
   }, []);
+
   return (
     <Box
       sx={{
@@ -40,13 +34,14 @@ const Home = () => {
         justifyContent: "space-between",
       }}
     >
-      <Navbar />
+      <Navbar home />
       <Box
         sx={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url(hero-background.jpg)`,
           backgroundSize: "cover",
+          backgroundRepeat: "repeat-y",
           backgroundPosition: "center",
-          height: "70vh",
+          height: { xs: "60vh", md: "70vh" },
           display: "flex",
           alignItems: "center",
           color: "white",
@@ -95,6 +90,60 @@ const Home = () => {
 
       <HowItWorks />
 
+      <Box sx={{ bgcolor: "background.paper", py: 8 }}>
+        <Container>
+          <Grid container spacing={4} alignItems="center">
+            <Grid item xs={12} md={6}>
+              <Typography
+                variant="h3"
+                sx={{
+                  fontSize: { xs: 36, md: 46 },
+                }}
+                gutterBottom
+              >
+                Create Your Lens
+              </Typography>
+              <Typography variant="h6" paragraph>
+                Every community has its hidden gems and fascinating stories.
+                With GeoLens, you have the power to bring these stories to life.
+              </Typography>
+              <Typography paragraph>
+                Whether it&apos;s the best coffee shops in your neighborhood,
+                historical landmarks in your city, or the most picturesque
+                hiking trails nearby, your unique perspective can guide others
+                to discover the world through your lens.
+              </Typography>
+              <Typography paragraph>
+                Start crafting your lens today and become a local expert,
+                sharing your passion and knowledge with explorers from around
+                the globe.
+              </Typography>
+              <Button
+                component={Link}
+                to="/lens/new"
+                variant="contained"
+                startIcon={<RoomIcon />}
+                size="large"
+                sx={{ mt: 2 }}
+              >
+                Create Your Lens
+              </Button>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Box
+                component="img"
+                src="/createlens.jpg"
+                alt="Create Your Lens"
+                sx={{
+                  width: "100%",
+                  height: "auto",
+                }}
+              />
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+
       <Box
         sx={{
           margin: "2rem 0.5rem",
@@ -116,7 +165,80 @@ const Home = () => {
         >
           Top lenses this week
         </Typography>
-        {lenses && <LensesGrid lenses={lenses} />}
+        {lenses && (
+          <Container>
+            <LensesGrid lenses={lenses} />
+          </Container>
+        )}
+      </Box>
+
+      <Box sx={{ bgcolor: "background.default", py: 8 }}>
+        <Container>
+          <Grid container spacing={4} alignItems="center">
+            <Grid item xs={12} md={6}>
+              <Box
+                component="img"
+                src="/exploreworld.jpg"
+                alt="Why GeoLens"
+                sx={{
+                  width: "100%",
+                  height: "auto",
+                  borderRadius: 1,
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography
+                variant="h3"
+                sx={{
+                  fontSize: { xs: 36, md: 46 },
+                }}
+                gutterBottom
+              >
+                Discover the world, one lens at a time.
+              </Typography>
+
+              <Typography paragraph>
+                GeoLens is more than just a map—it's a gateway to your
+                community&apos;s most cherished locations and untold stories.
+                Whether you&apos;re an explorer or a storyteller, GeoLens
+                empowers you to:
+              </Typography>
+              <ul>
+                <li>
+                  <Typography paragraph>
+                    Unearth hidden gems and local secrets.
+                  </Typography>
+                </li>
+                <li>
+                  <Typography paragraph>
+                    Connect with like-minded adventurers.
+                  </Typography>
+                </li>
+                <li>
+                  <Typography paragraph>
+                    Share your unique perspective with the world.
+                  </Typography>
+                </li>
+              </ul>
+              <Typography paragraph>
+                Join us on a journey to map the world, one lens at a time. Your
+                story matters, and with GeoLens, you can make it part of the
+                global narrative.
+              </Typography>
+              <Button
+                component={Link}
+                to="/get-started"
+                variant="contained"
+                size="large"
+                startIcon={<TravelExploreIcon />}
+                sx={{ mt: 2 }}
+              >
+                Get Started
+              </Button>
+            </Grid>
+          </Grid>
+        </Container>
       </Box>
       <Footer />
     </Box>

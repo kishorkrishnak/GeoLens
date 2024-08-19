@@ -15,6 +15,7 @@ import Footer from "../../../components/Footer/Footer";
 import Navbar from "../../../components/Navbar/Navbar";
 import useAuthContext from "../../../contexts/AuthContext/useAuthContext";
 import { useLensCreationContext } from "../contexts/LensCreationContext";
+import { handleFileUpload } from "../../../utils/handleFileUpload";
 
 function LensDetails() {
   const navigate = useNavigate();
@@ -22,10 +23,22 @@ function LensDetails() {
   const { user } = useAuthContext();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setUploading(true);
+      const imageUrl = await handleFileUpload(file);
+      setThumbnail(imageUrl);
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,6 +48,7 @@ function LensDetails() {
       const lensData = {
         name,
         description,
+        thumbnail,
         location: {
           type: "Point",
           coordinates: centerLatLong,
@@ -44,14 +58,19 @@ function LensDetails() {
       };
 
       const response = await createLens(lensData);
-      console.log(response);
       setName("");
       setDescription("");
       setTagInput("");
+      setThumbnail("");
       setTags([]);
       setError(null);
 
-      toast.success("Hurray! lens created successfully");
+      toast.success(
+        "Hurray! lens created successfully, now add markers for your favorite locations and share it with the world!",
+        {
+          duration: 8000,
+        }
+      );
       navigate(`/lens/${response.data.data._id}`);
     } catch (err) {
       toast.error("Failed to create lens. Please try again.");
@@ -90,7 +109,8 @@ function LensDetails() {
           justifyContent: "center",
           alignItems: "center",
           flexGrow: 1,
-          padding: 2,
+          paddingY: 5,
+          paddingX: 2,
         }}
       >
         <Box
@@ -111,6 +131,7 @@ function LensDetails() {
             label="Name"
             variant="outlined"
             value={name}
+            inputProps={{ maxLength: 100 }}
             onChange={(e) => setName(e.target.value)}
             required
           />
@@ -120,9 +141,28 @@ function LensDetails() {
             multiline
             rows={4}
             value={description}
+            inputProps={{ maxLength: 2000 }}
             onChange={(e) => setDescription(e.target.value)}
             required
           />
+
+          <Box>
+            <Button variant="outlined" component="label">
+              {thumbnail ? "Change Image" : "Upload Thumbnail"}
+              <input hidden type="file" onChange={handleImageUpload} />
+            </Button>
+          </Box>
+
+          <Box>
+            {thumbnail && (
+              <img
+                src={thumbnail}
+                style={{ maxWidth: "100%", height: "auto" }}
+                alt="marker-image"
+              />
+            )}
+          </Box>
+
           <Stack direction="row" spacing={1} alignItems="center">
             <TextField
               label="Add Tags"

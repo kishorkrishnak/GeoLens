@@ -9,12 +9,12 @@ const HowItWorks = () => {
       <Typography variant="h4" align="center" gutterBottom>
         How It Works
       </Typography>
-      <Grid container  spacing={4} sx={{ mt: 4 }}>
+      <Grid container spacing={4} sx={{ mt: 4 }}>
         <Grid item xs={12} md={4}>
           <Paper
             elevation={3}
             sx={{
-              p: 3,
+              p: 4,
               height: "100%",
               display: "flex",
               flexDirection: "column",
@@ -22,14 +22,14 @@ const HowItWorks = () => {
             }}
           >
             <Avatar sx={{ bgcolor: "primary.main", mb: 2 }}>
-              <CreateIcon />
+              <CreateIcon fontSize="medium" />
             </Avatar>
             <Typography variant="h6" align="center" gutterBottom>
               Create Lenses
             </Typography>
-            <Typography align="center">
-              Create custom lenses to showcase your favorite locations and
-              landmarks.
+            <Typography variant="body1" align="center">
+              Create map with markers to showcase your favorite locations and
+              landmarks in your region.
             </Typography>
           </Paper>
         </Grid>

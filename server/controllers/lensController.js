@@ -3,7 +3,7 @@ const User = require("../models/User");
 
 exports.createLens = async (req, res, next) => {
   try {
-    const { name, description, location, tags, creator } = req.body;
+    const { name, thumbnail, description, location, tags, creator } = req.body;
     if (!name || !location || !creator) {
       return res.status(400).json({
         status: "error",
@@ -16,6 +16,7 @@ exports.createLens = async (req, res, next) => {
       name,
       description,
       location,
+      thumbnail,
       tags,
       creator,
     });
@@ -79,23 +80,80 @@ exports.getLens = async (req, res, next) => {
 };
 
 exports.getLenses = async (req, res, next) => {
-    try {
-      const lenses = await Lens.find({}).populate("markers").populate("creator")
-  
-      res.status(201).json({
-        status: "success",
-        message:"Lenses retrieved successfully",
-        data: lenses,
-      });
-    } catch (error) {
-      res.status(500).json({
-        status: "error",
-        message: "Internal server error",
-        data: null,
-      });
-    }
-  };
+  const {
+    country,
+    state,
+    sort,
+    filter,
+    search,
+    page = 1,
+    limit = 10,
+    clientGeoCoordinates
+  } = req.query;
 
+  console.log(req.query)
+  let sortStage = {};
+  let matchStage = {};
+
+  if (sort === "latest") {
+    sortStage = { createdAt: -1 };
+  } else if (sort === "oldest") {
+    sortStage = { createdAt: 1 };
+  } else if (sort === "popular") {
+    sortStage = { views: -1, likes: -1, createdAt: -1 };
+  }
+
+  if (country) matchStage.country = country;
+  if (state) matchStage.state = state;
+
+  const searchConditions = [];
+  if (search) {
+    const regex = new RegExp(search, "i");
+    searchConditions.push(
+      { name: { $regex: regex } },
+      { description: { $regex: regex } },
+      // { state: { $regex: regex } },  // Uncomment if needed
+      // { district: { $regex: regex } },  // Uncomment if needed
+      { tags: { $elemMatch: { $regex: regex } } }
+    );
+  }
+
+  if (searchConditions.length > 0) {
+    matchStage.$and = matchStage.$and || [];
+    matchStage.$and.push({ $or: searchConditions });
+  }
+
+  const collation = { locale: "en", strength: 2 };
+
+  try {
+    const skip = (page - 1) * limit;
+
+    const lenses = await Lens.find(matchStage)
+      .collation(collation)
+      .sort(sortStage)
+      .skip(skip)
+      .limit(parseInt(limit))
+      .populate("markers")
+      .populate("creator");
+
+    const totalLenses = await Lens.countDocuments(matchStage);
+
+    res.status(200).json({
+      status: "success",
+      message: "Lenses retrieved successfully",
+      data: lenses,
+      total: totalLenses,
+      page,
+      limit,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
 exports.deleteLens = async (req, res, next) => {
   try {
     const { id } = req.params;

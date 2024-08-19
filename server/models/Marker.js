@@ -11,14 +11,24 @@ const MarkerSchema = new Schema(
 
         description: {
             type: String,
+            required: [true, 'Lens must have a description'],
+            trim: true,
         },
 
         category: {
             type: String,
+            required: [true, 'Lens must have a category'],
+
         },
+
         image: {
             type: String,
         },
+
+        address: {
+            type: String,
+        },
+        
         location: {
             type: {
                 type: String,

@@ -1,8 +1,9 @@
 const Lens = require("../models/Lens");
 const Marker = require("../models/Marker");
+
 exports.createMarker = async (req, res, next) => {
     try {
-        const { lensId, location, title, description, category, image } = req.body;
+        const { lensId, location, title, description, category, image, address } = req.body;
         if (!lensId || !title || !category) {
             return res.status(400).json({
                 status: 'error',
@@ -17,6 +18,7 @@ exports.createMarker = async (req, res, next) => {
             location,
             category,
             image,
+            address
         });
 
         const lens = await Lens.findById(lensId)
@@ -79,11 +81,11 @@ exports.getMarker = async (req, res, next) => {
 
 exports.updateMarker = async (req, res, next) => {
     try {
-        const markerId = req.params.id; 
+        const markerId = req.params.id;
         const updatedMarkerDetails = req.body;
 
         const updatedMarker = await Marker.findByIdAndUpdate(markerId, updatedMarkerDetails, {
-            new: true, 
+            new: true,
             runValidators: true
         });
 
@@ -98,7 +100,7 @@ exports.updateMarker = async (req, res, next) => {
         res.status(200).json({
             status: 'success',
             message: "Marker updated successfully",
-            data: updatedMarker 
+            data: updatedMarker
         });
     } catch (error) {
         console.error(error);

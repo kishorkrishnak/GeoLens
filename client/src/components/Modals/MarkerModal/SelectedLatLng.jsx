@@ -1,35 +1,40 @@
 import { Box, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { reverseGeoCode } from "../../../api/geocode";
+import { useMapContext } from "../../../contexts/MapContext";
 
-const SelectedLatLng = ({ latlng }) => {
-  const [address, setAddress] = useState("");
+const SelectedLatLng = () => {
+  const { markerData, setMarkerData } = useMapContext();
 
   useEffect(() => {
     const reverseGeoCodeSelectedPoint = async () => {
       try {
-        const result = await reverseGeoCode(latlng);
-        setAddress(result.data.results[0].formatted);
+        const selectedLocation = [markerData.lat,markerData.lng]
+        const result = await reverseGeoCode(selectedLocation);
+        console.log(result)
+        const formattedAddress = result.data.results[0].formatted;
+
+        setMarkerData({ ...markerData, address: formattedAddress });
       } catch (error) {
         console.log(error);
       }
     };
 
-    // reverseGeoCodeSelectedPoint();
-  }, [latlng]);
+    reverseGeoCodeSelectedPoint();
+  }, [markerData.lat,markerData.lng]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
       <Typography variant="p" fontSize={18} noWrap>
-        Latitude: {latlng[0]}
+        Latitude: {markerData.lat}
       </Typography>
 
       <Typography variant="p" fontSize={18} noWrap>
-        Longitude: {latlng[1]}
+        Longitude: {markerData.lng}
       </Typography>
 
       <Typography variant="p" fontSize={18}>
-        Address: {address}
+        Address: {markerData.address}
       </Typography>
     </Box>
   );

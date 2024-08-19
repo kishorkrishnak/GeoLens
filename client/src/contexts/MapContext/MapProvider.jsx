@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { createMarker, deleteMarker, updateMarker } from "../../api/marker";
 import MapContext from "./MapContext";
+import useAuthContext from "../AuthContext/useAuthContext";
 
 export const MapProvider = ({ children }) => {
+  const { user } = useAuthContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [routingMode, setRoutingMode] = useState(false);
+  const [isLensCreator, setIsLensCreator] = useState(false);
   const [centerLatLong, setCenterLatLong] = useState([1, 15]);
   const [lens, setLens] = useState(null);
   const maxBounds = [
@@ -21,6 +24,7 @@ export const MapProvider = ({ children }) => {
     description: "",
     category: "",
     image: "",
+    address:""
   });
 
   //get client's geocoordinates and set it as the default center of map
@@ -31,6 +35,16 @@ export const MapProvider = ({ children }) => {
       }
     );
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
+    if (lens?.creator?._id === user?._id) {
+      return setIsLensCreator(true);
+    } else {
+      return setIsLensCreator(false);
+    }
+  }, [lens, user]);
 
   async function addMarker() {
     if (!(markerData.title && markerData.category)) {
@@ -134,6 +148,7 @@ export const MapProvider = ({ children }) => {
     setSidebarCollapsed,
     lens,
     setLens,
+    isLensCreator,
   };
 
   return (

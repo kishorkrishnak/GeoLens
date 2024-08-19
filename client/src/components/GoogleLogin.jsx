@@ -13,7 +13,6 @@ const GoogleLogin = () => {
         setUser(result.data.data.user);
         toast.success("Successfuly logged in");
       } else {
-        console.log(authResult);
         throw new Error(authResult);
       }
     } catch (e) {

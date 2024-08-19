@@ -9,7 +9,7 @@ import {
   CardMedia,
   Chip,
   Grid,
-  Typography,
+  Typography
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -25,6 +25,7 @@ const LensesGrid = ({ lenses }) => {
             }}
           >
             <Card
+              elevation={3}
               sx={{
                 height: "100%",
                 display: "flex",
@@ -34,10 +35,7 @@ const LensesGrid = ({ lenses }) => {
               <CardMedia
                 component="img"
                 height="180"
-                image={
-                  lens.markers[0]?.image ||
-                  "https://via.placeholder.com/300x140"
-                }
+                image={lens.thumbnail || "https://via.placeholder.com/300x140"}
                 alt={lens.name}
               />
               <CardContent sx={{ flexGrow: 1 }}>

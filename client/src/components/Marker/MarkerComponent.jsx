@@ -7,7 +7,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { Marker, Popup } from "react-leaflet";
 import { useMapContext } from "../../contexts/MapContext";
 const MarkerComponent = ({ marker, index, totalMarkers }) => {
-  const { updateMarkerPosition, removeMarker, routingMode } = useMapContext();
+  const { updateMarkerPosition, removeMarker, routingMode, isLensCreator } =
+    useMapContext();
+
   const markerRef = useRef(null);
   const eventHandlers = useMemo(
     () => ({
@@ -63,7 +65,7 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
     <Marker
       eventHandlers={eventHandlers}
       ref={markerRef}
-      draggable
+      draggable={isLensCreator}
       icon={icon}
       position={position}
     >
@@ -76,6 +78,9 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
           </Typography>
           {marker.category}
         </Typography>
+
+        <Typography variant="subtitle2">{marker?.address}</Typography>
+
         {marker?.image && (
           <img
             src={marker.image}
@@ -98,7 +103,7 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
               color="primary"
               sx={{ verticalAlign: "middle", marginRight: 1.5 }}
             />
-            {77}
+            {marker.upvotes}
           </Typography>
           <Typography variant="body1" noWrap>
             <ThumbDown
@@ -106,14 +111,16 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
               color="primary"
               sx={{ verticalAlign: "middle", marginRight: 1.5 }}
             />
-            {77}
+            {marker.downvotes}
           </Typography>
         </Box>
-        <DeleteForeverIcon
-          color="error"
-          onClick={handleDeleteClick}
-          fontSize="small"
-        />
+        {isLensCreator && (
+          <DeleteForeverIcon
+            color="error"
+            onClick={handleDeleteClick}
+            fontSize="small"
+          />
+        )}
       </Popup>
     </Marker>
   );

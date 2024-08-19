@@ -62,7 +62,7 @@ const MarkerModal = () => {
         </Box>
 
         <Box my={2}>
-          <SelectedLatLng latlng={[markerData.lat, markerData.lng]} />
+          <SelectedLatLng  />
         </Box>
 
         <Box component="form" noValidate autoComplete="off" width="100%">
