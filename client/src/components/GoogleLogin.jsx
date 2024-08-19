@@ -2,7 +2,8 @@ import { Button } from "@mui/material";
 import { useGoogleLogin } from "@react-oauth/google";
 import useAuthContext from "../contexts/AuthContext/useAuthContext";
 import { googleAuth } from "../api/auth";
-
+import GoogleIcon from "@mui/icons-material/Google";
+import toast from "react-hot-toast";
 const GoogleLogin = () => {
   const { setUser } = useAuthContext();
   const responseGoogle = async (authResult) => {
@@ -10,7 +11,7 @@ const GoogleLogin = () => {
       if (authResult["code"]) {
         const result = await googleAuth(authResult.code);
         setUser(result.data.data.user);
-        alert("successfuly logged in");
+       toast.success("Successfuly logged in");
       } else {
         console.log(authResult);
         throw new Error(authResult);
@@ -31,9 +32,10 @@ const GoogleLogin = () => {
       onClick={googleLogin}
       type="submit"
       color="success"
+      startIcon={<GoogleIcon/>}
       variant="contained"
     >
-      Sign In Using Google
+      Login
     </Button>
   );
 };

@@ -7,6 +7,7 @@ function MapClickHandler() {
 
   useMapEvents({
     click: ({ latlng: { lat, lng } }) => {
+      //add marker only if markermodal is not visible
       if (!modalVisible) {
         setMarkerData({ ...markerData, lat, lng });
       }

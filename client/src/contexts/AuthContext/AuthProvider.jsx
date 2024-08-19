@@ -4,17 +4,18 @@ import { verifyToken } from "../../api/auth";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [authCheckComplete,setAuthCheckComplete] = useState(false);
+  const [authCheckComplete, setAuthCheckComplete] = useState(false);
+
+  //ensure auth status before page load to ensure proper working
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const result = await verifyToken();
         setUser(result.data.data.user);
       } catch (error) {
-        console.log("Not authenticated", error);
         setUser(null);
-      }finally{
-        setAuthCheckComplete(true)
+      } finally {
+        setAuthCheckComplete(true);
       }
     };
 
@@ -24,7 +25,7 @@ export const AuthProvider = ({ children }) => {
   const contextValue = {
     user,
     setUser,
-    authCheckComplete
+    authCheckComplete,
   };
 
   return (

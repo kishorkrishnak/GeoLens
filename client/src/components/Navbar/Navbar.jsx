@@ -42,9 +42,12 @@ function Navbar() {
   const settings = [
     {
       setting: "Profile",
-      action: () => navigate(`/profile/${user?._id}`),
+      action: () => navigate(`/user/${user?._id}`),
     },
-
+    {
+      setting: "Your Lenses",
+      action: () => navigate(`/user/${user?._id}/lenses`),
+    },
     {
       setting: "Logout",
       action: async () => {
@@ -78,7 +81,7 @@ function Navbar() {
               ml: 1,
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontWeight: 600,
+              fontWeight: 500,
               color: "inherit",
               textDecoration: "none",
             }}
@@ -143,7 +146,7 @@ function Navbar() {
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontWeight: 600,
+              fontWeight: 500,
               color: "inherit",
               textDecoration: "none",
             }}

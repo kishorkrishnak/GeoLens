@@ -2,10 +2,9 @@ import L from "leaflet";
 import { MapContainer, TileLayer } from "react-leaflet";
 import { uid } from "react-uid";
 import { useMapContext } from "../../contexts/MapContext";
-import useRoutingMachine from "../../hooks/useRoutingMachine";
 import MapClickHandler from "../MapClickHandler";
 import MarkerComponent from "../Marker/MarkerComponent";
-import MarkerModal from "../MarkerModal/MarkerModal";
+import MarkerModal from "../Modals/MarkerModal/MarkerModal";
 import RecenterMap from "../RecenterMap";
 import RoutingMachine from "../RoutingMachine/RoutingMachine";
 
@@ -42,7 +41,7 @@ function MapComponent() {
           />
         ))}
 
-<MarkerModal  modalVisible={modalVisible}/>
+        <MarkerModal modalVisible={modalVisible} />
         {routingMode && <RoutingMachine waypoints={wayPoints} />}
         <MapClickHandler />
       </MapContainer>

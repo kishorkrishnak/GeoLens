@@ -11,7 +11,7 @@ import LensStats from "./LensDetails/LensStats";
 import ShareButton from "./LensDetails/ShareButton";
 import { useParams } from "react-router-dom";
 
-const Sidebar = () => {
+const SidebarMobile = () => {
   const [weather, setWeather] = useState(null);
   const { id } = useParams();
   const {
@@ -151,4 +151,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default SidebarMobile;

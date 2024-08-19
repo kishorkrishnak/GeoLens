@@ -2,7 +2,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { lazy, Suspense } from "react";
 import { Toaster } from "react-hot-toast";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import ScrollToTop from "./components/ScrollToTop";
 import SuspenseFallback from "./components/SuspenseFallback";
@@ -11,6 +11,8 @@ import { MapProvider } from "./contexts/MapContext";
 import PrivateRoute from "./PrivateRoute";
 
 const LazyMapPage = lazy(() => import("./pages/MapPage"));
+const LazyLenses = lazy(() => import("./pages/Lenses"));
+
 const LazyHome = lazy(() => import("./pages/Home"));
 const LazyUserProfile = lazy(() => import("./pages/UserProfile"));
 const LazyLensCreation = lazy(() => import("./pages/LensCreation"));
@@ -36,6 +38,10 @@ const App = () => {
                       <Route path="/" element={<LazyHome />} />
                       <Route path="/lens" element={<LazyMapPage />} />
                       <Route
+                        path="/user/:id/lenses"
+                        element={<LazyMapPage />}
+                      />
+                      <Route
                         path="/lens/new/*"
                         element={
                           <PrivateRoute
@@ -44,9 +50,9 @@ const App = () => {
                           />
                         }
                       />{" "}
-                      <Route path="/lens/:id" element={<LazyMapPage />} />
+                      <Route path="/lens/:id" element={<LazyLenses />} />
                       <Route
-                        path="/profile/:id"
+                        path="/user/:id"
                         element={
                           <PrivateRoute
                             user={user}

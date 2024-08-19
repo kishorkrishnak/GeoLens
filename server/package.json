@@ -6,7 +6,7 @@
   "scripts": {
     "devStart": "nodemon app.js"
   },
-  "author": "",
+  "author": "Kishor Krishna K",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.7.4",

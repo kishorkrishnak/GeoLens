@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { reverseGeoCode } from "../../api/geocode";
+import { reverseGeoCode } from "../../../api/geocode";
 
 const SelectedLatLng = ({ latlng }) => {
   const [address, setAddress] = useState("");
@@ -15,7 +15,7 @@ const SelectedLatLng = ({ latlng }) => {
       }
     };
 
-    reverseGeoCodeSelectedPoint();
+    // reverseGeoCodeSelectedPoint();
   }, [latlng]);
 
   return (

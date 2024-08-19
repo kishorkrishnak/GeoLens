@@ -1,20 +1,19 @@
-import { useState } from "react";
 import {
+  Autocomplete,
+  Box,
   Button,
-  Typography,
   TextField,
   TextareaAutosize,
-  Box,
-  IconButton,
-  Autocomplete,
+  Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import { useMapContext } from "../../contexts/MapContext";
-import { handleFileUpload } from "../../utils/handleFileUpload";
-import markerCategories from "./markerCategories";
+import { useState } from "react";
 import { Modal } from "react-responsive-modal";
-import "react-responsive-modal/styles.css"; // Import styles
+import "react-responsive-modal/styles.css";
+import { useMapContext } from "../../../contexts/MapContext";
+import { handleFileUpload } from "../../../utils/handleFileUpload";
+import markerCategories from "./markerCategories";
 import SelectedLatLng from "./SelectedLatLng";
+
 const MarkerModal = () => {
   const {
     markerData,
