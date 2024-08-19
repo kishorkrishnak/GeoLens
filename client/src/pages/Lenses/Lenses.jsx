@@ -1,141 +1,142 @@
-import { Box, Typography } from "@mui/material";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { getLenses } from "../../api/lens";
 import Footer from "../../components/Footer/Footer";
 import Navbar from "../../components/Navbar/Navbar";
-import LensTable from "./Table";
+import LensesGrid from "./LensesGrid";
 
 const Lenses = () => {
-  const [lenses, setLenses] = useState([
-    {
-      id: "1",
-      name: "Historic Downtown Tour",
-      creator: "John Doe",
-      category: "Historical",
-      views: 1200,
-    },
-    {
-      id: "2",
-      name: "Nature Walk in Central Park",
-      creator: "Jane Smith",
-      category: "Nature",
-      views: 980,
-    },
-    {
-      id: "3",
-      name: "Best Coffee Shops in Town",
-      creator: "Mike Brown",
-      category: "Food",
-      views: 750,
-    },
-    {
-      id: "4",
-      name: "City Events Guide",
-      creator: "Emily White",
-      category: "Events",
-      views: 1340,
-    },
-    {
-      id: "5",
-      name: "Hidden Gems of the East Side",
-      creator: "Alice Green",
-      category: "Hidden Gems",
-      views: 620,
-    },
-  ]);
+  const [lenses, setLenses] = useState([]);
+  const [filteredLenses, setFilteredLenses] = useState([]);
+  const [search, setSearch] = useState("");
+  const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
+  const [sortOrder, setSortOrder] = useState("latest");
+
+  useEffect(() => {
+    const fetchLenses = async () => {
+      try {
+        const response = await getLenses();
+        setLenses(response.data.data);
+        setFilteredLenses(response.data.data);
+      } catch (error) {
+        console.error("Error fetching lenses data:", error);
+      }
+    };
+
+    fetchLenses();
+  }, []);
+
+  useEffect(() => {
+    let result = lenses;
+
+    if (search) {
+      result = result.filter(
+        (lens) =>
+          lens.name.toLowerCase().includes(search.toLowerCase()) ||
+          lens.description.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    if (country) {
+      result = result.filter((lens) => lens.country === country);
+    }
+
+    if (state) {
+      result = result.filter((lens) => lens.state === state);
+    }
+
+    result.sort((a, b) => {
+      if (sortOrder === "latest") {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      } else {
+        return new Date(a.createdAt) - new Date(b.createdAt);
+      }
+    });
+
+    setFilteredLenses(result);
+  }, [search, country, state, sortOrder, lenses]);
+
+  const countries = [...new Set(lenses.map((lens) => lens.country))];
+  const states = [...new Set(lenses.map((lens) => lens.state))];
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-      }}
-    >
+    <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <Navbar />
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: 2,
-          height: "55vh",
-          p: 1,
-          flexDirection: { xs: "column", md: "row" },
-        }}
-      >
-        <Box
-          sx={{
-            backgroundImage: `url(loginmarker.jpeg)`,
-            backgroundSize: "400px",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            borderRadius: 1,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            border: "1px solid gray",
-            width: "100%",
-            height: "100%",
-            p: 1,
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: { xs: 20, md: 30 },
-              textAlign: "center",
-              color: "inherit",
-            }}
-          >
-            Login, create and share lenses and lot more...
-          </Typography>
-        </Box>
-        <Typography
-          to="/lens"
-          component={Link}
-          sx={{
-            backgroundImage: `url(mapmarkers.png)`,
-            backgroundSize: "400px",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            borderRadius: 1,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            border: "1px solid gray",
-            width: "100%",
-            height: "100%",
-            padding: "0.5rem",
-            textDecoration: "none",
-            color: "inherit",
-            fontSize: { xs: 20, md: 30 },
-          }}
-        >
-          Explore basic features as a guest
+      <Box sx={{ flexGrow: 1, padding: 3 }}>
+        <Typography variant="h4" gutterBottom>
+          Explore Lenses
         </Typography>
-      </Box>
 
-      <Box
-        sx={{
-          margin: "2rem 0.5rem",
-          minHeight: "45vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "start",
-          borderRadius: 1,
-          alignItems: "center",
-        }}
-      >
-        <Typography
-          sx={{
-            fontSize: { xs: 20, md: 25 },
-            textAlign: "center",
-            color: "inherit",
-          }}
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          spacing={2}
+          sx={{ mt: 3, mb: 5 }}
         >
-          Top lenses this week
-        </Typography>
-        <LensTable lenses={lenses} />
+          <TextField
+            label="Search"
+            variant="outlined"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            InputProps={{
+              startAdornment: <SearchIcon />,
+            }}
+            fullWidth
+          />
+          <FormControl fullWidth>
+            <InputLabel>Country</InputLabel>
+            <Select
+              value={country}
+              label="Country"
+              onChange={(e) => setCountry(e.target.value)}
+            >
+              <MenuItem value="">All</MenuItem>
+              {countries.map((c) => (
+                <MenuItem key={c} value={c}>
+                  {c}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel>State</InputLabel>
+            <Select
+              value={state}
+              label="State"
+              onChange={(e) => setState(e.target.value)}
+            >
+              <MenuItem value="">All</MenuItem>
+              {states.map((s) => (
+                <MenuItem key={s} value={s}>
+                  {s}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel>Sort</InputLabel>
+            <Select
+              value={sortOrder}
+              label="Sort"
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <MenuItem value="latest">Latest</MenuItem>
+              <MenuItem value="oldest">Oldest</MenuItem>
+            </Select>
+          </FormControl>
+        </Stack>
+
+        <LensesGrid lenses={filteredLenses} />
       </Box>
       <Footer />
     </Box>

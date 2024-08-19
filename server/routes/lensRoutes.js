@@ -1,9 +1,10 @@
 const express = require('express');
 
-const { createLens } = require('../controllers/lensController');
+const { getLens, getLenses, createLens } = require('../controllers/lensController');
 const router = express.Router();
 
-
+router.get('/', getLenses);
 router.post('/', createLens);
+router.get('/:id', getLens);
 
 module.exports = router;

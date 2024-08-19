@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { generateUniqueId } from "../../utils";
+import { createMarker, deleteMarker, updateMarker } from "../../api/marker";
 import MapContext from "./MapContext";
 
 export const MapProvider = ({ children }) => {
@@ -8,7 +8,7 @@ export const MapProvider = ({ children }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [routingMode, setRoutingMode] = useState(false);
   const [centerLatLong, setCenterLatLong] = useState([1, 15]);
-  const [markers, setMarkers] = useState(getSavedMarkers());
+  const [lens, setLens] = useState(null);
   const maxBounds = [
     [12.74116988678989, 75.09318351745607],
     [12.797405423615684, 75.22253036499025],
@@ -32,89 +32,108 @@ export const MapProvider = ({ children }) => {
     );
   }, []);
 
-  function getSavedMarkers() {
-    return JSON.parse(localStorage.getItem("markers")) || [];
-  }
-
-  function setSavedMarkers(markers) {
-    try {
-      localStorage.setItem("markers", JSON.stringify(markers));
-    } catch (e) {
-      console.error("Failed to update localStorage:", e);
-    }
-  }
-
-  function addMarker() {
-    const id = generateUniqueId();
-
+  async function addMarker() {
     if (!(markerData.title && markerData.category)) {
       return toast.error("You must provide a title and category");
     }
+
     const newMarker = {
       ...markerData,
-      id,
+      lensId: lens._id,
+      location: {
+        type: "Point",
+        coordinates: [markerData.lat, markerData.lng],
+      },
     };
-    setMarkers([...markers, newMarker]);
 
-    const savedMarkers = getSavedMarkers();
+    const response = await createMarker(newMarker);
 
-    savedMarkers.push(newMarker);
-    setSavedMarkers(savedMarkers);
+    setLens({
+      ...lens,
+      markers: [...lens.markers, response.data.data],
+    });
+
     setModalVisible(false);
     toast.success("Marker added");
     setMarkerData({});
   }
 
-  function deleteMarker(id) {
-    const updatedMarkers = markers.filter((marker) => marker.id !== id);
-    setMarkers([...updatedMarkers]);
-    setSavedMarkers(updatedMarkers);
-    toast.success("Marker deleted");
-    setRoutingMode(false);
+  async function removeMarker(id) {
+    try {
+      const response = await deleteMarker(id);
+      if (response.data.status === "success") {
+        const updatedMarkers = lens.markers.filter(
+          (marker) => marker._id !== id
+        );
+
+        setLens({
+          ...lens,
+          markers: [...updatedMarkers],
+        });
+
+        toast.success("Marker deleted");
+        setRoutingMode(false);
+      } else {
+        throw new Error();
+      }
+    } catch (error) {
+      toast.success("Error while deleting marker");
+    }
   }
 
-  const updateMarkerPosition = (id, { lat, lng }) => {
-    const updatedMarkers = markers.map((marker) => {
-      if (marker.id === id) {
-        return {
-          ...marker,
-          lat,
-          lng,
-        };
+  const updateMarkerPosition = async (id, { lat, lng }) => {
+    try {
+      const response = await updateMarker(id, {
+        location: {
+          type: "Point",
+          coordinates: [lat, lng],
+        },
+      });
+      if (response.data.status === "success") {
+        const updatedMarkers = lens.markers.map((marker) => {
+          if (marker._id === id) {
+            return {
+              ...marker,
+              location: {
+                type: "Point",
+                coordinates: [lat, lng],
+              },
+            };
+          }
+
+          return marker;
+        });
+
+        setLens({
+          ...lens,
+          markers: updatedMarkers,
+        });
+      } else {
+        throw new Error("Error while updating marker");
       }
-
-      return marker;
-    });
-
-    setMarkers([...updatedMarkers]);
-    let savedMarkers = getSavedMarkers();
-    const savedMarker = savedMarkers.find((marker) => marker.id === id);
-
-    if (savedMarker) {
-      savedMarker.lat = lat;
-      savedMarker.lng = lng;
+    } catch (error) {
+      toast.error("Could not update marker");
     }
-
-    setSavedMarkers(savedMarkers);
   };
 
   const contextValue = {
-    markers,
-    setMarkers,
+    markers: lens?.markers,
     modalVisible,
     setModalVisible,
     markerData,
     setMarkerData,
     addMarker,
-    deleteMarker,
+    removeMarker,
     updateMarkerPosition,
     centerLatLong,
     maxBounds,
-    markerCount: markers.length,
+    markerCount: lens?.markers?.length,
     routingMode,
     setRoutingMode,
     sidebarCollapsed,
-    setSidebarCollapsed
+    setSidebarCollapsed,
+    lens,
+    setLens,
   };
 
   return (

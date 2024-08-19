@@ -1,33 +1,31 @@
+import { ThumbDown, ThumbUp } from "@mui/icons-material/";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import {ThumbDown,ThumbUp} from '@mui/icons-material/';
 import { Box, Typography } from "@mui/material";
 import L from "leaflet";
-import { useCallback, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Marker, Popup } from "react-leaflet";
 import { useMapContext } from "../../contexts/MapContext";
 const MarkerComponent = ({ marker, index, totalMarkers }) => {
-  const { updateMarkerPosition, deleteMarker, routingMode } = useMapContext();
+  const { updateMarkerPosition, removeMarker, routingMode } = useMapContext();
   const markerRef = useRef(null);
   const eventHandlers = useMemo(
     () => ({
       dragend() {
         const markerElement = markerRef.current;
         if (markerElement != null) {
-          updateMarkerPosition(marker.id, markerElement.getLatLng());
+          updateMarkerPosition(marker._id, markerElement.getLatLng());
         }
       },
     }),
-    [marker.id, updateMarkerPosition]
+    [marker._id, updateMarkerPosition]
   );
 
-  const handleDeleteClick = useCallback(
-    (e) => {
-      e.stopPropagation();
-      deleteMarker(marker.id);
-    },
-    [deleteMarker, marker.id]
-  );
+  const handleDeleteClick = (e) => {
+    e.stopPropagation();
+    removeMarker(marker._id);
+  };
+
   let markerColor;
   if (index === 0) {
     markerColor = "green";
@@ -59,6 +57,7 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
   });
 
   const icon = routingMode ? customIcon : new L.Icon.Default();
+  const position = marker.location.coordinates;
 
   return (
     <Marker
@@ -66,7 +65,7 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
       ref={markerRef}
       draggable
       icon={icon}
-      position={[marker.lat, marker.lng]}
+      position={position}
     >
       <Popup>
         <Typography variant="h6">{marker.title}</Typography>
@@ -80,7 +79,7 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
         {marker?.image && (
           <img
             src={marker.image}
-            style={{ maxWidth: "130px" }}
+            style={{ maxWidth: "130px", borderRadius: "5px" }}
             alt="marker-image"
           />
         )}
@@ -90,13 +89,13 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "flex-start",
-            gap:3
+            gap: 3,
           }}
         >
-       
           <Typography variant="body1" noWrap>
             <ThumbUp
               fontSize="small"
+              color="primary"
               sx={{ verticalAlign: "middle", marginRight: 1.5 }}
             />
             {77}
@@ -104,6 +103,7 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
           <Typography variant="body1" noWrap>
             <ThumbDown
               fontSize="small"
+              color="primary"
               sx={{ verticalAlign: "middle", marginRight: 1.5 }}
             />
             {77}

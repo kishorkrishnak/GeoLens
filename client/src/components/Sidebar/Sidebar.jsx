@@ -9,7 +9,7 @@ import CurrentWeather from "./CurrentWeather";
 import CreatorCard from "./LensDetails/CreatorCard";
 import LensStats from "./LensDetails/LensStats";
 import ShareButton from "./LensDetails/ShareButton";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Sidebar = () => {
   const [weather, setWeather] = useState(null);
@@ -25,7 +25,7 @@ const Sidebar = () => {
   } = useMapContext();
 
   const { user } = useAuthContext();
-
+  const navigate = useNavigate();
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
@@ -96,10 +96,12 @@ const Sidebar = () => {
             }}
           >
             <Box
+              onClick={() => navigate("/")}
               sx={{
                 marginTop: 2,
                 fontWeight: 600,
                 display: "flex",
+                cursor: "pointer",
                 gap: 2,
                 alignItems: "center",
                 justifyContent: "start",
@@ -118,6 +120,7 @@ const Sidebar = () => {
             <Button
               sx={{
                 marginTop: 1,
+                color: "white",
               }}
               onClick={() => {
                 if (markerCount < 2 && !routingMode)
@@ -128,7 +131,7 @@ const Sidebar = () => {
                 });
               }}
               variant="contained"
-              color={routingMode ? "error" : "success"}
+              color={routingMode ? "warning" : "success"}
             >
               {routingMode ? "Disable Routing" : "Enable Routing"}
             </Button>

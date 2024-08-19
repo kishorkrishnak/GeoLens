@@ -28,7 +28,14 @@ function UserProfile() {
               <IconButton onClick={() => setEditProfile((ele) => !ele)}>
                 {editProfile ? <CloseRoundedIcon /> : <EditRoundedIcon />}
               </IconButton>
-              <Button type="button" variant="contained" color="error">
+              <Button
+                sx={{
+                  color: "white",
+                }}
+                type="button"
+                variant="contained"
+                color="warning"
+              >
                 Logout
               </Button>
             </div>
@@ -70,9 +77,16 @@ function UserProfile() {
           </div>
 
           {editProfile && (
-             <Button type="button" variant="contained" color="success">
-           Save
-           </Button>
+            <Button
+              sx={{
+                color: "white",
+              }}
+              type="button"
+              variant="contained"
+              color="success"
+            >
+              Save
+            </Button>
           )}
         </div>
       </div>

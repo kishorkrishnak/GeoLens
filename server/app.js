@@ -4,11 +4,13 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
 
+require("./config/dbConnect");
+
 const authRouter = require('./routes/authRoutes');
 const lensRouter = require('./routes/lensRoutes');
+const markerRouter = require('./routes/markerRoutes');
 
 const cookieParser = require("cookie-parser");
-require("./config/dbConnect");
 
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -23,6 +25,7 @@ app.options(process.env.REMOTE, cors());
 
 app.use('/api/v1/auth/', authRouter);
 app.use('/api/v1/lens/', lensRouter);
+app.use('/api/v1/marker/', markerRouter);
 
 const port = process.env.PORT || 5000;
 

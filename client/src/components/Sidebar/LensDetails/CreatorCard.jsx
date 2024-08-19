@@ -2,8 +2,11 @@ import { Avatar, Box, IconButton, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useMapContext } from "../../../contexts/MapContext";
 
-const CreatorCard = ({ creator }) => {
-  const { sidebarCollapsed } = useMapContext();
+const CreatorCard = () => {
+  const {
+    sidebarCollapsed,
+    lens: { creator },
+  } = useMapContext();
 
   return (
     <Link

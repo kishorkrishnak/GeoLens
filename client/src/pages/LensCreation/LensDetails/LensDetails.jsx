@@ -1,21 +1,20 @@
-import { useState } from "react";
 import {
   Box,
   Button,
+  Chip,
+  Container,
+  Stack,
   TextField,
   Typography,
-  Container,
-  Chip,
-  Stack,
 } from "@mui/material";
-import Footer from "../../../components/Footer/Footer";
-import Navbar from "../../../components/Navbar/Navbar";
-import { useLensCreationContext } from "../contexts/LensCreationContext";
-import axios from "axios";
-import useAuthContext from "../../../contexts/AuthContext/useAuthContext";
-import { createLens } from "../../../api/lens";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { createLens } from "../../../api/lens";
+import Footer from "../../../components/Footer/Footer";
+import Navbar from "../../../components/Navbar/Navbar";
+import useAuthContext from "../../../contexts/AuthContext/useAuthContext";
+import { useLensCreationContext } from "../contexts/LensCreationContext";
 
 function LensDetails() {
   const navigate = useNavigate();
@@ -46,7 +45,6 @@ function LensDetails() {
 
       const response = await createLens(lensData);
       console.log(response);
-      // Clear form fields
       setName("");
       setDescription("");
       setTagInput("");
@@ -54,9 +52,9 @@ function LensDetails() {
       setError(null);
 
       toast.success("Hurray! lens created successfully");
-      navigate(`/lens/${response.data.data.lens._id}`);
+      navigate(`/lens/${response.data.data._id}`);
     } catch (err) {
-      setError("Failed to create lens. Please try again.");
+      toast.error("Failed to create lens. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -73,15 +71,25 @@ function LensDetails() {
     setTags(tags.filter((tag) => tag !== tagToDelete));
   };
 
+  useEffect(() => {
+    if (!centerLatLong && !centerLatLong.length === 2) navigate("/lens/new");
+  }, [centerLatLong, navigate]);
+
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
+    >
       <Navbar />
       <Container
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          minHeight: "100vh",
+          flexGrow: 1,
           padding: 2,
         }}
       >
@@ -92,7 +100,7 @@ function LensDetails() {
             display: "flex",
             flexDirection: "column",
             gap: 2,
-            maxWidth: 500, // Adjust this value as needed
+            maxWidth: 500,
             width: "100%",
           }}
         >
@@ -117,7 +125,7 @@ function LensDetails() {
           />
           <Stack direction="row" spacing={1} alignItems="center">
             <TextField
-              label="Add Tag"
+              label="Add Tags"
               variant="outlined"
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value)}
@@ -127,12 +135,16 @@ function LensDetails() {
               type="button"
               variant="contained"
               color="primary"
+              sx={{
+                height: "100%",
+                py: 1.87,
+              }}
               onClick={handleAddTag}
             >
-              Add
+              Add Tag
             </Button>
           </Stack>
-          <Stack direction="row" spacing={1} mt={2}>
+          <Stack direction="row" spacing={1}>
             {tags.map((tag, index) => (
               <Chip
                 key={index}
@@ -145,15 +157,20 @@ function LensDetails() {
           <Button
             type="submit"
             variant="contained"
-            color="primary"
+            color="success"
             disabled={loading}
+            sx={{
+              py: 2,
+              color: "white",
+              textTransform: "none",
+            }}
           >
             {loading ? "Creating..." : "Create Lens"}
           </Button>
         </Box>
       </Container>
       <Footer />
-    </>
+    </Box>
   );
 }
 

@@ -64,5 +64,12 @@ const LensSchema = new Schema(
 
 const Lens = mongoose.model('Lens', LensSchema);
 LensSchema.index({ location: '2dsphere' });
-
+LensSchema.pre('remove', async function (next) {
+    try {
+        await mongoose.model('Marker').deleteMany({ _id: { $in: this.markers } });
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
 module.exports = Lens;

@@ -1,4 +1,4 @@
-import { createTheme, ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { lazy, Suspense } from "react";
 import { Toaster } from "react-hot-toast";
@@ -9,8 +9,9 @@ import SuspenseFallback from "./components/SuspenseFallback";
 import useAuthContext from "./contexts/AuthContext/useAuthContext";
 import { MapProvider } from "./contexts/MapContext";
 import PrivateRoute from "./PrivateRoute";
+import theme from "./theme";
 
-const LazyMapPage = lazy(() => import("./pages/MapPage"));
+const LazyLens = lazy(() => import("./pages/Lens"));
 const LazyLenses = lazy(() => import("./pages/Lenses"));
 
 const LazyHome = lazy(() => import("./pages/Home"));
@@ -18,7 +19,8 @@ const LazyUserProfile = lazy(() => import("./pages/UserProfile"));
 const LazyLensCreation = lazy(() => import("./pages/LensCreation"));
 
 const App = () => {
-  const defaultTheme = createTheme();
+  const defaultTheme = theme;
+
   const { user, authCheckComplete } = useAuthContext();
 
   return (
@@ -36,10 +38,14 @@ const App = () => {
                     />
                     <Routes>
                       <Route path="/" element={<LazyHome />} />
-                      <Route path="/lens" element={<LazyMapPage />} />
+                      {/* <Route path="/lens" element={<LazyLens />} /> */}
                       <Route
                         path="/user/:id/lenses"
-                        element={<LazyMapPage />}
+                        element={<LazyLenses />}
+                      />
+                            <Route
+                        path="/lenses"
+                        element={<LazyLenses />}
                       />
                       <Route
                         path="/lens/new/*"
@@ -50,7 +56,7 @@ const App = () => {
                           />
                         }
                       />{" "}
-                      <Route path="/lens/:id" element={<LazyLenses />} />
+                      <Route path="/lens/:id" element={<LazyLens />} />
                       <Route
                         path="/user/:id"
                         element={

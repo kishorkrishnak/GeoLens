@@ -87,7 +87,6 @@ const MarkerModal = () => {
               width: "100%",
               padding: "8px",
               fontSize: "16px",
-              fontFamily: "Roboto, sans-serif",
               resize: "none",
               border: "1px solid #b8b8b8",
               borderRadius: "4px",
@@ -136,7 +135,14 @@ const MarkerModal = () => {
             )}
           </Box>
 
-          <Button onClick={addMarker} variant="contained" color="success">
+          <Button
+            sx={{
+              color: "white",
+            }}
+            onClick={addMarker}
+            variant="contained"
+            color="success"
+          >
             Add
           </Button>
         </Box>

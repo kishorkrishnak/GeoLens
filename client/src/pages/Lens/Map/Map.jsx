@@ -1,30 +1,31 @@
 import L from "leaflet";
 import { MapContainer, TileLayer } from "react-leaflet";
 import { uid } from "react-uid";
-import { useMapContext } from "../../contexts/MapContext";
-import MapClickHandler from "../MapClickHandler";
-import MarkerComponent from "../Marker/MarkerComponent";
-import MarkerModal from "../Modals/MarkerModal/MarkerModal";
-import RecenterMap from "../RecenterMap";
-import RoutingMachine from "../RoutingMachine/RoutingMachine";
+import MapClickHandler from "../../../components/MapClickHandler";
+import MarkerComponent from "../../../components/Marker/MarkerComponent";
+import MarkerModal from "../../../components/Modals/MarkerModal/MarkerModal";
+import RecenterMap from "../../../components/RecenterMap";
+import RoutingMachine from "../../../components/RoutingMachine/RoutingMachine";
+import { useMapContext } from "../../../contexts/MapContext";
 
-function MapComponent() {
-  const { centerLatLong, modalVisible, markers, routingMode } = useMapContext();
-
+const Map = () => {
+  const { modalVisible, routingMode, lens } = useMapContext();
+  const markers = lens.markers;
   const wayPoints = markers.map((marker) => L.latLng(marker.lat, marker.lng));
+  const centerCoordinates = lens.location.coordinates;
 
   return (
     <>
       <MapContainer
         className="map"
-        center={centerLatLong}
+        center={centerCoordinates}
         zoom={14}
         scrollWheelZoom={true}
         zoomControl={false}
         maxBoundsViscosity={1}
       >
         {/* forcefully recenter map when coordinates changes */}
-        <RecenterMap lat={centerLatLong[0]} lng={centerLatLong[1]} />
+        <RecenterMap lat={centerCoordinates[0]} lng={centerCoordinates[1]} />
 
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -41,12 +42,12 @@ function MapComponent() {
           />
         ))}
 
-        <MarkerModal modalVisible={modalVisible} />
+        <MarkerModal lensId={lens._id} modalVisible={modalVisible} />
         {routingMode && <RoutingMachine waypoints={wayPoints} />}
         <MapClickHandler />
       </MapContainer>
     </>
   );
-}
+};
 
-export default MapComponent;
+export default Map;

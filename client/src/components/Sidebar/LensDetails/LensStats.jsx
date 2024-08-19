@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { ThumbUp, Visibility } from "@mui/icons-material";
 import { useMapContext } from "../../../contexts/MapContext";
 const LensStats = () => {
-  const { sidebarCollapsed } = useMapContext();
+  const { sidebarCollapsed ,lens} = useMapContext();
 
   return (
     <Box
@@ -21,7 +21,7 @@ const LensStats = () => {
         noWrap
       >
         <Visibility fontSize="small" sx={{ marginRight: 1.5 }} />
-        Views: {345}
+        Views:  {lens?.views  || 0}
       </Typography>
       <Typography
         display={"flex"}
@@ -34,7 +34,7 @@ const LensStats = () => {
           fontSize="small"
           sx={{ verticalAlign: "middle", marginRight: 1.5 }}
         />
-        Likes: {77}
+        Likes: {lens?.likes  || 0}
       </Typography>
     </Box>
   );

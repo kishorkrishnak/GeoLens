@@ -16,9 +16,9 @@ import useAuthContext from "../../contexts/AuthContext/useAuthContext";
 import { logoutUser } from "../../api/auth";
 import GoogleLogin from "../GoogleLogin";
 
-const pages = ["Your Lenses", "Explore"];
+const pages = ["Explore", "About"];
 
-function Navbar() {
+const Navbar = () => {
   const { user, setUser } = useAuthContext();
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -58,7 +58,7 @@ function Navbar() {
     },
   ];
   return (
-    <AppBar position="static">
+    <AppBar color="info" elevation={0} position="static" sx={{ py: 0.5 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box
@@ -79,10 +79,10 @@ function Navbar() {
             href="/"
             sx={{
               ml: 1,
-              mr: 2,
+              mr: 3,
               display: { xs: "none", md: "flex" },
               fontWeight: 500,
-              color: "inherit",
+              color: "white",
               textDecoration: "none",
             }}
           >
@@ -101,7 +101,6 @@ function Navbar() {
               <MenuIcon />
             </IconButton>
             <Menu
-              id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: "bottom",
@@ -158,7 +157,12 @@ function Navbar() {
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{
+                  mt: 0.4,
+                  color: "white",
+                  display: "block",
+                  textTransform: "none",
+                }}
               >
                 {page}
               </Button>
@@ -168,7 +172,7 @@ function Navbar() {
           {user ? (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0,border:"2px solid white" }}>
                   <Avatar alt={user?.name} src={user?.image} />
                 </IconButton>
               </Tooltip>
@@ -196,7 +200,7 @@ function Navbar() {
                       handleCloseUserMenu();
                     }}
                   >
-                    <Typography textAlign="center">
+                    <Typography textTransform={"none"} textAlign="center">
                       {setting.setting}
                     </Typography>
                   </MenuItem>
@@ -210,5 +214,6 @@ function Navbar() {
       </Container>
     </AppBar>
   );
-}
+};
+
 export default Navbar;

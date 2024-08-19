@@ -11,7 +11,7 @@ const GoogleLogin = () => {
       if (authResult["code"]) {
         const result = await googleAuth(authResult.code);
         setUser(result.data.data.user);
-       toast.success("Successfuly logged in");
+        toast.success("Successfuly logged in");
       } else {
         console.log(authResult);
         throw new Error(authResult);
@@ -30,9 +30,12 @@ const GoogleLogin = () => {
   return (
     <Button
       onClick={googleLogin}
+      sx={{
+        color:"white"
+      }}
       type="submit"
       color="success"
-      startIcon={<GoogleIcon/>}
+      startIcon={<GoogleIcon />}
       variant="contained"
     >
       Login

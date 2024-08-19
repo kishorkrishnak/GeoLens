@@ -26,6 +26,7 @@ const SelectCenter = () => {
           left: 0,
           right: 0,
           margin: "0 auto",
+          color:"white",
           width: "fit-content",
         }}
         color="success"
