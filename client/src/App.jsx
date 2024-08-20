@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@mui/material";
+import { Box, LinearProgress, ThemeProvider } from "@mui/material";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { lazy, Suspense } from "react";
 import { Toaster } from "react-hot-toast";
@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import ScrollToTop from "./components/ScrollToTop";
 import SuspenseFallback from "./components/SuspenseFallback";
-import {useAuthContext} from "./contexts/AuthContext";
+import { useAuthContext } from "./contexts/AuthContext";
 import { MapProvider } from "./contexts/MapContext";
 import PrivateRoute from "./PrivateRoute";
 import theme from "./theme";
@@ -17,11 +17,12 @@ const LazyYourLenses = lazy(() => import("./pages/YourLenses"));
 const LazyHome = lazy(() => import("./pages/Home"));
 const LazyUserProfile = lazy(() => import("./pages/UserProfile"));
 const LazyLensCreation = lazy(() => import("./pages/LensCreation"));
+const LazyEditLens = lazy(() => import("./pages/EditLens"));
 
 const App = () => {
   const defaultTheme = theme;
 
-  const { user, authCheckComplete } = useAuthContext();
+  const { user, authCheckComplete, loading } = useAuthContext();
 
   return (
     <>
@@ -32,6 +33,20 @@ const App = () => {
               <MapProvider>
                 <BrowserRouter>
                   <ScrollToTop>
+                    {loading && (
+                      <Box
+                        sx={{
+                          width: "100%",
+                          position: "fixed",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          zIndex: 1000000,
+                        }}
+                      >
+                        <LinearProgress />
+                      </Box>
+                    )}
                     <Toaster
                       position="top-right"
                       containerStyle={{ zIndex: 99999 }}
@@ -45,9 +60,26 @@ const App = () => {
                           <PrivateRoute
                             user={user}
                             component={LazyLensCreation}
+                            state={{
+                              operation: "create",
+                            }}
                           />
                         }
                       />
+
+                      <Route
+                        path="/lens/edit/:id/*"
+                        element={
+                          <PrivateRoute
+                            user={user}
+                            component={LazyEditLens}
+                            state={{
+                              operation: "edit",
+                            }}
+                          />
+                        }
+                      />
+                      
                       <Route path="/lens/:id" element={<LazyLens />} />
 
                       <Route

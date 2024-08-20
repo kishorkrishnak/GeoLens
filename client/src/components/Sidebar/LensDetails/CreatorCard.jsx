@@ -25,7 +25,6 @@ const CreatorCard = () => {
         sx={{
           p: 0,
           position: sidebarCollapsed ? "absolute" : "",
-
           left: sidebarCollapsed ? -3.5 : "",
           bottom: sidebarCollapsed ? 20 : "",
           marginLeft: sidebarCollapsed ? 1.5 : "",

@@ -1,12 +1,12 @@
 import { OpenStreetMapProvider } from "leaflet-geosearch";
 import { useMemo, useRef } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import RecenterMap from "../../../components/RecenterMap";
-import SearchControl from "../../../components/SearchControl/SearchControl";
-import { useLensCreationContext } from "../contexts/LensCreationContext";
+import RecenterMap from "../../components/RecenterMap";
+import SearchControl from "../../components/SearchControl/SearchControl";
+import { useLensCreationContext } from "../LensCreation/contexts/LensCreationContext";
 import MapClickHandler from "./MapClickHandler";
 
-function MapComponent() {
+const MapComponent = () => {
   const { centerLatLong, setCenterLatLong } = useLensCreationContext();
   const prov = new OpenStreetMapProvider();
 
@@ -70,6 +70,6 @@ function MapComponent() {
       </MapContainer>
     </>
   );
-}
+};
 
 export default MapComponent;

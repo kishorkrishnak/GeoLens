@@ -28,7 +28,7 @@ const MarkerSchema = new Schema(
         address: {
             type: String,
         },
-        
+
         location: {
             type: {
                 type: String,

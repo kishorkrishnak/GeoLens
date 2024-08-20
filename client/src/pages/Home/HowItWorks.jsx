@@ -1,20 +1,21 @@
-import React from "react";
 import CreateIcon from "@mui/icons-material/Create";
-import ShareIcon from "@mui/icons-material/Share";
 import PublicIcon from "@mui/icons-material/Public";
+import ShareIcon from "@mui/icons-material/Share";
 import { Avatar, Container, Grid, Paper, Typography } from "@mui/material";
+
 const HowItWorks = () => {
   return (
     <Container sx={{ my: 8 }}>
-      <Typography variant="h4" align="center" gutterBottom>
+      <Typography variant="h4" fontWeight={500} align="center">
         How It Works
       </Typography>
-      <Grid container spacing={4} sx={{ mt: 4 }}>
+      <Grid container spacing={4} sx={{ mt: { xs: 1, md: 2 } }}>
         <Grid item xs={12} md={4}>
           <Paper
-            elevation={3}
+            elevation={2}
             sx={{
-              p: 4,
+              px: 4,
+              py: { xs: 5, md: 4 },
               height: "100%",
               display: "flex",
               flexDirection: "column",
@@ -22,22 +23,23 @@ const HowItWorks = () => {
             }}
           >
             <Avatar sx={{ bgcolor: "primary.main", mb: 2 }}>
-              <CreateIcon fontSize="medium" />
+              <CreateIcon />
             </Avatar>
             <Typography variant="h6" align="center" gutterBottom>
               Create Lenses
             </Typography>
             <Typography variant="body1" align="center">
-              Create maps with markers to showcase best locations and
-              landmarks in your region.
+              Create maps with markers to showcase best locations and landmarks
+              in your region.
             </Typography>
           </Paper>
         </Grid>
         <Grid item xs={12} md={4}>
           <Paper
-            elevation={3}
+            elevation={2}
             sx={{
-              p: 3,
+              px: 4,
+              py: { xs: 5, md: 4 },
               height: "100%",
               display: "flex",
               flexDirection: "column",
@@ -58,9 +60,10 @@ const HowItWorks = () => {
         </Grid>
         <Grid item xs={12} md={4}>
           <Paper
-            elevation={3}
+            elevation={2}
             sx={{
-              p: 3,
+              px: 4,
+              py: { xs: 5, md: 4 },
               height: "100%",
               display: "flex",
               flexDirection: "column",
@@ -74,7 +77,8 @@ const HowItWorks = () => {
               Explore Community
             </Typography>
             <Typography align="center">
-              Discover local hotspots, hidden gems, and community favorites for new adventures
+              Discover local hotspots, hidden gems, and community favorites for
+              new adventures
             </Typography>
           </Paper>
         </Grid>

@@ -34,7 +34,7 @@ const LensStats = () => {
           fontSize="small"
           sx={{ verticalAlign: "middle", marginRight: 1.5 }}
         />
-        Likes: {lens?.likes  || 0}
+        Likes: {lens?.likes?.length || 0}
       </Typography>
     </Box>
   );

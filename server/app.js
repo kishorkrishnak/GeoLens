@@ -19,6 +19,7 @@ app.use(
     extended: true,
   })
 );
+
 app.enable('trust proxy');
 app.use(cors({ credentials: true, origin: process.env.REMOTE }));
 app.options(process.env.REMOTE, cors());

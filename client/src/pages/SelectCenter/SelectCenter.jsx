@@ -1,18 +1,19 @@
 import { Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import Footer from "../../../components/Footer/Footer";
-import Navbar from "../../../components/Navbar/Navbar";
+import { useNavigate, useParams } from "react-router-dom";
+import Footer from "../../components/Footer/Footer";
+import Navbar from "../../components/Navbar/Navbar";
 import MapComponent from "./MapComponent";
 
-const SelectCenter = () => {
+const SelectCenter = ({ operation }) => {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const navigationUrl = operation==="edit" ?`/lens/edit/${id}/details` :"/lens/new/details"
   return (
     <div className="App">
       <Navbar />
-
       <Button
         onClick={() => {
-          navigate("/lens/new/details");
+          navigate(navigationUrl);
         }}
         sx={{
           display: "flex",
@@ -26,7 +27,7 @@ const SelectCenter = () => {
           left: 0,
           right: 0,
           margin: "0 auto",
-          color:"white",
+          color: "white",
           width: "fit-content",
         }}
         color="success"

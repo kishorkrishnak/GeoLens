@@ -12,10 +12,14 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getLenses } from "../../api/lens";
+import { deleteLens, getLenses } from "../../api/lens";
 import Footer from "../../components/Footer/Footer";
 import LensesGrid from "../../components/LensesGrid";
 import Navbar from "../../components/Navbar/Navbar";
+import { useAuthContext } from "../../contexts/AuthContext";
+import useModal from "../../hooks/useModal";
+import ConfirmationModal from "../../components/Modals/MarkerModal/ConfirmationModal";
+import toast from "react-hot-toast";
 
 const YourLenses = () => {
   const [lenses, setLenses] = useState([]);
@@ -24,8 +28,34 @@ const YourLenses = () => {
 
   const { id } = useParams();
 
+  const { setLoading } = useAuthContext();
+  const { isShowing, toggle } = useModal();
+  const [lensIdToDelete, setLensIdToDelete] = useState(null);
+
+  const deleteLensById = async () => {
+    setLoading(true);
+    try {
+      const response = await deleteLens(lensIdToDelete);
+      if (response.data.status === "success") {
+        const updatedLenses = lenses.filter(
+          (lens) => lens._id !== lensIdToDelete
+        );
+        setLenses([...updatedLenses]);
+        toast.success("Lens deleted successfully");
+      } else {
+        toast.error("Error while deleting lens");
+      }
+    } catch (error) {
+      console.error("Error fetching lenses data:", error);
+    } finally {
+      setLoading(false);
+      toggle();
+    }
+  };
+
   useEffect(() => {
     const fetchLenses = async () => {
+      setLoading(true);
       try {
         const response = await getLenses({
           search,
@@ -35,6 +65,8 @@ const YourLenses = () => {
         setLenses(response.data.data);
       } catch (error) {
         console.error("Error fetching lenses data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -52,7 +84,7 @@ const YourLenses = () => {
       }}
     >
       <Navbar />
-      <Container sx={{ flexGrow: 1, padding: 6 }}>
+      <Container sx={{ flexGrow: 1, paddingY: { xs: 5, md: 6 } }}>
         <Box>
           <Typography variant="h4" gutterBottom>
             Manage Your Lenses
@@ -89,7 +121,12 @@ const YourLenses = () => {
           </Stack>
 
           {lenses.length > 0 ? (
-            <LensesGrid lenses={lenses} />
+            <LensesGrid
+              toggle={toggle}
+              setLensIdToDelete={setLensIdToDelete}
+              allowEdit
+              lenses={lenses}
+            />
           ) : (
             <Box
               sx={{
@@ -113,6 +150,12 @@ const YourLenses = () => {
             </Box>
           )}
         </Box>
+        <ConfirmationModal
+          title={"Are you sure want to delete this lens?"}
+          isOpen={isShowing}
+          onClose={() => toggle()}
+          onConfirm={() => deleteLensById(lensIdToDelete)}
+        />
       </Container>
       <Footer />
     </Box>

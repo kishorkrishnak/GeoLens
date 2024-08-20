@@ -65,6 +65,10 @@ exports.getLens = async (req, res, next) => {
       });
     }
 
+    lens.views++
+
+    await lens.save()
+
     res.status(201).json({
       status: "success",
       data: lens,
@@ -75,6 +79,68 @@ exports.getLens = async (req, res, next) => {
       status: "error",
       message: "Internal server error",
       data: null,
+    });
+  }
+};
+exports.getLensCenterCoordinates = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const lens = await Lens.findById(id)
+
+
+    if (!lens) {
+      return res.status(404).json({
+        status: "error",
+        message: "Invalid lens id",
+        data: null,
+      });
+    }
+
+
+    res.status(200).json({
+      status: "success",
+      data: lens?.location,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+exports.updateLens = async (req, res, next) => {
+  try {
+    const lensId = req.params.id;
+    const updatedLensDetails = req.body;
+
+    const updatedLens = await Lens.findByIdAndUpdate(lensId, updatedLensDetails, {
+      new: true,
+      runValidators: true
+    });
+
+    if (!updatedLens) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Lens to update not found',
+        data: null
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: "Lens updated successfully",
+      data: updatedLens
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+      data: null
     });
   }
 };
@@ -168,7 +234,8 @@ exports.deleteLens = async (req, res, next) => {
       });
     }
 
-    await lens.remove();
+    await Lens.deleteOne({ _id: id });
+
     res.status(201).json({
       status: "success",
       message: "Lens deleted successfully",

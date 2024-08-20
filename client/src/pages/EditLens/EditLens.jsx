@@ -1,9 +1,9 @@
 import { Route, Routes } from "react-router-dom";
-import LensDetails from "../LensDetails";
 import SelectCenter from "../SelectCenter";
-import { LensCreationProvider } from "./contexts/LensCreationContext";
+import LensDetails from "../LensDetails";
+import { LensCreationProvider } from "../LensCreation/contexts/LensCreationContext";
 
-const LensCreation = ({ state }) => {
+const EditLens = ({ state }) => {
   const { operation } = state;
   return (
     <LensCreationProvider operation={operation}>
@@ -18,4 +18,4 @@ const LensCreation = ({ state }) => {
   );
 };
 
-export default LensCreation;
+export default EditLens;

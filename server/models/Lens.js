@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose
 
 const LensSchema = new Schema(
-
     {
         name: {
             type: String,
@@ -55,25 +54,37 @@ const LensSchema = new Schema(
             default: 0, index: true,
         },
 
-        likes: {
-            type: Number,
-            default: 0,
-            index: true,
-        },
+        likes: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "User",
+                index: true,
+            },
+        ],
 
     },
     { timestamps: { createdAt: true } }
 
 );
 
-const Lens = mongoose.model('Lens', LensSchema);
 LensSchema.index({ location: '2dsphere' });
-LensSchema.pre('remove', async function (next) {
+
+LensSchema.pre('deleteOne', { document: false, query: true }, async function (next) {
     try {
-        await mongoose.model('Marker').deleteMany({ _id: { $in: this.markers } });
+        const doc = await this.model.findOne(this.getFilter());
+        if (doc && doc.markers && doc.markers.length > 0) {
+            await mongoose.model('Marker').deleteMany({ _id: { $in: doc.markers } });
+        }
         next();
     } catch (error) {
         next(error);
     }
 });
+
+
+const Lens = mongoose.model('Lens', LensSchema);
+
+
+
+
 module.exports = Lens;

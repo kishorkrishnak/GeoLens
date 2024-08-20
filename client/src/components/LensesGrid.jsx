@@ -9,11 +9,12 @@ import {
   CardMedia,
   Chip,
   Grid,
-  Typography
+  Stack,
+  Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
-const LensesGrid = ({ lenses }) => {
+const LensesGrid = ({ lenses, allowEdit, toggle, setLensIdToDelete }) => {
   return (
     <Grid container spacing={3}>
       {lenses.map((lens) => (
@@ -39,10 +40,15 @@ const LensesGrid = ({ lenses }) => {
                 alt={lens.name}
               />
               <CardContent sx={{ flexGrow: 1 }}>
-                <Typography gutterBottom variant="h5" component="div">
-                  {lens.name}
+                <Typography
+                  gutterBottom
+                  variant="h6"
+                  fontWeight={500}
+                  component="div"
+                >
+                  {lens?.name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" noWrap>
+                <Typography variant="body1" color="text.secondary" noWrap>
                   {lens.description}
                 </Typography>
                 <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
@@ -73,21 +79,52 @@ const LensesGrid = ({ lenses }) => {
                     />
                     <Chip
                       icon={<FavoriteIcon />}
-                      label={lens.likes}
+                      label={lens.likes?.length}
                       size="small"
                     />
                   </Box>
                 </Box>
-                <Box sx={{ mt: 2 }}>
-                  {lens.tags.map((tag) => (
-                    <Chip
-                      key={tag}
-                      label={tag}
-                      size="small"
-                      sx={{ mr: 0.5, mb: 0.5 }}
-                    />
-                  ))}
-                </Box>
+                {allowEdit && (
+                  <Stack
+                    direction="row"
+                    sx={{
+                      mt: 2,
+                    }}
+                    spacing={1}
+                    alignItems="center"
+                  >
+                    <Link
+                      to={`/lens/edit/${lens._id}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                      sx={{ mt: 2 }}
+                    >
+                      <Chip
+                        color="success"
+                        label={"Edit"}
+                        size="medium"
+                        sx={{ ml: 0, color: "white" }}
+                      />
+                    </Link>
+
+                    <Box
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        toggle();
+                        setLensIdToDelete(lens._id);
+                      }}
+                    >
+                      <Chip
+                        color="warning"
+                        label={"Delete"}
+                        size="medium"
+                        sx={{ ml: 0, color: "white" }}
+                      />
+                    </Box>
+                  </Stack>
+                )}
               </CardContent>
             </Card>
           </Link>

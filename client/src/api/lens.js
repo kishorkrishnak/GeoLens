@@ -1,8 +1,10 @@
 import axios from '../axios/Axios'
 
 const createLens = (lensData) => axios.post(`/lens/`, lensData);
-
+const getLensCenterCoordinates = (lensId) => axios.get(`/lens/${lensId}/center`);
 const getLens = (lensId) => axios.get(`/lens/${lensId}`);
+const updateLens = (lensId,lensData) => axios.put(`/lens/${lensId}`,lensData);
+const deleteLens = (lensId) => axios.put(`/lens/${lensId}`);
 
 const getLenses = (params) => {
     return axios.get(`/lens`, {
@@ -11,7 +13,9 @@ const getLenses = (params) => {
 };
 
 export {
+    getLenses,
     getLens,
     createLens,
-    getLenses
+    deleteLens,
+    updateLens,getLensCenterCoordinates
 }

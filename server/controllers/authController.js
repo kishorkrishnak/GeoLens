@@ -91,16 +91,26 @@ exports.verifyToken = async (req, res) => {
 };
 
 exports.logoutUser = (req, res) => {
-  res.cookie('jwt', '', {
-    expires: new Date(0),
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    path: '/',
-  });
+  try {
+    res.cookie('jwt', '', {
+      expires: new Date(0),
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/',
+    });
 
-  res.status(200).json({
-    status: 'success',
-    message: 'Logged out successfully',
-  });
+    res.status(200).json({
+      status: 'success',
+      message: 'Logged out successfully',
+      data: null
+
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Error while logging out',
+      data: null
+    });
+  }
 };

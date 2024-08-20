@@ -6,6 +6,7 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
+  Pagination,
   Select,
   Stack,
   TextField,
@@ -16,6 +17,7 @@ import { getLenses } from "../../api/lens";
 import Footer from "../../components/Footer/Footer";
 import LensesGrid from "../../components/LensesGrid";
 import Navbar from "../../components/Navbar/Navbar";
+import { useAuthContext } from "../../contexts/AuthContext";
 import { countryData } from "../../utils/data";
 
 const Lenses = () => {
@@ -24,24 +26,36 @@ const Lenses = () => {
   const [country, setCountry] = useState("");
   const [state, setState] = useState();
   const [sort, setSort] = useState("popular");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 6;
+
+  const { setLoading } = useAuthContext();
 
   useEffect(() => {
     const fetchLenses = async () => {
+      setLoading(true);
+
       try {
         const response = await getLenses({
           search,
           country,
           state,
           sort,
+          page,
+          limit,
         });
         setLenses(response.data.data);
+        setTotalPages(Math.ceil(response.data.total / limit));
       } catch (error) {
         console.error("Error fetching lenses data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchLenses();
-  }, [search, country, state, sort]);
+  }, [search, country, state, sort, page]);
 
   const getStatesByCountry = (country) => {
     if (!country) return [];
@@ -67,7 +81,7 @@ const Lenses = () => {
       }}
     >
       <Navbar />
-      <Container sx={{ flexGrow: 1, padding: 6 }}>
+      <Container sx={{ flexGrow: 1, paddingY: { xs: 5, md: 6 } }}>
         <Box>
           <Typography variant="h4" gutterBottom>
             Explore Lenses
@@ -80,6 +94,7 @@ const Lenses = () => {
           >
             <TextField
               label="Search"
+              placeholder="Names, places, keywords"
               variant="outlined"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -132,7 +147,17 @@ const Lenses = () => {
           </Stack>
 
           {lenses.length > 0 ? (
-            <LensesGrid lenses={lenses} />
+            <>
+              <LensesGrid lenses={lenses} />
+              <Stack spacing={2} sx={{ mt: 5, alignItems: "center" }}>
+                <Pagination
+                  count={totalPages}
+                  page={page}
+                  onChange={(event, value) => setPage(value)}
+                  color="primary"
+                />
+              </Stack>
+            </>
           ) : (
             <Box
               sx={{

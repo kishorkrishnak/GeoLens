@@ -9,12 +9,12 @@ import { getLenses } from "../../api/lens";
 import Footer from "../../components/Footer/Footer";
 import LensesGrid from "../../components/LensesGrid";
 import Navbar from "../../components/Navbar/Navbar";
-import {useAuthContext} from "../../contexts/AuthContext";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 import HowItWorks from "./HowItWorks";
 const Home = () => {
   const [lenses, setLenses] = useState([]);
-  const { user } = useAuthContext();
+  const { user, setLoading } = useAuthContext();
   const navigate = useNavigate();
 
   const handleCreateLensClick = (e) => {
@@ -25,6 +25,7 @@ const Home = () => {
 
   useEffect(() => {
     const fetchLenses = async () => {
+      setLoading(true);
       try {
         const response = await getLenses({
           sort: "popular",
@@ -33,6 +34,8 @@ const Home = () => {
         setLenses(response.data.data);
       } catch (error) {
         console.error("Error fetching lenses data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -69,7 +72,7 @@ const Home = () => {
             variant="h2"
             gutterBottom
           >
-            GeoLens: Landmark Explorer
+            GeoLens: Explore & Share
           </Typography>
           <Typography
             sx={{
@@ -108,13 +111,7 @@ const Home = () => {
         <Container>
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12} md={6}>
-              <Typography
-                variant="h3"
-                sx={{
-                  fontSize: { xs: 36, md: 46 },
-                }}
-                gutterBottom
-              >
+              <Typography variant="h4" fontWeight={500} gutterBottom>
                 Create Your Lens
               </Typography>
               <Typography variant="h6" paragraph>
@@ -170,14 +167,7 @@ const Home = () => {
           alignItems: "center",
         }}
       >
-        <Typography
-          variant="h4"
-          sx={{
-            textAlign: "center",
-            color: "inherit",
-            marginBottom: 4,
-          }}
-        >
+        <Typography variant="h4" fontWeight={500} marginBottom={4}>
           Top lenses this week
         </Typography>
         {lenses && (
@@ -203,39 +193,39 @@ const Home = () => {
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography
-                variant="h3"
-                sx={{
-                  fontSize: { xs: 36, md: 46 },
-                }}
-                gutterBottom
-              >
+              <Typography variant="h4" fontWeight={500} gutterBottom>
                 Discover the world, one lens at a time.
               </Typography>
 
               <Typography paragraph>
-                GeoLens is more than just a map—it's a gateway to your
+                GeoLens is more than just a map, it&apos;s a gateway to your
                 community&apos;s most cherished locations and untold stories.
                 Whether you&apos;re an explorer or a storyteller, GeoLens
                 empowers you to:
               </Typography>
-              <ul>
-                <li>
-                  <Typography paragraph>
-                    Unearth hidden gems and local secrets.
-                  </Typography>
-                </li>
-                <li>
-                  <Typography paragraph>
-                    Connect with like-minded adventurers.
-                  </Typography>
-                </li>
-                <li>
-                  <Typography paragraph>
-                    Share your unique perspective with the world.
-                  </Typography>
-                </li>
-              </ul>
+              <Box
+                sx={{
+                  pl: 2.09,
+                }}
+              >
+                <ul>
+                  <li>
+                    <Typography paragraph>
+                      Unearth hidden gems and local secrets.
+                    </Typography>
+                  </li>
+                  <li>
+                    <Typography paragraph>
+                      Connect with like-minded adventurers.
+                    </Typography>
+                  </li>
+                  <li>
+                    <Typography paragraph>
+                      Share your unique perspective with the world.
+                    </Typography>
+                  </li>
+                </ul>
+              </Box>
               <Typography paragraph>
                 Join us on a journey to map the world, one lens at a time. Your
                 story matters, and with GeoLens, you can make it part of the

@@ -12,10 +12,11 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import {useAuthContext} from "../../contexts/AuthContext";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 import { logoutUser } from "../../api/auth";
 import GoogleLogin from "../GoogleLogin";
+import toast from "react-hot-toast";
 
 const pages = [
   {
@@ -61,9 +62,14 @@ const Navbar = ({ home }) => {
     {
       setting: "Logout",
       action: async () => {
-        await logoutUser();
-        setUser(null);
-        window.location.reload();
+        const response = await logoutUser();
+        if (response.data.status === "success") {
+          setUser(null);
+          window.location.reload();
+          toast.success("Successfully logged out");
+        } else {
+          toast.error("Error while logging out");
+        }
       },
     },
   ];
@@ -72,7 +78,12 @@ const Navbar = ({ home }) => {
       color="info"
       elevation={0}
       position="static"
-      sx={{ py: 0.5, position: home ? "sticky" : "", top: home ? 0 : "",zIndex:100 }}
+      sx={{
+        py: 0.5,
+        position: home ? "sticky" : "",
+        top: home ? 0 : "",
+        zIndex: 100,
+      }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
