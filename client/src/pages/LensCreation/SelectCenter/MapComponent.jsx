@@ -3,7 +3,6 @@ import { useMemo, useRef } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import RecenterMap from "../../../components/RecenterMap";
 import SearchControl from "../../../components/SearchControl/SearchControl";
-import useRoutingMachine from "../../../hooks/useRoutingMachine";
 import { useLensCreationContext } from "../contexts/LensCreationContext";
 import MapClickHandler from "./MapClickHandler";
 
@@ -71,11 +70,6 @@ function MapComponent() {
       </MapContainer>
     </>
   );
-}
-
-function RoutingMachineLayer({ waypoints }) {
-  useRoutingMachine(waypoints);
-  return null;
 }
 
 export default MapComponent;

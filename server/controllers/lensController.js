@@ -81,6 +81,7 @@ exports.getLens = async (req, res, next) => {
 
 exports.getLenses = async (req, res, next) => {
   const {
+    creatorId,
     country,
     state,
     sort,
@@ -91,7 +92,6 @@ exports.getLenses = async (req, res, next) => {
     clientGeoCoordinates
   } = req.query;
 
-  console.log(req.query)
   let sortStage = {};
   let matchStage = {};
 
@@ -105,6 +105,7 @@ exports.getLenses = async (req, res, next) => {
 
   if (country) matchStage.country = country;
   if (state) matchStage.state = state;
+  if (creatorId) matchStage.creator = creatorId;
 
   const searchConditions = [];
   if (search) {

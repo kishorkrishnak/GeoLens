@@ -50,7 +50,12 @@ const CreatorCard = () => {
           opacity: sidebarCollapsed ? 0 : 1,
         }}
       >
-        <Typography variant="p" fontSize={18} fontStyle={"italic"}>
+        <Typography
+          variant="p"
+          color="greenyellow"
+          fontSize={18}
+          fontStyle={"italic"}
+        >
           Created By
         </Typography>
         <Typography variant="p">{creator?.name}</Typography>

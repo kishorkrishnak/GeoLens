@@ -13,7 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { createLens } from "../../../api/lens";
 import Footer from "../../../components/Footer/Footer";
 import Navbar from "../../../components/Navbar/Navbar";
-import useAuthContext from "../../../contexts/AuthContext/useAuthContext";
+import {useAuthContext} from "../../../contexts/AuthContext";
+
 import { useLensCreationContext } from "../contexts/LensCreationContext";
 import { handleFileUpload } from "../../../utils/handleFileUpload";
 

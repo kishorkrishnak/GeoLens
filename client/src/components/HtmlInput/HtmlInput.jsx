@@ -1,3 +1,4 @@
+import React from "react";
 import "./HtmlInput.css";
 
 function HtmlInput({ placeholder, name, id, onChange, onBlur, value }) {

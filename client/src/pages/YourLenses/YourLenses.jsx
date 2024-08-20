@@ -1,6 +1,5 @@
 import SearchIcon from "@mui/icons-material/Search";
 import {
-  Autocomplete,
   Box,
   Container,
   FormControl,
@@ -12,27 +11,26 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { getLenses } from "../../api/lens";
 import Footer from "../../components/Footer/Footer";
 import LensesGrid from "../../components/LensesGrid";
 import Navbar from "../../components/Navbar/Navbar";
-import { countryData } from "../../utils/data";
 
-const Lenses = () => {
+const YourLenses = () => {
   const [lenses, setLenses] = useState([]);
   const [search, setSearch] = useState("");
-  const [country, setCountry] = useState("");
-  const [state, setState] = useState();
   const [sort, setSort] = useState("popular");
+
+  const { id } = useParams();
 
   useEffect(() => {
     const fetchLenses = async () => {
       try {
         const response = await getLenses({
           search,
-          country,
-          state,
           sort,
+          creatorId: id,
         });
         setLenses(response.data.data);
       } catch (error) {
@@ -41,20 +39,7 @@ const Lenses = () => {
     };
 
     fetchLenses();
-  }, [search, country, state, sort]);
-
-  const getStatesByCountry = (country) => {
-    if (!country) return [];
-    const states =
-      countryData
-        .find(({ name }) => name === country)
-        ?.states?.map((data) => data.name) || [];
-
-    return states;
-  };
-
-  const countries = countryData.map((country) => country.name);
-  const states = getStatesByCountry(country);
+  }, [search, sort, id]);
 
   return (
     <Box
@@ -70,7 +55,7 @@ const Lenses = () => {
       <Container sx={{ flexGrow: 1, padding: 6 }}>
         <Box>
           <Typography variant="h4" gutterBottom>
-            Explore Lenses
+            Manage Your Lenses
           </Typography>
 
           <Stack
@@ -88,34 +73,7 @@ const Lenses = () => {
               }}
               fullWidth
             />
-            <FormControl fullWidth>
-              <Autocomplete
-                value={country}
-                onChange={(event, newValue) => {
-                  setCountry(newValue);
-                }}
-                options={countries}
-                renderInput={(params) => (
-                  <TextField {...params} label="Country" variant="outlined" />
-                )}
-                isOptionEqualToValue={(option, value) => option === value}
-                getOptionLabel={(option) => option}
-              />
-            </FormControl>
-            <FormControl fullWidth>
-              <Autocomplete
-                value={state}
-                onChange={(event, newValue) => {
-                  setState(newValue);
-                }}
-                options={states}
-                renderInput={(params) => (
-                  <TextField {...params} label="State" variant="outlined" />
-                )}
-                isOptionEqualToValue={(option, value) => option === value}
-                getOptionLabel={(option) => option}
-              />
-            </FormControl>
+
             <FormControl fullWidth>
               <InputLabel>Sort</InputLabel>
               <Select
@@ -124,7 +82,6 @@ const Lenses = () => {
                 onChange={(e) => setSort(e.target.value)}
               >
                 <MenuItem value="popular">Popular</MenuItem>
-                <MenuItem value="closest">Closest</MenuItem>
                 <MenuItem value="latest">Latest</MenuItem>
                 <MenuItem value="oldest">Oldest</MenuItem>
               </Select>
@@ -162,4 +119,4 @@ const Lenses = () => {
   );
 };
 
-export default Lenses;
+export default YourLenses;

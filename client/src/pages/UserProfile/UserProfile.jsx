@@ -5,7 +5,8 @@ import { useState } from "react";
 import Footer from "../../components/Footer/Footer";
 import HtmlInput from "../../components/HtmlInput";
 import Navbar from "../../components/Navbar/Navbar";
-import useAuthContext from "../../contexts/AuthContext/useAuthContext";
+import {useAuthContext} from "../../contexts/AuthContext";
+
 import "./UserProfile.css";
 
 function UserProfile() {

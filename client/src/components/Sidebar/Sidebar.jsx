@@ -3,7 +3,8 @@ import { Box, Button, IconButton, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { getWeatherData } from "../../api/geocode";
-import useAuthContext from "../../contexts/AuthContext/useAuthContext";
+import {useAuthContext} from "../../contexts/AuthContext";
+
 import { useMapContext } from "../../contexts/MapContext";
 import CurrentWeather from "./CurrentWeather";
 import CreatorCard from "./LensDetails/CreatorCard";

@@ -1,6 +1,7 @@
 import { Button } from "@mui/material";
 import { useGoogleLogin } from "@react-oauth/google";
-import useAuthContext from "../contexts/AuthContext/useAuthContext";
+import {useAuthContext} from "../contexts/AuthContext";
+
 import { googleAuth } from "../api/auth";
 import GoogleIcon from "@mui/icons-material/Google";
 import toast from "react-hot-toast";

@@ -12,7 +12,8 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import useAuthContext from "../../contexts/AuthContext/useAuthContext";
+import {useAuthContext} from "../../contexts/AuthContext";
+
 import { logoutUser } from "../../api/auth";
 import GoogleLogin from "../GoogleLogin";
 

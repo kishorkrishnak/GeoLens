@@ -5,6 +5,7 @@ import { verifyToken } from "../../api/auth";
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [authCheckComplete, setAuthCheckComplete] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   //ensure auth status before page load to ensure proper working
   useEffect(() => {
@@ -26,6 +27,8 @@ export const AuthProvider = ({ children }) => {
     user,
     setUser,
     authCheckComplete,
+    loading,
+    setLoading,
   };
 
   return (

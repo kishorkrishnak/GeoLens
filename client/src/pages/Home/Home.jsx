@@ -1,21 +1,35 @@
 import ExploreIcon from "@mui/icons-material/Explore";
 import RoomIcon from "@mui/icons-material/Room";
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
 import { getLenses } from "../../api/lens";
 import Footer from "../../components/Footer/Footer";
+import LensesGrid from "../../components/LensesGrid";
 import Navbar from "../../components/Navbar/Navbar";
-import LensesGrid from "../Lenses/LensesGrid";
+import {useAuthContext} from "../../contexts/AuthContext";
+
 import HowItWorks from "./HowItWorks";
-import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 const Home = () => {
   const [lenses, setLenses] = useState([]);
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
+
+  const handleCreateLensClick = (e) => {
+    e.preventDefault();
+    if (!user) return toast.error("You need to be logged in to create lenses");
+    navigate("/lens/new");
+  };
 
   useEffect(() => {
     const fetchLenses = async () => {
       try {
-        const response = await getLenses();
+        const response = await getLenses({
+          sort: "popular",
+          limit: 6,
+        });
         setLenses(response.data.data);
       } catch (error) {
         console.error("Error fetching lenses data:", error);
@@ -120,6 +134,7 @@ const Home = () => {
               </Typography>
               <Button
                 component={Link}
+                onClick={handleCreateLensClick}
                 to="/lens/new"
                 variant="contained"
                 startIcon={<RoomIcon />}
@@ -146,7 +161,7 @@ const Home = () => {
 
       <Box
         sx={{
-          margin: "2rem 0.5rem",
+          margin: "3rem 0.5rem",
           minHeight: "45vh",
           display: "flex",
           flexDirection: "column",
@@ -228,7 +243,7 @@ const Home = () => {
               </Typography>
               <Button
                 component={Link}
-                to="/get-started"
+                to="/lenses"
                 variant="contained"
                 size="large"
                 startIcon={<TravelExploreIcon />}

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { createMarker, deleteMarker, updateMarker } from "../../api/marker";
 import MapContext from "./MapContext";
-import useAuthContext from "../AuthContext/useAuthContext";
+import {useAuthContext} from "../AuthContext";
+
 
 export const MapProvider = ({ children }) => {
   const { user } = useAuthContext();
@@ -24,7 +25,7 @@ export const MapProvider = ({ children }) => {
     description: "",
     category: "",
     image: "",
-    address:""
+    address: "",
   });
 
   //get client's geocoordinates and set it as the default center of map
@@ -36,6 +37,7 @@ export const MapProvider = ({ children }) => {
     );
   }, []);
 
+  //check if the lens visitor is the creator of the lens
   useEffect(() => {
     if (!user) return;
 
@@ -46,18 +48,20 @@ export const MapProvider = ({ children }) => {
     }
   }, [lens, user]);
 
-  async function addMarker() {
+  const addMarker = async () => {
     if (!(markerData.title && markerData.category)) {
       return toast.error("You must provide a title and category");
     }
 
+    const location = {
+      type: "Point",
+      coordinates: [markerData.lat, markerData.lng],
+    };
+
     const newMarker = {
       ...markerData,
       lensId: lens._id,
-      location: {
-        type: "Point",
-        coordinates: [markerData.lat, markerData.lng],
-      },
+      location,
     };
 
     const response = await createMarker(newMarker);
@@ -70,9 +74,9 @@ export const MapProvider = ({ children }) => {
     setModalVisible(false);
     toast.success("Marker added");
     setMarkerData({});
-  }
+  };
 
-  async function removeMarker(id) {
+  const removeMarker = async (id) => {
     try {
       const response = await deleteMarker(id);
       if (response.data.status === "success") {
@@ -93,7 +97,7 @@ export const MapProvider = ({ children }) => {
     } catch (error) {
       toast.success("Error while deleting marker");
     }
-  }
+  };
 
   const updateMarkerPosition = async (id, { lat, lng }) => {
     try {
@@ -131,24 +135,24 @@ export const MapProvider = ({ children }) => {
   };
 
   const contextValue = {
-    markers: lens?.markers,
-    modalVisible,
-    setModalVisible,
+    lens,
+    isLensCreator,
+    centerLatLong,
+    maxBounds,
+    setLens,
     markerData,
     setMarkerData,
+    markers: lens?.markers,
+    markerCount: lens?.markers?.length,
+    modalVisible,
+    setModalVisible,
     addMarker,
     removeMarker,
     updateMarkerPosition,
-    centerLatLong,
-    maxBounds,
-    markerCount: lens?.markers?.length,
     routingMode,
     setRoutingMode,
     sidebarCollapsed,
     setSidebarCollapsed,
-    lens,
-    setLens,
-    isLensCreator,
   };
 
   return (

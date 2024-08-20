@@ -6,14 +6,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import ScrollToTop from "./components/ScrollToTop";
 import SuspenseFallback from "./components/SuspenseFallback";
-import useAuthContext from "./contexts/AuthContext/useAuthContext";
+import {useAuthContext} from "./contexts/AuthContext";
 import { MapProvider } from "./contexts/MapContext";
 import PrivateRoute from "./PrivateRoute";
 import theme from "./theme";
 
 const LazyLens = lazy(() => import("./pages/Lens"));
 const LazyLenses = lazy(() => import("./pages/Lenses"));
-
+const LazyYourLenses = lazy(() => import("./pages/YourLenses"));
 const LazyHome = lazy(() => import("./pages/Home"));
 const LazyUserProfile = lazy(() => import("./pages/UserProfile"));
 const LazyLensCreation = lazy(() => import("./pages/LensCreation"));
@@ -38,15 +38,7 @@ const App = () => {
                     />
                     <Routes>
                       <Route path="/" element={<LazyHome />} />
-                      {/* <Route path="/lens" element={<LazyLens />} /> */}
-                      <Route
-                        path="/user/:id/lenses"
-                        element={<LazyLenses />}
-                      />
-                            <Route
-                        path="/lenses"
-                        element={<LazyLenses />}
-                      />
+                      <Route path="/lenses" element={<LazyLenses />} />
                       <Route
                         path="/lens/new/*"
                         element={
@@ -55,8 +47,9 @@ const App = () => {
                             component={LazyLensCreation}
                           />
                         }
-                      />{" "}
+                      />
                       <Route path="/lens/:id" element={<LazyLens />} />
+
                       <Route
                         path="/user/:id"
                         element={
@@ -65,6 +58,10 @@ const App = () => {
                             component={LazyUserProfile}
                           />
                         }
+                      />
+                      <Route
+                        path="/user/:id/lenses"
+                        element={<LazyYourLenses />}
                       />
                     </Routes>
                   </ScrollToTop>

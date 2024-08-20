@@ -28,7 +28,7 @@ const HowItWorks = () => {
               Create Lenses
             </Typography>
             <Typography variant="body1" align="center">
-              Create map with markers to showcase your favorite locations and
+              Create maps with markers to showcase best locations and
               landmarks in your region.
             </Typography>
           </Paper>
@@ -74,7 +74,7 @@ const HowItWorks = () => {
               Explore Community
             </Typography>
             <Typography align="center">
-              Discover local hotspots, hidden gems, and community favorites.
+              Discover local hotspots, hidden gems, and community favorites for new adventures
             </Typography>
           </Paper>
         </Grid>
