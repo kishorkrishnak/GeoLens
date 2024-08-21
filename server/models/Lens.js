@@ -29,6 +29,24 @@ const LensSchema = new Schema(
             }
         },
 
+        address: {
+            bounds: {
+                type: Map,
+                of: Schema.Types.Mixed,
+                default: {}
+            },
+
+            formatted: {
+                type: String,
+                required: [true, 'Address must have a formatted string'],
+            },
+            components: {
+                type: Map,
+                of: Schema.Types.Mixed,
+                default: {}
+            }
+        },
+
         markers: [
             {
                 type: Schema.Types.ObjectId,

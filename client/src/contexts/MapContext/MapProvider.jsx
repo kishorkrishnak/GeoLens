@@ -12,6 +12,7 @@ export const MapProvider = ({ children }) => {
   const [isLensCreator, setIsLensCreator] = useState(false);
   const [centerLatLong, setCenterLatLong] = useState([1, 15]);
   const [lens, setLens] = useState(null);
+
   const maxBounds = [
     [12.74116988678989, 75.09318351745607],
     [12.797405423615684, 75.22253036499025],
@@ -24,7 +25,7 @@ export const MapProvider = ({ children }) => {
     description: "",
     category: "",
     image: "",
-    address: "",
+    address: {},
   });
 
   //get client's geocoordinates and set it as the default center of map
@@ -137,7 +138,7 @@ export const MapProvider = ({ children }) => {
     lens,
     isLensCreator,
     centerLatLong,
-    maxBounds,
+    maxBounds: lens?.address?.bounds,
     setLens,
     markerData,
     setMarkerData,

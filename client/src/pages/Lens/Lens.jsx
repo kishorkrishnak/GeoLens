@@ -1,10 +1,10 @@
-import { useNavigate, useParams } from "react-router-dom";
-import Map from "./Map/Map";
-import Sidebar from "../../components/Sidebar/Sidebar";
-import { useEffect, useState } from "react";
-import { getLens } from "../../api/lens";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
+import { getLens } from "../../api/lens";
+import Sidebar from "../../components/Sidebar/Sidebar";
 import { useMapContext } from "../../contexts/MapContext";
+import Map from "./Map/Map";
 
 const Lens = () => {
   const navigate = useNavigate();

@@ -4,10 +4,11 @@ import Footer from "../../components/Footer/Footer";
 import Navbar from "../../components/Navbar/Navbar";
 import MapComponent from "./MapComponent";
 
-const SelectCenter = ({ operation }) => {
+const DrawBounds = ({ operation }) => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const navigationUrl = operation==="edit" ?`/lens/edit/${id}/details` :"/lens/new/details"
+  const navigationUrl =
+    operation === "edit" ? `/lens/edit/${id}/details` : "/lens/new/details";
   return (
     <div className="App">
       <Navbar />
@@ -36,10 +37,10 @@ const SelectCenter = ({ operation }) => {
         Confirm
       </Button>
 
-      <MapComponent  operation={operation} />
+      <MapComponent />
       <Footer />
     </div>
   );
 };
 
-export default SelectCenter;
+export default DrawBounds;

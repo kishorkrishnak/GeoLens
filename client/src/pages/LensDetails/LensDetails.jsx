@@ -16,6 +16,7 @@ import Navbar from "../../components/Navbar/Navbar";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { handleFileUpload } from "../../utils/handleFileUpload";
 import { useLensCreationContext } from "../LensCreation/contexts/LensCreationContext";
+import { reverseGeoCode } from "../../api/geocode";
 
 const LensDetails = ({ operation }) => {
   const navigate = useNavigate();
@@ -23,6 +24,16 @@ const LensDetails = ({ operation }) => {
   const { user } = useAuthContext();
   const { id } = useParams();
 
+  const fetchAddress = async (coordinates) => {
+    try {
+      const result = await reverseGeoCode(coordinates);
+      const fetchedAddress = result.data.results[0];
+
+      return fetchedAddress;
+    } catch (error) {
+      console.error("Failed to fetch address:", error);
+    }
+  };
   const [lensData, setLensData] = useState({
     name: "",
     description: "",
@@ -81,6 +92,9 @@ const LensDetails = ({ operation }) => {
       creator: user._id,
     };
 
+    const address = await fetchAddress(centerLatLong);
+    lensDataToSend.address = address;
+
     const response = await createLens(lensDataToSend);
     setLensData({
       name: "",
@@ -96,7 +110,8 @@ const LensDetails = ({ operation }) => {
     setError(null);
 
     toast.success(
-      "Lens created successfully! Add markers and share it with the world!"
+      "Lens created successfully! Add markers relating to your theme and share it with the world!",
+      { duration: 7000 }
     );
     navigate(`/lens/${response.data.data._id}`);
   };
@@ -104,6 +119,8 @@ const LensDetails = ({ operation }) => {
   const handleUpdateLens = async () => {
     const { creator, ...lensDataToUpdate } = lensData;
 
+    const address = await fetchAddress(centerLatLong);
+    lensDataToUpdate.address = address;
     await updateLens(id, lensDataToUpdate);
     setLensData({
       name: "",
@@ -203,7 +220,7 @@ const LensDetails = ({ operation }) => {
             display: "flex",
             flexDirection: "column",
             gap: 2,
-            maxWidth: 500,
+            maxWidth: 700,
             width: "100%",
           }}
         >

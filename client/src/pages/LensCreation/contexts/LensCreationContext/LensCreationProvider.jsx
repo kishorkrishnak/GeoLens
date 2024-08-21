@@ -1,38 +1,45 @@
 import { useEffect, useState } from "react";
-import LensCreationContext from "./LensCreationContext";
 import { useParams } from "react-router-dom";
 import { getLensCenterCoordinates } from "../../../../api/lens";
+import LensCreationContext from "./LensCreationContext";
 
 export const LensCreationProvider = ({ children, operation }) => {
   const { id } = useParams();
   const [centerLatLong, setCenterLatLong] = useState([
-    12.762846155546352, 75.2016619004097,
+    23.0707, 80.0982,
   ]);
 
   useEffect(() => {
     const fetchCenterCoordinates = async () => {
-      const response = await getLensCenterCoordinates(id);
-      setCenterLatLong([...response.data.data.coordinates]);
+      try {
+        const response = await getLensCenterCoordinates(id);
+        const coordinates = response.data.data.coordinates;
+        setCenterLatLong(coordinates);
+      } catch (error) {
+        console.error("Failed to fetch center coordinates:", error);
+      }
     };
-    
+
+    const fetchCurrentLocation = () => {
+      navigator.geolocation.getCurrentPosition(
+        async ({ coords: { latitude, longitude } }) => {
+          const coordinates = [latitude, longitude];
+          setCenterLatLong(coordinates);
+        },
+        (error) => console.error("Geolocation error:", error)
+      );
+    };
+
     if (operation === "edit") {
       fetchCenterCoordinates();
     } else {
-      navigator.geolocation.getCurrentPosition(
-        ({ coords: { latitude, longitude } }) => {
-          setCenterLatLong([latitude, longitude]);
-        }
-      );
+      fetchCurrentLocation();
     }
-  }, [operation]);
-
-  const [maxBounds, setMaxBounds] = useState(null);
+  }, [id, operation]);
 
   const contextValue = {
     centerLatLong,
     setCenterLatLong,
-    maxBounds,
-    setMaxBounds,
   };
 
   return (

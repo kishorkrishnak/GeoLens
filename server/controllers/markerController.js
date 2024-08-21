@@ -20,6 +20,7 @@ exports.createMarker = async (req, res, next) => {
             image,
             address: {
                 formatted: address?.formatted || "",
+                //store all the address components as an object
                 components: address?.components || {}
             },
         });
@@ -43,7 +44,6 @@ exports.createMarker = async (req, res, next) => {
             data: newMarker
         });
     } catch (error) {
-        console.log(error)
         res.status(500).json({
             status: 'error',
             message: 'Internal server error',
@@ -106,7 +106,6 @@ exports.updateMarker = async (req, res, next) => {
             data: updatedMarker
         });
     } catch (error) {
-        console.error(error);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error',
@@ -119,7 +118,7 @@ exports.deleteMarker = async (req, res, next) => {
     try {
         const { id } = req.params;
 
-        const marker = await Marker.findByIdAndDelete(id)
+        await Marker.findByIdAndDelete(id)
 
         res.status(201).json({
             status: 'success',

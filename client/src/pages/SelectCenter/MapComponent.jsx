@@ -1,30 +1,45 @@
 import { OpenStreetMapProvider } from "leaflet-geosearch";
 import { useMemo, useRef } from "react";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import {
+  FeatureGroup,
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+} from "react-leaflet";
 import RecenterMap from "../../components/RecenterMap";
-// import SearchControl from "../../components/SearchControl/SearchControl";
+import SearchControl from "../../components/SearchControl/SearchControl";
+import { Typography } from "@mui/material";
+import { EditControl } from "react-leaflet-draw";
 import { useLensCreationContext } from "../LensCreation/contexts/LensCreationContext";
 import MapClickHandler from "./MapClickHandler";
 
-const MapComponent = () => {
+const MapComponent = ({ operation }) => {
   const { centerLatLong, setCenterLatLong } = useLensCreationContext();
   const prov = new OpenStreetMapProvider();
 
   const markerRef = useRef(null);
   const eventHandlers = useMemo(
     () => ({
-      dragend() {
+      async dragend() {
         const markerElement = markerRef.current;
 
         if (markerElement != null) {
           const { lat, lng } = markerElement.getLatLng();
-          setCenterLatLong([lat, lng]);
+          const coordinates = [lat, lng];
+
+          setCenterLatLong([...coordinates]);
         }
       },
     }),
     []
   );
-
+  const handleDraw = (e) => {
+    const layer = e.layer;
+    const bounds = layer.getBounds();
+    // Store the bounds in your database or use it to restrict marker placement
+    console.log(bounds);
+  };
   return (
     <>
       <MapContainer
@@ -34,12 +49,21 @@ const MapComponent = () => {
         scrollWheelZoom={true}
         maxBoundsViscosity={1}
       >
+        <FeatureGroup>
+          <EditControl
+            position="topright"
+            onCreated={handleDraw}
+            draw={{
+              rectangle: true, // or enable polygon, circle, etc.
+            }}
+          />
+        </FeatureGroup>
         <RecenterMap lat={centerLatLong[0]} lng={centerLatLong[1]} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {/* <SearchControl
+        <SearchControl
           provider={prov}
           showMarker={false}
           showPopup={false}
@@ -48,9 +72,11 @@ const MapComponent = () => {
           retainZoomLevel={false}
           animateZoom={true}
           autoClose={false}
-          searchLabel={"Select the center point of your lens"}
+          searchLabel={`${
+            operation === "create" ? "Select" : "Change"
+          } the center point of your lens`}
           keepResult={true}
-        /> */}
+        />
 
         <Marker
           eventHandlers={eventHandlers}
@@ -59,14 +85,14 @@ const MapComponent = () => {
           position={centerLatLong}
         >
           <Popup permanent>
-            <h2>
+            <Typography variant="h5">
               This will be the center of your map and your map will be locked to
               this particular region. Add markers for all your favorite spots in
               this region :D
-            </h2>
+            </Typography>
           </Popup>
         </Marker>
-        <MapClickHandler />
+        {/* <MapClickHandler /> */}
       </MapContainer>
     </>
   );

@@ -3,7 +3,7 @@ const User = require("../models/User");
 
 exports.createLens = async (req, res, next) => {
   try {
-    const { name, thumbnail, description, location, tags, creator } = req.body;
+    const { name, thumbnail, description, location, tags, creator, address } = req.body;
     if (!name || !location || !creator) {
       return res.status(400).json({
         status: "error",
@@ -19,6 +19,12 @@ exports.createLens = async (req, res, next) => {
       thumbnail,
       tags,
       creator,
+      address: {
+        bounds: address?.bounds || {},
+        formatted: address?.formatted || "",
+        //store all the address components as an object
+        components: address?.components || {}
+      },
     });
 
     const lensCreator = await User.findById(creator);
@@ -82,6 +88,7 @@ exports.getLens = async (req, res, next) => {
     });
   }
 };
+
 exports.getLensCenterCoordinates = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -116,7 +123,7 @@ exports.updateLens = async (req, res, next) => {
   try {
     const lensId = req.params.id;
     const updatedLensDetails = req.body;
-
+    console.log(updatedLensDetails)
     const updatedLens = await Lens.findByIdAndUpdate(lensId, updatedLensDetails, {
       new: true,
       runValidators: true
@@ -224,7 +231,6 @@ exports.getLenses = async (req, res, next) => {
 exports.deleteLens = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const lens = await Lens.findById(id);
 
     if (!lens) {
       return res.status(404).json({
@@ -234,13 +240,16 @@ exports.deleteLens = async (req, res, next) => {
       });
     }
 
-    await Lens.deleteOne({ _id: id });
+    const deleteRecord = await Lens.deleteOne({ _id: id });
 
-    res.status(201).json({
-      status: "success",
-      message: "Lens deleted successfully",
-      data: null,
-    });
+    if (!deleteRecord.deletedCount >= 1) {
+
+      res.status(201).json({
+        status: "success",
+        message: "Lens deleted successfully",
+        data: null,
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({
