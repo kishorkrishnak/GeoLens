@@ -5,7 +5,6 @@ import { getLensCenterCoordinates } from "../../../../api/lens";
 
 export const LensCreationProvider = ({ children, operation }) => {
   const { id } = useParams();
-  console.log(operation);
   const [centerLatLong, setCenterLatLong] = useState([
     12.762846155546352, 75.2016619004097,
   ]);
@@ -15,6 +14,7 @@ export const LensCreationProvider = ({ children, operation }) => {
       const response = await getLensCenterCoordinates(id);
       setCenterLatLong([...response.data.data.coordinates]);
     };
+    
     if (operation === "edit") {
       fetchCenterCoordinates();
     } else {

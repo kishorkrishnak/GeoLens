@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { createMarker, deleteMarker, updateMarker } from "../../api/marker";
+import { useAuthContext } from "../AuthContext";
 import MapContext from "./MapContext";
-import {useAuthContext} from "../AuthContext";
-
 
 export const MapProvider = ({ children }) => {
   const { user } = useAuthContext();

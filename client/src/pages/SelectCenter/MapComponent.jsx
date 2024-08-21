@@ -2,7 +2,7 @@ import { OpenStreetMapProvider } from "leaflet-geosearch";
 import { useMemo, useRef } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import RecenterMap from "../../components/RecenterMap";
-import SearchControl from "../../components/SearchControl/SearchControl";
+// import SearchControl from "../../components/SearchControl/SearchControl";
 import { useLensCreationContext } from "../LensCreation/contexts/LensCreationContext";
 import MapClickHandler from "./MapClickHandler";
 
@@ -39,7 +39,7 @@ const MapComponent = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <SearchControl
+        {/* <SearchControl
           provider={prov}
           showMarker={false}
           showPopup={false}
@@ -50,7 +50,7 @@ const MapComponent = () => {
           autoClose={false}
           searchLabel={"Select the center point of your lens"}
           keepResult={true}
-        />
+        /> */}
 
         <Marker
           eventHandlers={eventHandlers}

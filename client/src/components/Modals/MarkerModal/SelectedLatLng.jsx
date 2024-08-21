@@ -9,19 +9,19 @@ const SelectedLatLng = () => {
   useEffect(() => {
     const reverseGeoCodeSelectedPoint = async () => {
       try {
-        const selectedLocation = [markerData.lat,markerData.lng]
+        const selectedLocation = [markerData.lat, markerData.lng];
         const result = await reverseGeoCode(selectedLocation);
-        console.log(result)
-        const formattedAddress = result.data.results[0].formatted;
+        console.log(result);
+        const address = result.data.results[0];
 
-        setMarkerData({ ...markerData, address: formattedAddress });
+        setMarkerData({ ...markerData, address });
       } catch (error) {
         console.log(error);
       }
     };
 
     reverseGeoCodeSelectedPoint();
-  }, [markerData.lat,markerData.lng]);
+  }, [markerData.lat, markerData.lng]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -34,7 +34,7 @@ const SelectedLatLng = () => {
       </Typography>
 
       <Typography variant="p" fontSize={18}>
-        Address: {markerData.address}
+        Address: {markerData.address?.formatted}
       </Typography>
     </Box>
   );

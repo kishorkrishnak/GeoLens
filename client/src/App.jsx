@@ -79,7 +79,7 @@ const App = () => {
                           />
                         }
                       />
-                      
+
                       <Route path="/lens/:id" element={<LazyLens />} />
 
                       <Route

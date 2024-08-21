@@ -22,7 +22,7 @@ const LensDetails = ({ operation }) => {
   const { centerLatLong } = useLensCreationContext();
   const { user } = useAuthContext();
   const { id } = useParams();
-  
+
   const [lensData, setLensData] = useState({
     name: "",
     description: "",
@@ -38,7 +38,7 @@ const LensDetails = ({ operation }) => {
   const [error, setError] = useState(null);
   const { loading, setLoading } = useAuthContext();
 
-  // Handle file upload
+  // Handle lens thumbnail upload
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -58,7 +58,6 @@ const LensDetails = ({ operation }) => {
     }
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -76,7 +75,6 @@ const LensDetails = ({ operation }) => {
     }
   };
 
-  // Handle lens creation
   const handleCreateLens = async () => {
     const lensDataToSend = {
       ...lensData,
@@ -97,11 +95,12 @@ const LensDetails = ({ operation }) => {
     setTagInput("");
     setError(null);
 
-    toast.success("Lens created successfully! Add markers and share it with the world!");
+    toast.success(
+      "Lens created successfully! Add markers and share it with the world!"
+    );
     navigate(`/lens/${response.data.data._id}`);
   };
 
-  // Handle lens update
   const handleUpdateLens = async () => {
     const { creator, ...lensDataToUpdate } = lensData;
 
@@ -123,7 +122,6 @@ const LensDetails = ({ operation }) => {
     navigate(`/user/${user._id}/lenses`);
   };
 
-  // Handle tag addition
   const handleAddTag = () => {
     if (tagInput && !lensData.tags.includes(tagInput)) {
       setLensData((prevData) => ({
@@ -134,7 +132,6 @@ const LensDetails = ({ operation }) => {
     }
   };
 
-  // Handle tag deletion
   const handleDeleteTag = (tagToDelete) => {
     setLensData((prevData) => ({
       ...prevData,
@@ -142,7 +139,7 @@ const LensDetails = ({ operation }) => {
     }));
   };
 
-  // Fetch lens data if in edit mode
+  // Fetch and prefill lens data if in edit mode
   useEffect(() => {
     if (operation === "edit" && id) {
       const fetchLens = async () => {

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose
+const { Schema } = mongoose;
 
 const MarkerSchema = new Schema(
     {
@@ -18,7 +18,6 @@ const MarkerSchema = new Schema(
         category: {
             type: String,
             required: [true, 'Lens must have a category'],
-
         },
 
         image: {
@@ -26,7 +25,15 @@ const MarkerSchema = new Schema(
         },
 
         address: {
-            type: String,
+            formatted: {
+                type: String,
+                required: [true, 'Address must have a formatted string'],
+            },
+            components: {
+                type: Map,
+                of: Schema.Types.Mixed,
+                default: {}
+            }
         },
 
         location: {
@@ -36,7 +43,6 @@ const MarkerSchema = new Schema(
                 required: true,
                 default: 'Point'
             },
-
             coordinates: {
                 type: [Number],
                 required: true
@@ -54,7 +60,6 @@ const MarkerSchema = new Schema(
         },
     },
     { timestamps: { createdAt: true } }
-
 );
 
 const Marker = mongoose.model('Marker', MarkerSchema);

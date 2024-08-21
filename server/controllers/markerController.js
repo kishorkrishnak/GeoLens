@@ -18,7 +18,10 @@ exports.createMarker = async (req, res, next) => {
             location,
             category,
             image,
-            address
+            address: {
+                formatted: address?.formatted || "",
+                components: address?.components || {}
+            },
         });
 
         const lens = await Lens.findById(lensId)

@@ -79,7 +79,7 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
           {marker.category}
         </Typography>
 
-        <Typography variant="subtitle2">{marker?.address}</Typography>
+        <Typography variant="subtitle2">{marker?.address?.formatted}</Typography>
 
         {marker?.image && (
           <img
