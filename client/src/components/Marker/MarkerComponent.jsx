@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material";
 import L from "leaflet";
 import { useMemo, useRef } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { Marker, Popup } from "react-leaflet";
+import { Marker, Popup, Tooltip } from "react-leaflet";
 import { useMapContext } from "../../contexts/MapContext";
 const MarkerComponent = ({ marker, index, totalMarkers }) => {
   const { updateMarkerPosition, removeMarker, routingMode, isLensCreator } =
@@ -69,9 +69,11 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
       icon={icon}
       position={position}
     >
-      <Popup>
+      <Tooltip>{marker.title}</Tooltip>
+
+      <Popup keepInView>
         <Typography variant="h6">{marker.title}</Typography>
-        <Typography variant="subtitle1">{marker.description}</Typography>
+        <Typography variant="body1">{marker.description}</Typography>
         <Typography marginBottom={2} variant="subtitle2" display={"block"}>
           <Typography variant="span" fontWeight={600}>
             Category:{" "}
@@ -79,7 +81,9 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
           {marker.category}
         </Typography>
 
-        <Typography variant="subtitle2">{marker?.address?.formatted}</Typography>
+        <Typography variant="subtitle2">
+          {marker?.address?.formatted}
+        </Typography>
 
         {marker?.image && (
           <img

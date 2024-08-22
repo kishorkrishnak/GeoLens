@@ -1,16 +1,14 @@
+import { Typography } from "@mui/material";
 import { OpenStreetMapProvider } from "leaflet-geosearch";
 import { useMemo, useRef } from "react";
 import {
-  FeatureGroup,
   MapContainer,
   Marker,
   Popup,
-  TileLayer,
+  TileLayer
 } from "react-leaflet";
 import RecenterMap from "../../components/RecenterMap";
 import SearchControl from "../../components/SearchControl/SearchControl";
-import { Typography } from "@mui/material";
-import { EditControl } from "react-leaflet-draw";
 import { useLensCreationContext } from "../LensCreation/contexts/LensCreationContext";
 import MapClickHandler from "./MapClickHandler";
 
@@ -34,12 +32,7 @@ const MapComponent = ({ operation }) => {
     }),
     []
   );
-  const handleDraw = (e) => {
-    const layer = e.layer;
-    const bounds = layer.getBounds();
-    // Store the bounds in your database or use it to restrict marker placement
-    console.log(bounds);
-  };
+  
   return (
     <>
       <MapContainer
@@ -49,15 +42,7 @@ const MapComponent = ({ operation }) => {
         scrollWheelZoom={true}
         maxBoundsViscosity={1}
       >
-        <FeatureGroup>
-          <EditControl
-            position="topright"
-            onCreated={handleDraw}
-            draw={{
-              rectangle: true, // or enable polygon, circle, etc.
-            }}
-          />
-        </FeatureGroup>
+       
         <RecenterMap lat={centerLatLong[0]} lng={centerLatLong[1]} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -92,7 +77,7 @@ const MapComponent = ({ operation }) => {
             </Typography>
           </Popup>
         </Marker>
-        {/* <MapClickHandler /> */}
+        <MapClickHandler />
       </MapContainer>
     </>
   );

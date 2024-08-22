@@ -8,14 +8,24 @@ const deleteLens = (lensId) => axios.delete(`/lens/${lensId}`);
 
 const getLenses = (params) => {
     return axios.get(`/lens`, {
-        params: params,
+        params
     });
 };
+
+const addCommentToLens = (lensId, commentData) => axios.post(`/lens/${lensId}/comments`, commentData);
+const deleteCommentFromLens = (lensId, commentId) => axios.delete(`/lens/${lensId}/comments/${commentId}`);
+const getCommentsForLens = (lensId, params) => axios.get(`/lens/${lensId}/comments`, {
+    params
+});
 
 export {
     getLenses,
     getLens,
     createLens,
     deleteLens,
-    updateLens, getLensCenterCoordinates
-}
+    updateLens,
+    getLensCenterCoordinates,
+    addCommentToLens,
+    deleteCommentFromLens,
+    getCommentsForLens
+};

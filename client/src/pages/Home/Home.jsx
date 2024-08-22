@@ -10,6 +10,9 @@ import Footer from "../../components/Footer/Footer";
 import LensesGrid from "../../components/LensesGrid";
 import Navbar from "../../components/Navbar/Navbar";
 import { useAuthContext } from "../../contexts/AuthContext";
+import createLensImg from "../../assets/images/createlens.jpg";
+import exploreWorldImg from "../../assets/images/exploreworld.jpg";
+import heroBgImg from "../../assets/images/hero-background.jpg";
 
 import HowItWorks from "./HowItWorks";
 const Home = () => {
@@ -54,7 +57,7 @@ const Home = () => {
       <Navbar home />
       <Box
         sx={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url(hero-background.jpg)`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url(${heroBgImg})`,
           backgroundSize: "cover",
           backgroundRepeat: "repeat-y",
           backgroundPosition: "center",
@@ -144,7 +147,7 @@ const Home = () => {
             <Grid item xs={12} md={6}>
               <Box
                 component="img"
-                src="/createlens.jpg"
+                src={createLensImg}
                 alt="Create Your Lens"
                 sx={{
                   width: "100%",
@@ -183,7 +186,7 @@ const Home = () => {
             <Grid item xs={12} md={6}>
               <Box
                 component="img"
-                src="/exploreworld.jpg"
+                src={exploreWorldImg}
                 alt="Why GeoLens"
                 sx={{
                   width: "100%",

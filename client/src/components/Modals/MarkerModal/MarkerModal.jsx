@@ -6,13 +6,12 @@ import {
   TextareaAutosize,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
 import { Modal } from "react-responsive-modal";
+import { useAuthContext } from "../../../contexts/AuthContext";
 import { useMapContext } from "../../../contexts/MapContext";
 import { handleFileUpload } from "../../../utils/handleFileUpload";
 import markerCategories from "./markerCategories";
 import SelectedLatLng from "./SelectedLatLng";
-import { useAuthContext } from "../../../contexts/AuthContext";
 
 const MarkerModal = () => {
   const {
@@ -45,6 +44,7 @@ const MarkerModal = () => {
         modal: "custom-modal",
         overlay: "custom-overlay",
       }}
+      animationDuration={400}
     >
       <Box
         display="flex"
@@ -63,9 +63,7 @@ const MarkerModal = () => {
           </Typography>
         </Box>
 
-        <Box my={2}>
-          <SelectedLatLng />
-        </Box>
+        <SelectedLatLng />
 
         {isLensCreator && (
           <Box component="form" noValidate autoComplete="off" width="100%">

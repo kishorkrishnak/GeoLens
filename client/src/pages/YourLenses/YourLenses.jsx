@@ -11,15 +11,15 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import { deleteLens, getLenses } from "../../api/lens";
 import Footer from "../../components/Footer/Footer";
 import LensesGrid from "../../components/LensesGrid";
+import ConfirmationModal from "../../components/Modals/ConfirmationModal/ConfirmationModal";
 import Navbar from "../../components/Navbar/Navbar";
 import { useAuthContext } from "../../contexts/AuthContext";
 import useModal from "../../hooks/useModal";
-import ConfirmationModal from "../../components/Modals/MarkerModal/ConfirmationModal";
-import toast from "react-hot-toast";
 
 const YourLenses = () => {
   const [lenses, setLenses] = useState([]);

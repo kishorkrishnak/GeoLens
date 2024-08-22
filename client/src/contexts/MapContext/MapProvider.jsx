@@ -7,16 +7,12 @@ import MapContext from "./MapContext";
 export const MapProvider = ({ children }) => {
   const { user } = useAuthContext();
   const [modalVisible, setModalVisible] = useState(false);
+  const [commentsModalVisible, setCommentsModalVisible] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [routingMode, setRoutingMode] = useState(false);
   const [isLensCreator, setIsLensCreator] = useState(false);
   const [centerLatLong, setCenterLatLong] = useState([1, 15]);
   const [lens, setLens] = useState(null);
-
-  const maxBounds = [
-    [12.74116988678989, 75.09318351745607],
-    [12.797405423615684, 75.22253036499025],
-  ];
 
   const [markerData, setMarkerData] = useState({
     lat: null,
@@ -138,7 +134,6 @@ export const MapProvider = ({ children }) => {
     lens,
     isLensCreator,
     centerLatLong,
-    maxBounds: lens?.address?.bounds,
     setLens,
     markerData,
     setMarkerData,
@@ -153,6 +148,8 @@ export const MapProvider = ({ children }) => {
     setRoutingMode,
     sidebarCollapsed,
     setSidebarCollapsed,
+    commentsModalVisible,
+    setCommentsModalVisible,
   };
 
   return (

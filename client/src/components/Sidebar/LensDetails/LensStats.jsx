@@ -1,8 +1,13 @@
 import { Box, Typography } from "@mui/material";
-import { ThumbUp, Visibility } from "@mui/icons-material";
+import { ThumbUp, Visibility, Chat } from "@mui/icons-material";
 import { useMapContext } from "../../../contexts/MapContext";
 const LensStats = () => {
-  const { sidebarCollapsed ,lens} = useMapContext();
+  const {
+    sidebarCollapsed,
+    lens,
+    commentsModalVisible,
+    setCommentsModalVisible,
+  } = useMapContext();
 
   return (
     <Box
@@ -21,7 +26,7 @@ const LensStats = () => {
         noWrap
       >
         <Visibility fontSize="small" sx={{ marginRight: 1.5 }} />
-        Views:  {lens?.views  || 0}
+        Views: {lens?.views || 0}
       </Typography>
       <Typography
         display={"flex"}
@@ -36,6 +41,32 @@ const LensStats = () => {
         />
         Likes: {lens?.likes?.length || 0}
       </Typography>
+
+      <Box
+        onClick={() => {
+          console.log("hi");
+          setCommentsModalVisible(true);
+        }}
+        sx={{
+          cursor: "pointer",
+        }}
+      >
+        <Typography
+          display={"flex"}
+          marginTop={2}
+          alignItems={"center"}
+          justifyContent={"start"}
+          color={"greenyellow"}
+          variant="body1"
+          noWrap
+        >
+          <Chat
+            fontSize="small"
+            sx={{ color: "white", verticalAlign: "middle", marginRight: 1.5 }}
+          />
+          View Comments
+        </Typography>
+      </Box>
     </Box>
   );
 };

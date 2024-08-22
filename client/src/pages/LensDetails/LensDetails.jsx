@@ -20,7 +20,8 @@ import { reverseGeoCode } from "../../api/geocode";
 
 const LensDetails = ({ operation }) => {
   const navigate = useNavigate();
-  const { centerLatLong } = useLensCreationContext();
+  const { centerLatLong, circleBoundRadius, circleBounds } =
+    useLensCreationContext();
   const { user } = useAuthContext();
   const { id } = useParams();
 
@@ -28,12 +29,15 @@ const LensDetails = ({ operation }) => {
     try {
       const result = await reverseGeoCode(coordinates);
       const fetchedAddress = result.data.results[0];
+      fetchedAddress.circleBoundRadius = circleBoundRadius;
+      fetchedAddress.circleBounds = circleBounds;
 
       return fetchedAddress;
     } catch (error) {
       console.error("Failed to fetch address:", error);
     }
   };
+
   const [lensData, setLensData] = useState({
     name: "",
     description: "",

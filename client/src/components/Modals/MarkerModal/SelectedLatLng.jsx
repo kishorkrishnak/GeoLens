@@ -11,7 +11,6 @@ const SelectedLatLng = () => {
       try {
         const selectedLocation = [markerData.lat, markerData.lng];
         const result = await reverseGeoCode(selectedLocation);
-        console.log(result);
         const address = result.data.results[0];
 
         setMarkerData({ ...markerData, address });
@@ -24,7 +23,7 @@ const SelectedLatLng = () => {
   }, [markerData.lat, markerData.lng]);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 1, my: 2 }}>
       <Typography variant="p" fontSize={18} noWrap>
         Latitude: {markerData.lat}
       </Typography>

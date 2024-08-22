@@ -8,7 +8,7 @@ import Map from "./Map/Map";
 
 const Lens = () => {
   const navigate = useNavigate();
-  const { lens, setLens } = useMapContext();
+  const { lens, setLens, commentsModalVisible } = useMapContext();
   const { id } = useParams();
 
   useEffect(() => {

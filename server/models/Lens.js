@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose
+const { Schema } = mongoose;
 
 const LensSchema = new Schema(
     {
@@ -11,31 +11,44 @@ const LensSchema = new Schema(
 
         description: {
             type: String,
+            default: '',
         },
+
         thumbnail: {
             type: String,
+            default: '',
         },
+
         location: {
             type: {
                 type: String,
                 enum: ['Point'],
                 required: true,
-                default: 'Point'
+                default: 'Point',
             },
-
             coordinates: {
                 type: [Number],
-                required: true
-            }
+                required: true,
+                validate: {
+                    validator: function (arr) {
+                        return arr.length === 2;
+                    },
+                    message: 'Coordinates should have exactly 2 values (longitude and latitude).',
+                },
+            },
         },
 
         address: {
-            bounds: {
+            circleBounds: {
                 type: Map,
                 of: Schema.Types.Mixed,
-                default: {}
+                default: {},
             },
-
+            circleBoundRadius: {
+                type: Number,
+                default: 0,
+                required: [true, 'Circle bound radius is required.'],
+            },
             formatted: {
                 type: String,
                 required: [true, 'Address must have a formatted string'],
@@ -43,22 +56,21 @@ const LensSchema = new Schema(
             components: {
                 type: Map,
                 of: Schema.Types.Mixed,
-                default: {}
-            }
+                default: {},
+            },
         },
 
         markers: [
             {
                 type: Schema.Types.ObjectId,
-                ref: "Marker",
+                ref: 'Marker',
                 index: true,
-
             },
         ],
 
         tags: {
             type: [String],
-            default: []
+            default: [],
         },
 
         creator: {
@@ -69,24 +81,26 @@ const LensSchema = new Schema(
 
         views: {
             type: Number,
-            default: 0, index: true,
+            default: 0,
+            index: true,
         },
 
         likes: [
             {
                 type: Schema.Types.ObjectId,
-                ref: "User",
+                ref: 'User',
                 index: true,
             },
         ],
 
+        comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
     },
     { timestamps: { createdAt: true } }
-
 );
 
 LensSchema.index({ location: '2dsphere' });
 
+//cascade delete markers of the lens to be deleted
 LensSchema.pre('deleteOne', { document: false, query: true }, async function (next) {
     try {
         const doc = await this.model.findOne(this.getFilter());
@@ -99,10 +113,6 @@ LensSchema.pre('deleteOne', { document: false, query: true }, async function (ne
     }
 });
 
-
 const Lens = mongoose.model('Lens', LensSchema);
-
-
-
 
 module.exports = Lens;

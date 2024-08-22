@@ -14,9 +14,9 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/AuthContext";
 
+import toast from "react-hot-toast";
 import { logoutUser } from "../../api/auth";
 import GoogleLogin from "../GoogleLogin";
-import toast from "react-hot-toast";
 
 const pages = [
   {

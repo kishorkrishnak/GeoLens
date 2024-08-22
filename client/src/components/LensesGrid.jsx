@@ -112,8 +112,8 @@ const LensesGrid = ({ lenses, allowEdit, toggle, setLensIdToDelete }) => {
                       onClick={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
-                        toggle();
                         setLensIdToDelete(lens._id);
+                        toggle();
                       }}
                     >
                       <Chip

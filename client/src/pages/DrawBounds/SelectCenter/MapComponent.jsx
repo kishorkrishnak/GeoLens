@@ -1,23 +1,23 @@
-import { OpenStreetMapProvider } from "leaflet-geosearch";
+import { Typography } from "@mui/material";
 import {
+  Circle,
   FeatureGroup,
   MapContainer,
-  TileLayer
+  Marker,
+  Popup,
+  TileLayer,
 } from "react-leaflet";
-import { EditControl } from "react-leaflet-draw";
-import RecenterMap from "../../components/RecenterMap";
-import { useLensCreationContext } from "../LensCreation/contexts/LensCreationContext";
-import MapClickHandler from "./MapClickHandler";
+import RecenterMap from "../../../components/RecenterMap";
+import { useLensCreationContext } from "../../LensCreation/contexts/LensCreationContext";
+import CircleBoundCalculator from "./CircleBoundCalculator";
+import L from 'leaflet'
+
+L.Control.prototype._refocusOnMap = function _refocusOnMap() {};
 
 const MapComponent = () => {
-  const { centerLatLong, setCenterLatLong } = useLensCreationContext();
+  const { centerLatLong,circleBoundRadius } =
+    useLensCreationContext();
 
-  const handleDraw = (e) => {
-    const layer = e.layer;
-    const bounds = layer.getBounds();
-    // Store the bounds in your database or use it to restrict marker placement
-    console.log(bounds);
-  };
   return (
     <>
       <MapContainer
@@ -28,16 +28,10 @@ const MapComponent = () => {
         maxBoundsViscosity={1}
       >
         <FeatureGroup>
-          <EditControl
-            position="topright"
-            onCreated={handleDraw}
-            draw={{
-              rectangle: true,
-              polyline: false,
-              circle: true,
-              polygon: false,
-              circlemarker: false,
-            }}
+          <Circle
+         
+            center={centerLatLong}
+            radius={circleBoundRadius}
           />
         </FeatureGroup>
         <RecenterMap lat={centerLatLong[0]} lng={centerLatLong[1]} />
@@ -45,8 +39,17 @@ const MapComponent = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <CircleBoundCalculator/>
 
-        <MapClickHandler />
+        <Marker position={centerLatLong}>
+          <Popup permanent>
+            <Typography variant="h5">
+              This will be the center of your map and your map will be locked to
+              this particular region. Add markers for all your favorite spots in
+              this region :D
+            </Typography>
+          </Popup>
+        </Marker>
       </MapContainer>
     </>
   );

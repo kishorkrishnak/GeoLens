@@ -1,10 +1,11 @@
 import { Button } from "@mui/material";
 import { useGoogleLogin } from "@react-oauth/google";
-import {useAuthContext} from "../contexts/AuthContext";
+import { useAuthContext } from "../contexts/AuthContext";
 
-import { googleAuth } from "../api/auth";
 import GoogleIcon from "@mui/icons-material/Google";
 import toast from "react-hot-toast";
+import { googleAuth } from "../api/auth";
+
 const GoogleLogin = () => {
   const { setUser } = useAuthContext();
   const responseGoogle = async (authResult) => {
@@ -31,7 +32,7 @@ const GoogleLogin = () => {
     <Button
       onClick={googleLogin}
       sx={{
-        color:"white"
+        color: "white",
       }}
       type="submit"
       color="success"
