@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom";
-import SelectCenter from "../SelectCenter";
-import LensDetails from "../LensDetails";
+import DrawBounds from "../DrawBounds";
 import { LensCreationProvider } from "../LensCreation/contexts/LensCreationContext";
-import DrawBounds from "../DrawBounds/SelectCenter";
+import LensDetails from "../LensDetails";
+import SelectCenter from "../SelectCenter";
 
 const EditLens = ({ state }) => {
   const { operation } = state;

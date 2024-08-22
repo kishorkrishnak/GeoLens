@@ -1,7 +1,7 @@
 import L from "leaflet";
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
-import { useLensCreationContext } from "../../LensCreation/contexts/LensCreationContext";
+import { useLensCreationContext } from "../LensCreation/contexts/LensCreationContext";
 
 const CircleBoundCalculator = () => {
   const { centerLatLong, circleBoundRadius, setCircleBounds } =

@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import Footer from "../../../components/Footer/Footer";
-import Navbar from "../../../components/Navbar/Navbar";
+import Footer from "../../components/Footer/Footer";
+import Navbar from "../../components/Navbar/Navbar";
 import CircleBoundSlider from "./CircleBoundSlider";
 import MapComponent from "./MapComponent";
 

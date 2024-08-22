@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import DrawBounds from "../DrawBounds/SelectCenter";
+import DrawBounds from "../DrawBounds";
 import LensDetails from "../LensDetails";
 import SelectCenter from "../SelectCenter";
 import { LensCreationProvider } from "./contexts/LensCreationContext";

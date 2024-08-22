@@ -1,5 +1,5 @@
 import { useMapEvents } from "react-leaflet";
-import { useLensCreationContext } from "../../LensCreation/contexts/LensCreationContext";
+import { useLensCreationContext } from "../LensCreation/contexts/LensCreationContext";
 
 function MapClickHandler() {
   const { setCenterLatLong } = useLensCreationContext();

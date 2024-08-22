@@ -1,6 +1,4 @@
 
-
-
 export const countryData = [
     {
         "name": "Afghanistan",

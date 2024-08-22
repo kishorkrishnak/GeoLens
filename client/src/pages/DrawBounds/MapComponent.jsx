@@ -1,4 +1,5 @@
 import { Typography } from "@mui/material";
+import L from 'leaflet';
 import {
   Circle,
   FeatureGroup,
@@ -7,10 +8,9 @@ import {
   Popup,
   TileLayer,
 } from "react-leaflet";
-import RecenterMap from "../../../components/RecenterMap";
-import { useLensCreationContext } from "../../LensCreation/contexts/LensCreationContext";
+import RecenterMap from "../../components/RecenterMap";
+import { useLensCreationContext } from "../LensCreation/contexts/LensCreationContext";
 import CircleBoundCalculator from "./CircleBoundCalculator";
-import L from 'leaflet'
 
 L.Control.prototype._refocusOnMap = function _refocusOnMap() {};
 

@@ -1,5 +1,5 @@
 import { Box, Slider, Typography } from "@mui/material";
-import { useLensCreationContext } from "../../LensCreation/contexts/LensCreationContext";
+import { useLensCreationContext } from "../LensCreation/contexts/LensCreationContext";
 
 const CircleBoundSlider = () => {
   const { setCircleBoundRadius, circleBoundRadius } = useLensCreationContext();

@@ -100,12 +100,16 @@ const LensSchema = new Schema(
 
 LensSchema.index({ location: '2dsphere' });
 
-//cascade delete markers of the lens to be deleted
+//cascade delete markers and comments of the lens to be deleted
 LensSchema.pre('deleteOne', { document: false, query: true }, async function (next) {
     try {
         const doc = await this.model.findOne(this.getFilter());
         if (doc && doc.markers && doc.markers.length > 0) {
             await mongoose.model('Marker').deleteMany({ _id: { $in: doc.markers } });
+        }
+
+        if (doc && doc.comments && doc.comments.length > 0) {
+            await mongoose.model('Comment').deleteMany({ _id: { $in: doc.markers } });
         }
         next();
     } catch (error) {
