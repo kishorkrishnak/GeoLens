@@ -99,6 +99,11 @@ const LensDetails = ({ operation }) => {
     const address = await fetchAddress(centerLatLong);
     lensDataToSend.address = address;
 
+    // reverse to longitude-latitude format for GeoJSON compatibility
+    const langLat = [centerLatLong[1], centerLatLong[0]];
+
+    lensDataToSend.location.coordinates = langLat;
+
     const response = await createLens(lensDataToSend);
     setLensData({
       name: "",
@@ -125,6 +130,11 @@ const LensDetails = ({ operation }) => {
 
     const address = await fetchAddress(centerLatLong);
     lensDataToUpdate.address = address;
+
+    // reverse to longitude-latitude format for GeoJSON compatibility
+    const langLat = [centerLatLong[1], centerLatLong[0]];
+
+    lensDataToUpdate.location.coordinates = langLat;
     await updateLens(id, lensDataToUpdate);
     setLensData({
       name: "",

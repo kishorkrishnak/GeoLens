@@ -5,7 +5,7 @@ import { Avatar, Container, Grid, Paper, Typography } from "@mui/material";
 
 const HowItWorks = () => {
   return (
-    <Container sx={{ my: 8 }}>
+    <Container component={"section"} sx={{ my: 8 }}>
       <Typography variant="h4" fontWeight={500} align="center">
         How It Works
       </Typography>

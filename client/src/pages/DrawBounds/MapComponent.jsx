@@ -43,7 +43,7 @@ const MapComponent = () => {
 
         <Marker position={centerLatLong}>
           <Popup permanent>
-            <Typography variant="h5">
+            <Typography variant="h6">
               This will be the center of your map and your map will be locked to
               this particular region. Add markers for all your favorite spots in
               this region :D

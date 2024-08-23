@@ -29,8 +29,8 @@ const CircleBoundSlider = () => {
         Select the radius of your Lens
       </Typography>
       <Slider
-        defaultValue={circleBoundRadius || 100}
-        max={3000}
+        value={circleBoundRadius || 100}
+        max={10000}
         aria-label="Select Circle Bound Radius"
         valueLabelDisplay="auto"
         onChange={handleCircleRadiusChange}

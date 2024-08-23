@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [authCheckComplete, setAuthCheckComplete] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  //ensure auth status before page load to ensure proper working
+  //ensure auth status from server before the website loads
   useEffect(() => {
     const checkAuth = async () => {
       try {

@@ -42,7 +42,13 @@ exports.createMarker = async (req, res, next) => {
 
     res.status(201).json({
       status: "success",
-      data: newMarker,
+      data: {
+        ...newMarker,
+        location: {
+          ...newMarker.location,
+          coordinates: newMarker.location.coordinates.reverse()
+        }
+      },
     });
   } catch (error) {
     res.status(500).json({
@@ -66,6 +72,7 @@ exports.getMarker = async (req, res, next) => {
         data: null,
       });
     }
+    marker.location.coordinates = marker.location.coordinates.reverse()
 
     res.status(201).json({
       status: "success",

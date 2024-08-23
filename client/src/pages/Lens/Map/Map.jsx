@@ -1,23 +1,19 @@
+import { Typography } from "@mui/material";
 import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { uid } from "react-uid";
 import MapBoundsEnforcer from "../../../components/MapBoundsEnforcer";
 import MapClickHandler from "../../../components/MapClickHandler";
 import MarkerComponent from "../../../components/Marker/MarkerComponent";
+import CommentsModal from "../../../components/Modals/CommentsModal/CommentsModal";
 import MarkerModal from "../../../components/Modals/MarkerModal/MarkerModal";
 import RecenterMap from "../../../components/RecenterMap";
 import RoutingMachine from "../../../components/RoutingMachine/RoutingMachine";
 import { useMapContext } from "../../../contexts/MapContext";
-import { Typography } from "@mui/material";
-import CommentsModal from "../../../components/Modals/CommentsModal/CommentsModal";
+import Markers from "./Markers";
+
 const Map = () => {
-  const {
-    modalVisible,
-    routingMode,
-    lens,
-    centerLatLong,
-    commentsModalVisible,
-  } = useMapContext();
+  const { routingMode, lens, selectedMarkerCategory } = useMapContext();
   const markers = lens.markers;
   const wayPoints = markers.map((marker) => L.latLng(marker.lat, marker.lng));
   const centerCoordinates = lens.location.coordinates;
@@ -30,17 +26,23 @@ const Map = () => {
     [maxBoundsNorthEast.lat, maxBoundsNorthEast.lng],
   ];
 
+  /* render only the markers that match the selected category */
+  const filteredMarkers = markers.filter((marker) =>
+    selectedMarkerCategory && selectedMarkerCategory !== "All"
+      ? marker.category === selectedMarkerCategory
+      : true
+  );
+console.log(centerCoordinates)
   return (
     <>
       <MapContainer
         className="map"
         center={centerCoordinates}
         zoom={14}
-        minZoom={13}
         scrollWheelZoom={true}
-        maxBounds={maxBounds}
         zoomControl={false}
         maxBoundsViscosity={1}
+        autoPan={false}
       >
         {/* forcefully recenter map and update maxbounds when state changes */}
         <RecenterMap lat={centerCoordinates[0]} lng={centerCoordinates[1]} />
@@ -51,22 +53,13 @@ const Map = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* render all the markers associated with the lens */}
-        {markers.map((marker, index) => (
-          <MarkerComponent
-            totalMarkers={markers.length}
-            index={index}
-            key={uid(marker)}
-            marker={marker}
-          />
-        ))}
+        <Markers markers={filteredMarkers} />
 
-        <Marker position={centerLatLong}>
+        <Marker position={centerCoordinates}>
           <Popup permanent>
-            <Typography variant="h5">
-              This will be the center of your map and your map will be locked to
-              this particular region. Add markers for all your favorite spots in
-              this region :D
+            <Typography variant="h6">Center point of this lens</Typography>
+            <Typography variant="subtitle2">
+              {lens?.address?.formatted}
             </Typography>
           </Popup>
         </Marker>

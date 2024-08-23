@@ -20,6 +20,7 @@ import ConfirmationModal from "../../components/Modals/ConfirmationModal/Confirm
 import Navbar from "../../components/Navbar/Navbar";
 import { useAuthContext } from "../../contexts/AuthContext";
 import useModal from "../../hooks/useModal";
+import noResultsImg from "../../assets/images/noresults.png";
 
 const YourLenses = () => {
   const [lenses, setLenses] = useState([]);
@@ -139,8 +140,8 @@ const YourLenses = () => {
               </Typography>
               <Box
                 component="img"
-                src="/noresults.png"
-                alt="Create Your Lens"
+                src={noResultsImg}
+                alt="No results"
                 sx={{
                   width: "100%",
                   maxWidth: "400px",

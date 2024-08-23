@@ -3,16 +3,20 @@ import toast from "react-hot-toast";
 import { createMarker, deleteMarker, updateMarker } from "../../api/marker";
 import { useAuthContext } from "../AuthContext";
 import MapContext from "./MapContext";
+import { reverseGeoCode } from "../../api/geocode";
 
 export const MapProvider = ({ children }) => {
   const { user } = useAuthContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [commentsModalVisible, setCommentsModalVisible] = useState(false);
+  const [markerModalOperation, setMarkerModalOperation] = useState("create");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [routingMode, setRoutingMode] = useState(false);
   const [isLensCreator, setIsLensCreator] = useState(false);
-  const [centerLatLong, setCenterLatLong] = useState([1, 15]);
+  const [clientGeoCoordinates, setClientGeoCoordinates] = useState([]);
   const [lens, setLens] = useState(null);
+  const [markerIdToUpdate, setMarkerIdToUpdate] = useState(null);
+  const [selectedMarkerCategory, setSelectedMarkerCategory] = useState("All");
 
   const [markerData, setMarkerData] = useState({
     lat: null,
@@ -28,7 +32,7 @@ export const MapProvider = ({ children }) => {
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       ({ coords: { latitude, longitude } }) => {
-        setCenterLatLong([latitude, longitude]);
+        setClientGeoCoordinates([latitude, longitude]);
       }
     );
   }, []);
@@ -51,7 +55,7 @@ export const MapProvider = ({ children }) => {
 
     const location = {
       type: "Point",
-      coordinates: [markerData.lat, markerData.lng],
+      coordinates: [markerData.lng,markerData.lat ],
     };
 
     const newMarker = {
@@ -95,23 +99,18 @@ export const MapProvider = ({ children }) => {
     }
   };
 
-  const updateMarkerPosition = async (id, { lat, lng }) => {
+  const updateMarkerDetails = async () => {
+    if (!(markerData.title && markerData.category)) {
+      return toast.error("You must provide a title and category");
+    }
+
     try {
-      const response = await updateMarker(id, {
-        location: {
-          type: "Point",
-          coordinates: [lat, lng],
-        },
-      });
+      const response = await updateMarker(markerIdToUpdate, markerData);
       if (response.data.status === "success") {
         const updatedMarkers = lens.markers.map((marker) => {
-          if (marker._id === id) {
+          if (marker._id === markerIdToUpdate) {
             return {
-              ...marker,
-              location: {
-                type: "Point",
-                coordinates: [lat, lng],
-              },
+              ...markerData,
             };
           }
 
@@ -122,6 +121,59 @@ export const MapProvider = ({ children }) => {
           ...lens,
           markers: updatedMarkers,
         });
+      }
+      setModalVisible(false);
+      toast.success("Marker updated");
+      setMarkerData({});
+      setMarkerIdToUpdate(null);
+    } catch (error) {
+      console.log("Error while updating marker");
+    }
+  };
+
+  const updateMarkerPosition = async (id, { lat, lng }) => {
+    try {
+      //fetch the address of the new latitude and longitude
+      const addressReponse = await reverseGeoCode([lat, lng]);
+      const address = addressReponse.data.results[0];
+
+      const processedAddress = {
+        formatted: address.formatted,
+        components: address.components,
+      };
+
+      const response = await updateMarker(id, {
+        location: {
+          type: "Point",
+          coordinates: [ lng,lat],
+        },
+        processedAddress,
+      });
+
+      if (response.data.status === "success") {
+        const updatedMarkers = lens.markers.map((marker) => {
+          if (marker._id === id) {
+            return {
+              ...marker,
+              location: {
+                type: "Point",
+                coordinates: [lat, lng],
+              },
+              address,
+            };
+          }
+
+          return marker;
+        });
+
+        setLens({
+          ...lens,
+          markers: updatedMarkers,
+        });
+
+        toast.success(
+          "Marker position updated, edit the marker details to reflect the new location"
+        );
       } else {
         throw new Error("Error while updating marker");
       }
@@ -133,7 +185,7 @@ export const MapProvider = ({ children }) => {
   const contextValue = {
     lens,
     isLensCreator,
-    centerLatLong,
+    clientGeoCoordinates,
     setLens,
     markerData,
     setMarkerData,
@@ -142,6 +194,7 @@ export const MapProvider = ({ children }) => {
     modalVisible,
     setModalVisible,
     addMarker,
+    updateMarkerDetails,
     removeMarker,
     updateMarkerPosition,
     routingMode,
@@ -150,6 +203,11 @@ export const MapProvider = ({ children }) => {
     setSidebarCollapsed,
     commentsModalVisible,
     setCommentsModalVisible,
+    markerModalOperation,
+    setMarkerModalOperation,
+    setMarkerIdToUpdate,
+    selectedMarkerCategory,
+    setSelectedMarkerCategory,
   };
 
   return (

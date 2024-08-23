@@ -14,28 +14,32 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getLenses } from "../../api/lens";
+import noResultsImg from "../../assets/images/noresults.png";
 import Footer from "../../components/Footer/Footer";
 import LensesGrid from "../../components/LensesGrid";
 import Navbar from "../../components/Navbar/Navbar";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { countryData } from "../../utils/data";
+import { useMapContext } from "../../contexts/MapContext";
+import toast from "react-hot-toast";
 
 const Lenses = () => {
   const [lenses, setLenses] = useState([]);
   const [search, setSearch] = useState("");
   const [country, setCountry] = useState("");
-  const [state, setState] = useState();
+  const [state, setState] = useState("");
   const [sort, setSort] = useState("popular");
   const [page, setPage] = useState(1);
+  const [distance, setDistance] = useState("all");
   const [totalPages, setTotalPages] = useState(1);
   const limit = 6;
 
   const { setLoading } = useAuthContext();
+  const { clientGeoCoordinates } = useMapContext();
 
   useEffect(() => {
     const fetchLenses = async () => {
       setLoading(true);
-
       try {
         const response = await getLenses({
           search,
@@ -44,6 +48,9 @@ const Lenses = () => {
           sort,
           page,
           limit,
+          distance,
+          clientLat: clientGeoCoordinates[0],
+          clientLng: clientGeoCoordinates[1],
         });
         setLenses(response.data.data);
         setTotalPages(Math.ceil(response.data.total / limit));
@@ -55,15 +62,20 @@ const Lenses = () => {
     };
 
     fetchLenses();
-  }, [search, country, state, sort, page]);
+  }, [
+    search,
+    country,
+    state,
+    distance,
+    clientGeoCoordinates,
+    sort,
+    page,
+    setLoading,
+  ]);
 
   const getStatesByCountry = (country) => {
     if (!country) return [];
-    const states =
-      countryData
-        .find(({ name }) => name === country)
-        ?.states?.map((data) => data.name) || [];
-
+    const states = countryData.find(({ name }) => name === country).states;
     return states;
   };
 
@@ -115,6 +127,7 @@ const Lenses = () => {
                 )}
                 isOptionEqualToValue={(option, value) => option === value}
                 getOptionLabel={(option) => option}
+                freeSolo
               />
             </FormControl>
             <FormControl fullWidth>
@@ -129,6 +142,7 @@ const Lenses = () => {
                 )}
                 isOptionEqualToValue={(option, value) => option === value}
                 getOptionLabel={(option) => option}
+                freeSolo
               />
             </FormControl>
             <FormControl fullWidth>
@@ -139,9 +153,33 @@ const Lenses = () => {
                 onChange={(e) => setSort(e.target.value)}
               >
                 <MenuItem value="popular">Popular</MenuItem>
-                <MenuItem value="closest">Closest</MenuItem>
                 <MenuItem value="latest">Latest</MenuItem>
                 <MenuItem value="oldest">Oldest</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth>
+              <InputLabel>Distance</InputLabel>
+              <Select
+                value={distance}
+                label="Distance"
+                onChange={(e) => {
+                  if (
+                    clientGeoCoordinates &&
+                    clientGeoCoordinates?.length === 2
+                  ) {
+                    setDistance(e.target.value);
+                  } else
+                    toast.error(
+                      "You need to allow location access for this query"
+                    );
+                }}
+              >
+                <MenuItem value="all">All</MenuItem>
+                <MenuItem value="10">&lt; 10 km</MenuItem>
+                <MenuItem value="100">&lt; 100 km</MenuItem>
+                <MenuItem value="500">&lt; 500 km</MenuItem>
+                <MenuItem value="1000">&gt; 1000 km</MenuItem>
               </Select>
             </FormControl>
           </Stack>
@@ -170,8 +208,8 @@ const Lenses = () => {
               </Typography>
               <Box
                 component="img"
-                src="/noresults.png"
-                alt="Create Your Lens"
+                src={noResultsImg}
+                alt="No Results"
                 sx={{
                   width: "100%",
                   maxWidth: "400px",

@@ -1,31 +1,50 @@
-import { ThumbDown, ThumbUp } from "@mui/icons-material/";
+import { Edit, ThumbDown, ThumbUp } from "@mui/icons-material/";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { Box, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import L from "leaflet";
 import { useMemo, useRef } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Marker, Popup, Tooltip } from "react-leaflet";
 import { useMapContext } from "../../contexts/MapContext";
 const MarkerComponent = ({ marker, index, totalMarkers }) => {
-  const { updateMarkerPosition, removeMarker, routingMode, isLensCreator } =
-    useMapContext();
+  const {
+    updateMarkerPosition,
+    removeMarker,
+    setMarkerIdToUpdate,
+    routingMode,
+    isLensCreator,
+    setModalVisible,
+    setMarkerModalOperation,
+    setMarkerData,
+  } = useMapContext();
 
   const markerRef = useRef(null);
   const eventHandlers = useMemo(
     () => ({
-      dragend() {
+      async dragend() {
+        console.log("end");
         const markerElement = markerRef.current;
         if (markerElement != null) {
-          updateMarkerPosition(marker._id, markerElement.getLatLng());
+          const coordinates = markerElement.getLatLng();
+          updateMarkerPosition(marker._id, coordinates);
         }
       },
     }),
-    [marker._id, updateMarkerPosition]
+    [marker._id]
   );
 
   const handleDeleteClick = (e) => {
     e.stopPropagation();
     removeMarker(marker._id);
+  };
+
+  const handleEditClick = (e) => {
+    setMarkerModalOperation("edit");
+    setMarkerIdToUpdate(marker._id);
+    const coordinates = marker.location.coordinates;
+    setMarkerData({ ...marker, lat: coordinates[0], lng: coordinates[1] });
+    setModalVisible(true);
+    e.stopPropagation();
   };
 
   let markerColor;
@@ -69,9 +88,9 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
       icon={icon}
       position={position}
     >
-      <Tooltip>{marker.title}</Tooltip>
+      <Tooltip permanent={routingMode}>{marker.title}</Tooltip>
 
-      <Popup keepInView>
+      <Popup>
         <Typography variant="h6">{marker.title}</Typography>
         <Typography variant="body1">{marker.description}</Typography>
         <Typography marginBottom={2} variant="subtitle2" display={"block"}>
@@ -107,7 +126,7 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
               color="primary"
               sx={{ verticalAlign: "middle", marginRight: 1.5 }}
             />
-            {marker.upvotes}
+            {marker?.upvotes}
           </Typography>
           <Typography variant="body1" noWrap>
             <ThumbDown
@@ -115,15 +134,18 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
               color="primary"
               sx={{ verticalAlign: "middle", marginRight: 1.5 }}
             />
-            {marker.downvotes}
+            {marker?.downvotes}
           </Typography>
         </Box>
         {isLensCreator && (
-          <DeleteForeverIcon
-            color="error"
-            onClick={handleDeleteClick}
-            fontSize="small"
-          />
+          <Stack direction={"row"} spacing={1}>
+            <Edit onClick={handleEditClick} fontSize="small" />
+            <DeleteForeverIcon
+              color="error"
+              onClick={handleDeleteClick}
+              fontSize="small"
+            />
+          </Stack>
         )}
       </Popup>
     </Marker>

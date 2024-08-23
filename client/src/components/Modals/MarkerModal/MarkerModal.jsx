@@ -20,6 +20,8 @@ const MarkerModal = () => {
     addMarker,
     setModalVisible,
     modalVisible,
+    markerModalOperation,
+    updateMarkerDetails,
     isLensCreator,
   } = useMapContext();
 
@@ -59,7 +61,11 @@ const MarkerModal = () => {
           width="100%"
         >
           <Typography variant="h5" color="success">
-            {isLensCreator ? "Add Marker" : "Selected Point"}
+            {isLensCreator
+              ? markerModalOperation === "create"
+                ? "Add Marker"
+                : "Edit Marker"
+              : "Selected Point"}
           </Typography>
         </Box>
 
@@ -95,13 +101,27 @@ const MarkerModal = () => {
                 marginTop: "16px",
               }}
             />
-
             <Autocomplete
               options={markerCategories}
-              groupBy={(option) => option.category}
-              onChange={(e, v) =>
-                setMarkerData({ ...markerData, category: v.category })
+              groupBy={(option) => option.category} 
+              value={
+                markerCategories.find(
+                  (option) => option.sub_category === markerData.category
+                ) || null
               }
+              onChange={(e, v) => {
+                if (v) {
+                  setMarkerData({
+                    ...markerData,
+                   category: v.sub_category,
+                  });
+                } else {
+                  setMarkerData({
+                    ...markerData,
+                   category: "",
+                  });
+                }
+              }}
               getOptionLabel={(option) => option.sub_category}
               renderOption={(props, data) => (
                 <Typography key={data.id} {...props} variant="body1">
@@ -113,12 +133,12 @@ const MarkerModal = () => {
                   {...params}
                   variant="outlined"
                   label="Enter Category"
-                  placeholder="Categories"
+                  placeholder="Sub Categories"
                   style={{ marginTop: "16px" }}
                 />
               )}
+              freeSolo
             />
-
             <Box mt={2} mb={2}>
               <Button variant="outlined" component="label">
                 {markerData?.image ? "Change Image" : "Upload a Image"}
@@ -140,11 +160,15 @@ const MarkerModal = () => {
               sx={{
                 color: "white",
               }}
-              onClick={addMarker}
+              onClick={
+                markerModalOperation === "create"
+                  ? addMarker
+                  : updateMarkerDetails
+              }
               variant="contained"
               color="success"
             >
-              Add
+              {markerModalOperation === "create" ? "Add" : "Edit"}
             </Button>
           </Box>
         )}

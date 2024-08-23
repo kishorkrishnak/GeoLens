@@ -44,7 +44,6 @@ const LensStats = () => {
 
       <Box
         onClick={() => {
-          console.log("hi");
           setCommentsModalVisible(true);
         }}
         sx={{

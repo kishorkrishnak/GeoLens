@@ -1,12 +1,7 @@
 import { Typography } from "@mui/material";
 import { OpenStreetMapProvider } from "leaflet-geosearch";
 import { useMemo, useRef } from "react";
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer
-} from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import RecenterMap from "../../components/RecenterMap";
 import SearchControl from "../../components/SearchControl/SearchControl";
 import { useLensCreationContext } from "../LensCreation/contexts/LensCreationContext";
@@ -25,14 +20,13 @@ const MapComponent = ({ operation }) => {
         if (markerElement != null) {
           const { lat, lng } = markerElement.getLatLng();
           const coordinates = [lat, lng];
-
           setCenterLatLong([...coordinates]);
         }
       },
     }),
     []
   );
-  
+
   return (
     <>
       <MapContainer
@@ -42,7 +36,6 @@ const MapComponent = ({ operation }) => {
         scrollWheelZoom={true}
         maxBoundsViscosity={1}
       >
-       
         <RecenterMap lat={centerLatLong[0]} lng={centerLatLong[1]} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -70,7 +63,7 @@ const MapComponent = ({ operation }) => {
           position={centerLatLong}
         >
           <Popup permanent>
-            <Typography variant="h5">
+            <Typography variant="h6">
               This will be the center of your map and your map will be locked to
               this particular region. Add markers for all your favorite spots in
               this region :D

@@ -1,6 +1,7 @@
 const Lens = require("../models/Lens");
 const User = require("../models/User");
 const Comment = require("../models/Comment");
+const mongoose = require("mongoose");
 
 exports.createLens = async (req, res, next) => {
   try {
@@ -66,6 +67,7 @@ exports.getLens = async (req, res, next) => {
       .populate("markers")
       .populate("creator");
 
+
     if (!lens) {
       return res.status(404).json({
         status: "error",
@@ -77,6 +79,9 @@ exports.getLens = async (req, res, next) => {
     lens.views++;
 
     await lens.save();
+
+    lens.location.coordinates = lens.location.coordinates.reverse()
+    lens.markers.forEach((marker) => marker.location.coordinates = marker.location.coordinates.reverse())
 
     res.status(201).json({
       status: "success",
@@ -106,11 +111,13 @@ exports.getLensCenterCoordinates = async (req, res, next) => {
     }
 
     const { circleBounds, circleBoundRadius } = lens?.address;
+    const location = lens?.location
+    location.coordinates = location.coordinates.reverse()
 
     res.status(200).json({
       status: "success",
       data: {
-        location: lens?.location,
+        location,
         bounds: {
           circleBounds,
           circleBoundRadius,
@@ -167,12 +174,13 @@ exports.getLenses = async (req, res, next) => {
     creatorId,
     country,
     state,
+    distance,
     sort,
-    filter,
     search,
     page = 1,
     limit = 10,
-    clientGeoCoordinates,
+    clientLat,
+    clientLng
   } = req.query;
 
   let sortStage = {};
@@ -184,20 +192,30 @@ exports.getLenses = async (req, res, next) => {
     sortStage = { createdAt: 1 };
   } else if (sort === "popular") {
     sortStage = { views: -1, likes: -1, createdAt: -1 };
+  } else {
+    sortStage = { views: -1, likes: -1, createdAt: -1 };
+
   }
 
-  if (country) matchStage.country = country;
-  if (state) matchStage.state = state;
-  if (creatorId) matchStage.creator = creatorId;
+  if (creatorId) matchStage.creator = new mongoose.Types.ObjectId(creatorId);
+
+  if (country) {
+    matchStage["address.components.country"] = { $regex: new RegExp(country, "i") };
+  }
+
+  if (state) {
+    matchStage["address.components.state"] = { $regex: new RegExp(state, "i") };
+  }
 
   const searchConditions = [];
+
   if (search) {
     const regex = new RegExp(search, "i");
+
     searchConditions.push(
       { name: { $regex: regex } },
       { description: { $regex: regex } },
-      // { state: { $regex: regex } },  // Uncomment if needed
-      // { district: { $regex: regex } },  // Uncomment if needed
+      { "address.formatted": { $regex: regex } },
       { tags: { $elemMatch: { $regex: regex } } }
     );
   }
@@ -207,18 +225,45 @@ exports.getLenses = async (req, res, next) => {
     matchStage.$and.push({ $or: searchConditions });
   }
 
-  const collation = { locale: "en", strength: 2 };
+  const parsedDistance = parseInt(distance);
+  const parsedClientLat = parseFloat(clientLat);
+  const parsedClientLng = parseFloat(clientLng);
 
   try {
     const skip = (page - 1) * limit;
 
-    const lenses = await Lens.find(matchStage)
-      .collation(collation)
-      .sort(sortStage)
-      .skip(skip)
-      .limit(parseInt(limit))
-      .populate("markers")
-      .populate("creator");
+    let pipeline = [];
+
+    if (parsedDistance && !isNaN(parsedDistance) && !isNaN(parsedClientLat) && !isNaN(parsedClientLng)) {
+
+      pipeline.push({
+        $geoNear: {
+          near: {
+            type: "Point",
+            coordinates: [parsedClientLng, parsedClientLat]
+          },
+
+          distanceField: "distance",
+          maxDistance: parsedDistance * 1000,
+          spherical: true,
+          query: matchStage
+        }
+      });
+    } else {
+      pipeline.push({ $match: matchStage });
+    }
+
+
+    pipeline = pipeline.concat([
+      { $sort: sortStage },
+      { $skip: skip },
+      { $limit: parseInt(limit) },
+      { $lookup: { from: 'markers', localField: 'markers', foreignField: '_id', as: 'markers' } },
+      { $lookup: { from: 'users', localField: 'creator', foreignField: '_id', as: 'creator' } },
+      { $unwind: '$creator' }
+    ]);
+
+    const lenses = await Lens.aggregate(pipeline).collation({ locale: "en", strength: 2 });
 
     const totalLenses = await Lens.countDocuments(matchStage);
 
@@ -231,6 +276,7 @@ exports.getLenses = async (req, res, next) => {
       limit,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       status: "error",
       message: "Internal server error",
@@ -238,6 +284,7 @@ exports.getLenses = async (req, res, next) => {
     });
   }
 };
+
 exports.deleteLens = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -296,7 +343,7 @@ exports.addCommentToLens = async (req, res) => {
       data: populatedComment,
     });
   } catch (error) {
-    console.log(error);
+
     res.status(500).json({
       status: "error",
       message: "Internal server error",

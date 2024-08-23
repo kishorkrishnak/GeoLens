@@ -2,11 +2,18 @@ import { useMapEvents } from "react-leaflet";
 import { useMapContext } from "../contexts/MapContext";
 
 function MapClickHandler() {
-  const { modalVisible, setMarkerData, markerData, setModalVisible } =
-    useMapContext();
+  const {
+    modalVisible,
+    setMarkerData,
+    markerData,
+    setModalVisible,
+    setMarkerModalOperation,
+  } = useMapContext();
 
   useMapEvents({
     click: ({ latlng: { lat, lng } }) => {
+      setMarkerModalOperation("create");
+
       //add marker only if markermodal is not visible
       if (!modalVisible) {
         setMarkerData({ ...markerData, lat, lng });

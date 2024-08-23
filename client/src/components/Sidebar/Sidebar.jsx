@@ -1,22 +1,27 @@
 import MenuIcon from "@mui/icons-material/Menu";
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Typography
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
 import { getWeatherData } from "../../api/geocode";
 import { useAuthContext } from "../../contexts/AuthContext";
-
 import { useMapContext } from "../../contexts/MapContext";
 import CurrentWeather from "./CurrentWeather";
 import CreatorCard from "./LensDetails/CreatorCard";
 import LensStats from "./LensDetails/LensStats";
 import ShareButton from "./LensDetails/ShareButton";
-import { useNavigate, useParams } from "react-router-dom";
+import MarkerFilter from "./MarkerFilter";
 
 const Sidebar = () => {
   const [weather, setWeather] = useState(null);
   const { id } = useParams();
   const {
-    centerLatLong,
+    lens,
     markerCount,
     routingMode,
     setRoutingMode,
@@ -31,23 +36,24 @@ const Sidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
 
+  const centerCoordinates = lens.location.coordinates;
+
   useEffect(() => {
     const fetchTodaysWeather = async () => {
       try {
         const response = await getWeatherData(
-          centerLatLong[0],
-          centerLatLong[1]
+          centerCoordinates[0],
+          centerCoordinates[1]
         );
 
         setWeather(response.data);
       } catch (error) {
         console.error("Error fetching weather data:", error);
-        throw error;
       }
     };
 
     fetchTodaysWeather();
-  }, [centerLatLong]);
+  }, [centerCoordinates]);
 
   return (
     <>
@@ -115,9 +121,9 @@ const Sidebar = () => {
               />
               <Typography variant="h6">GeoLens</Typography>
             </Box>
-            <Typography variant="h6" noWrap sx={{ marginTop: 4 }}>
-              Total Markers: {markerCount}
-            </Typography>
+
+            <MarkerFilter />
+            
             <Button
               sx={{
                 marginTop: 1,
