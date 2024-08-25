@@ -4,12 +4,14 @@ import { createMarker, deleteMarker, updateMarker } from "../../api/marker";
 import { useAuthContext } from "../AuthContext";
 import MapContext from "./MapContext";
 import { reverseGeoCode } from "../../api/geocode";
+import { tileLayerData } from "../../utils/data";
 
 export const MapProvider = ({ children }) => {
   const { user } = useAuthContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [commentsModalVisible, setCommentsModalVisible] = useState(false);
   const [markerModalOperation, setMarkerModalOperation] = useState("create");
+  const [correctionsModalVisible, setCorrectionsModalVisible] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [routingMode, setRoutingMode] = useState(false);
   const [isLensCreator, setIsLensCreator] = useState(false);
@@ -17,6 +19,9 @@ export const MapProvider = ({ children }) => {
   const [lens, setLens] = useState(null);
   const [markerIdToUpdate, setMarkerIdToUpdate] = useState(null);
   const [selectedMarkerCategory, setSelectedMarkerCategory] = useState("All");
+
+  const tileLayers = tileLayerData;
+  const [currentTileLayer, setCurrentTileLayer] = useState(tileLayerData[0]);
 
   const [markerData, setMarkerData] = useState({
     lat: null,
@@ -55,7 +60,7 @@ export const MapProvider = ({ children }) => {
 
     const location = {
       type: "Point",
-      coordinates: [markerData.lng,markerData.lat ],
+      coordinates: [markerData.lng, markerData.lat],
     };
 
     const newMarker = {
@@ -145,7 +150,7 @@ export const MapProvider = ({ children }) => {
       const response = await updateMarker(id, {
         location: {
           type: "Point",
-          coordinates: [ lng,lat],
+          coordinates: [lng, lat],
         },
         processedAddress,
       });
@@ -203,11 +208,16 @@ export const MapProvider = ({ children }) => {
     setSidebarCollapsed,
     commentsModalVisible,
     setCommentsModalVisible,
+    correctionsModalVisible,
+    setCorrectionsModalVisible,
     markerModalOperation,
     setMarkerModalOperation,
     setMarkerIdToUpdate,
     selectedMarkerCategory,
     setSelectedMarkerCategory,
+    tileLayers,
+    currentTileLayer,
+    setCurrentTileLayer,
   };
 
   return (

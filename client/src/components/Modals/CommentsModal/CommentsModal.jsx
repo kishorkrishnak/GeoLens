@@ -48,7 +48,10 @@ const CommentsModal = ({ lensId }) => {
           (lens) => lens._id !== commentIdToDelete
         );
         setComments([...updatedComments]);
-        setTotalItems((prevCount) => prevCount - 1);
+
+        const newTotalItems = totalItems - 1;
+        setTotalItems(newTotalItems);
+        setTotalPages(Math.ceil(newTotalItems / limit));
 
         toast.success("Comment deleted successfully");
       } else {

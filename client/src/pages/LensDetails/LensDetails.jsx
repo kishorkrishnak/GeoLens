@@ -93,7 +93,6 @@ const LensDetails = ({ operation }) => {
   const handleCreateLens = async () => {
     const lensDataToSend = {
       ...lensData,
-      creator: user._id,
     };
 
     const address = await fetchAddress(centerLatLong);

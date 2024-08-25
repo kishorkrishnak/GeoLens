@@ -94,6 +94,21 @@ const LensesGrid = ({ lenses, allowEdit, toggle, setLensIdToDelete }) => {
                     alignItems="center"
                   >
                     <Link
+                      to={`/lens/${lens._id}/suggestions`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                      sx={{ mt: 2 }}
+                    >
+                      <Chip
+                        color="warning"
+                        label={"Suggestions"}
+                        size="medium"
+                        sx={{ ml: 0, color: "white" }}
+                      />
+                    </Link>
+
+                    <Link
                       to={`/lens/edit/${lens._id}`}
                       onClick={(e) => {
                         e.stopPropagation();

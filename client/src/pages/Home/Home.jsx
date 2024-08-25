@@ -5,6 +5,7 @@ import CreateYourLens from "./Sections/CreateYourLens";
 import Cta from "./Sections/Cta.jsx";
 import Hero from "./Sections/Hero";
 import HowItWorks from "./Sections/HowItWorks";
+import TopLenses from "./Sections/TopLenses.jsx";
 
 const Home = () => {
   return (
@@ -20,6 +21,7 @@ const Home = () => {
       <Hero />
       <HowItWorks />
       <CreateYourLens />
+      <TopLenses />
       <Cta />
       <Footer />
     </Box>

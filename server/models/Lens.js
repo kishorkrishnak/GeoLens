@@ -93,6 +93,10 @@ const LensSchema = new Schema(
             },
         ],
 
+        suggestions: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Suggestion'
+        }],
         comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
     },
     { timestamps: { createdAt: true } }

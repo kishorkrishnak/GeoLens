@@ -46,8 +46,8 @@ exports.createMarker = async (req, res, next) => {
         ...newMarker,
         location: {
           ...newMarker.location,
-          coordinates: newMarker.location.coordinates.reverse()
-        }
+          coordinates: newMarker.location.coordinates.reverse(),
+        },
       },
     });
   } catch (error) {
@@ -72,9 +72,9 @@ exports.getMarker = async (req, res, next) => {
         data: null,
       });
     }
-    marker.location.coordinates = marker.location.coordinates.reverse()
+    marker.location.coordinates = marker.location.coordinates.reverse();
 
-    res.status(201).json({
+    res.status(200).json({
       status: "success",
       data: marker,
     });
@@ -129,7 +129,7 @@ exports.deleteMarker = async (req, res, next) => {
 
     await Marker.findByIdAndDelete(id);
 
-    res.status(201).json({
+    res.status(204).json({
       status: "success",
       message: "Marker deleted successfully",
       data: null,

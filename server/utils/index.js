@@ -1,23 +1,5 @@
-const {
-  generateAccessToken,
-  generateRefreshToken,
-  verifyRefreshToken,
-  decodeAccessToken,
-} = require("./jwt");
-const { generateOtp, validateOtp } = require("./otp_handler");
-const { sendSms } = require("./sms_sender");
-const { encryptPassword, verifyPassword } = require("./bcrypt");
+const oauth2Client = require("./oauth2client")
 
-generateOtp();
-
-module.exports = {
-  generateAccessToken,
-  generateRefreshToken,
-  verifyRefreshToken,
-  decodeAccessToken,
-  generateOtp,
-  validateOtp,
-  sendSms,
-  encryptPassword,
-  verifyPassword,
-};
+module.exports ={
+    oauth2Client
+}

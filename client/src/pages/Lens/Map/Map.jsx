@@ -1,19 +1,19 @@
 import { Typography } from "@mui/material";
 import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import { uid } from "react-uid";
 import MapBoundsEnforcer from "../../../components/MapBoundsEnforcer";
 import MapClickHandler from "../../../components/MapClickHandler";
-import MarkerComponent from "../../../components/Marker/MarkerComponent";
 import CommentsModal from "../../../components/Modals/CommentsModal/CommentsModal";
 import MarkerModal from "../../../components/Modals/MarkerModal/MarkerModal";
 import RecenterMap from "../../../components/RecenterMap";
 import RoutingMachine from "../../../components/RoutingMachine/RoutingMachine";
 import { useMapContext } from "../../../contexts/MapContext";
 import Markers from "./Markers";
+import SuggestCorrectionModal from "../../../components/Modals/SuggestCorrectionModal/CommentsModal/SuggestCorrectionModal";
 
 const Map = () => {
-  const { routingMode, lens, selectedMarkerCategory } = useMapContext();
+  const { routingMode, lens, selectedMarkerCategory, currentTileLayer } =
+    useMapContext();
   const markers = lens.markers;
   const wayPoints = markers.map((marker) => L.latLng(marker.lat, marker.lng));
   const centerCoordinates = lens.location.coordinates;
@@ -32,7 +32,7 @@ const Map = () => {
       ? marker.category === selectedMarkerCategory
       : true
   );
-console.log(centerCoordinates)
+  console.log(currentTileLayer)
   return (
     <>
       <MapContainer
@@ -49,15 +49,15 @@ console.log(centerCoordinates)
         <MapBoundsEnforcer maxBounds={maxBounds} />
 
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url={currentTileLayer.url}
+          attribution={currentTileLayer.attribution}
         />
 
         <Markers markers={filteredMarkers} />
 
         <Marker position={centerCoordinates}>
           <Popup permanent>
-            <Typography variant="h6">Center point of this lens</Typography>
+            <Typography variant="h6">Centre point of this Lens</Typography>
             <Typography variant="subtitle2">
               {lens?.address?.formatted}
             </Typography>
@@ -66,7 +66,7 @@ console.log(centerCoordinates)
 
         <MarkerModal lensId={lens._id} />
         <CommentsModal lensId={lens._id} />
-
+        <SuggestCorrectionModal lensId={lens._id} />
         {routingMode && <RoutingMachine waypoints={wayPoints} />}
         <MapClickHandler />
       </MapContainer>

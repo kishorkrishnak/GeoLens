@@ -33,6 +33,7 @@ const MapComponent = ({ operation }) => {
         className="map"
         center={centerLatLong}
         zoom={14}
+        minZoom={13}
         scrollWheelZoom={true}
         maxBoundsViscosity={1}
       >
@@ -52,7 +53,7 @@ const MapComponent = ({ operation }) => {
           autoClose={false}
           searchLabel={`${
             operation === "create" ? "Select" : "Change"
-          } the center point of your lens`}
+          } the centre point of your Lens`}
           keepResult={true}
         />
 

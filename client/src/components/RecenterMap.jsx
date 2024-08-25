@@ -6,7 +6,7 @@ const RecenterMap = ({ lat, lng }) => {
 
   useEffect(() => {
     map.setView([lat, lng]);
-  }, [lat, lng]);
+  }, [lat, lng, map]);
 
   return null;
 };

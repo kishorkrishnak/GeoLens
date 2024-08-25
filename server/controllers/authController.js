@@ -1,7 +1,7 @@
-const axios = require('axios');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const oauth2Client = require('../utils/oauth2client');
+const axios = require("axios");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+const oauth2Client = require("../utils");
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -15,15 +15,15 @@ const createSendToken = (user, res) => {
   const cookieOptions = {
     expires: new Date(Date.now() + +process.env.JWT_COOKIE_EXPIRES_IN),
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    path: '/',
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: "/",
   };
 
-  res.cookie('jwt', token, cookieOptions);
+  res.cookie("jwt", token, cookieOptions);
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     token,
     data: {
       user,
@@ -55,9 +55,9 @@ exports.googleAuth = async (req, res, next) => {
     createSendToken(user, res);
   } catch (error) {
     res.status(500).json({
-      status: 'error',
+      status: "error",
       message: "Internal server error",
-      data: null
+      data: null,
     });
   }
 };
@@ -66,51 +66,54 @@ exports.verifyToken = async (req, res) => {
   try {
     const token = req.cookies?.jwt;
     if (!token) {
-      return res.status(401).json({ status: 'error', message: 'No token provided' });
+      return res
+        .status(401)
+        .json({ status: "error", message: "No token provided" });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);
 
     if (!user) {
-      return res.status(401).json({ status: 'error', message: 'Invalid token' });
+      return res
+        .status(401)
+        .json({ status: "error", message: "Invalid token" });
     }
 
     res.status(200).json({
-      status: 'success',
+      status: "success",
       data: {
         user,
       },
     });
   } catch (error) {
     res.status(401).json({
-      status: 'error',
-      message: 'Invalid token',
+      status: "error",
+      message: "Invalid token",
     });
   }
 };
 
 exports.logoutUser = (req, res) => {
   try {
-    res.cookie('jwt', '', {
+    res.cookie("jwt", "", {
       expires: new Date(0),
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      path: '/',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
     });
 
     res.status(200).json({
-      status: 'success',
-      message: 'Logged out successfully',
-      data: null
-
+      status: "success",
+      message: "Logged out successfully",
+      data: null,
     });
   } catch (error) {
     res.status(500).json({
-      status: 'error',
-      message: 'Error while logging out',
-      data: null
+      status: "error",
+      message: "Error while logging out",
+      data: null,
     });
   }
 };

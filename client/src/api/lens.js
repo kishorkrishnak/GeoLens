@@ -5,6 +5,11 @@ const getLensCenterCoordinates = (lensId) => axios.get(`/lens/${lensId}/center`)
 const getLens = (lensId) => axios.get(`/lens/${lensId}`);
 const updateLens = (lensId, lensData) => axios.put(`/lens/${lensId}`, lensData);
 const deleteLens = (lensId) => axios.delete(`/lens/${lensId}`);
+const suggestCorrection = (lensId, correctionData) => axios.post(`/lens/${lensId}/suggestion`, correctionData);
+const getSuggestionsForLens = (lensId) => axios.get(`/lens/${lensId}/suggestion`);
+
+const deleteSuggestionFromLens = (lensId, suggestionId) => axios.delete(`/lens/${lensId}/suggestion/${suggestionId}`);
+
 
 const getLenses = (params) => {
     return axios.get(`/lens`, {
@@ -27,5 +32,7 @@ export {
     getLensCenterCoordinates,
     addCommentToLens,
     deleteCommentFromLens,
-    getCommentsForLens
+    getCommentsForLens,
+    getSuggestionsForLens,
+    suggestCorrection, deleteSuggestionFromLens
 };

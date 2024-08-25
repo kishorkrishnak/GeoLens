@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import L from 'leaflet';
+import L from "leaflet";
 import {
   Circle,
   FeatureGroup,
@@ -15,8 +15,7 @@ import CircleBoundCalculator from "./CircleBoundCalculator";
 L.Control.prototype._refocusOnMap = function _refocusOnMap() {};
 
 const MapComponent = () => {
-  const { centerLatLong,circleBoundRadius } =
-    useLensCreationContext();
+  const { centerLatLong, circleBoundRadius } = useLensCreationContext();
 
   return (
     <>
@@ -24,22 +23,19 @@ const MapComponent = () => {
         className="map"
         center={centerLatLong}
         zoom={14}
+        minZoom={12}
         scrollWheelZoom={true}
         maxBoundsViscosity={1}
       >
         <FeatureGroup>
-          <Circle
-         
-            center={centerLatLong}
-            radius={circleBoundRadius}
-          />
+          <Circle center={centerLatLong} radius={circleBoundRadius} />
         </FeatureGroup>
         <RecenterMap lat={centerLatLong[0]} lng={centerLatLong[1]} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <CircleBoundCalculator/>
+        <CircleBoundCalculator />
 
         <Marker position={centerLatLong}>
           <Popup permanent>

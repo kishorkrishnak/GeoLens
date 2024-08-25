@@ -7,6 +7,7 @@ const MarkerFilter = () => {
 
   return (
     <Autocomplete
+      freeSolo
       sx={{
         mr: 1,
         mt: 1,
@@ -64,7 +65,6 @@ const MarkerFilter = () => {
               color: "white",
             },
           }}
-          freeSolo
         />
       )}
     />

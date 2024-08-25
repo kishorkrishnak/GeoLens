@@ -14,7 +14,7 @@ const TopLenses = () => {
       try {
         const response = await getLenses({
           sort: "popular",
-          limit: 6,
+          limit: 3,
         });
         setLenses(response.data.data);
       } catch (error) {

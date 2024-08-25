@@ -7,9 +7,10 @@ import toast from "react-hot-toast";
 import { googleAuth } from "../api/auth";
 
 const GoogleLogin = () => {
-  const { setUser } = useAuthContext();
+  const { setUser, setLoading } = useAuthContext();
   const responseGoogle = async (authResult) => {
     try {
+      setLoading(true);
       if (authResult["code"]) {
         const result = await googleAuth(authResult.code);
         setUser(result.data.data.user);
@@ -19,6 +20,8 @@ const GoogleLogin = () => {
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoading(false);
     }
   };
 

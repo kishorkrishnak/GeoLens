@@ -72,7 +72,7 @@ const YourLenses = () => {
     };
 
     fetchLenses();
-  }, [search, sort, id]);
+  }, [search, sort, id, setLoading]);
 
   return (
     <Box

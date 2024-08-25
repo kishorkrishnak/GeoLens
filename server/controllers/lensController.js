@@ -1,12 +1,15 @@
 const Lens = require("../models/Lens");
 const User = require("../models/User");
 const Comment = require("../models/Comment");
+const Suggestion = require("../models/Suggestion");
+
 const mongoose = require("mongoose");
 
 exports.createLens = async (req, res, next) => {
   try {
-    const { name, thumbnail, description, location, tags, creator, address } =
-      req.body;
+    const { name, thumbnail, description, location, tags, address } = req.body;
+    const creator = req.user._id;
+
     if (!name || !location || !creator) {
       return res.status(400).json({
         status: "error",
@@ -67,7 +70,6 @@ exports.getLens = async (req, res, next) => {
       .populate("markers")
       .populate("creator");
 
-
     if (!lens) {
       return res.status(404).json({
         status: "error",
@@ -80,8 +82,11 @@ exports.getLens = async (req, res, next) => {
 
     await lens.save();
 
-    lens.location.coordinates = lens.location.coordinates.reverse()
-    lens.markers.forEach((marker) => marker.location.coordinates = marker.location.coordinates.reverse())
+    lens.location.coordinates = lens.location.coordinates.reverse();
+    lens.markers.forEach(
+      (marker) =>
+        (marker.location.coordinates = marker.location.coordinates.reverse())
+    );
 
     res.status(201).json({
       status: "success",
@@ -111,8 +116,8 @@ exports.getLensCenterCoordinates = async (req, res, next) => {
     }
 
     const { circleBounds, circleBoundRadius } = lens?.address;
-    const location = lens?.location
-    location.coordinates = location.coordinates.reverse()
+    const location = lens?.location;
+    location.coordinates = location.coordinates.reverse();
 
     res.status(200).json({
       status: "success",
@@ -180,7 +185,7 @@ exports.getLenses = async (req, res, next) => {
     page = 1,
     limit = 10,
     clientLat,
-    clientLng
+    clientLng,
   } = req.query;
 
   let sortStage = {};
@@ -194,13 +199,14 @@ exports.getLenses = async (req, res, next) => {
     sortStage = { views: -1, likes: -1, createdAt: -1 };
   } else {
     sortStage = { views: -1, likes: -1, createdAt: -1 };
-
   }
 
   if (creatorId) matchStage.creator = new mongoose.Types.ObjectId(creatorId);
 
   if (country) {
-    matchStage["address.components.country"] = { $regex: new RegExp(country, "i") };
+    matchStage["address.components.country"] = {
+      $regex: new RegExp(country, "i"),
+    };
   }
 
   if (state) {
@@ -234,36 +240,56 @@ exports.getLenses = async (req, res, next) => {
 
     let pipeline = [];
 
-    if (parsedDistance && !isNaN(parsedDistance) && !isNaN(parsedClientLat) && !isNaN(parsedClientLng)) {
-
+    if (
+      parsedDistance &&
+      !isNaN(parsedDistance) &&
+      !isNaN(parsedClientLat) &&
+      !isNaN(parsedClientLng)
+    ) {
       pipeline.push({
         $geoNear: {
           near: {
             type: "Point",
-            coordinates: [parsedClientLng, parsedClientLat]
+            coordinates: [parsedClientLng, parsedClientLat],
           },
 
           distanceField: "distance",
           maxDistance: parsedDistance * 1000,
           spherical: true,
-          query: matchStage
-        }
+          query: matchStage,
+        },
       });
     } else {
       pipeline.push({ $match: matchStage });
     }
 
-
     pipeline = pipeline.concat([
       { $sort: sortStage },
       { $skip: skip },
       { $limit: parseInt(limit) },
-      { $lookup: { from: 'markers', localField: 'markers', foreignField: '_id', as: 'markers' } },
-      { $lookup: { from: 'users', localField: 'creator', foreignField: '_id', as: 'creator' } },
-      { $unwind: '$creator' }
+      {
+        $lookup: {
+          from: "markers",
+          localField: "markers",
+          foreignField: "_id",
+          as: "markers",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "creator",
+          foreignField: "_id",
+          as: "creator",
+        },
+      },
+      { $unwind: "$creator" },
     ]);
 
-    const lenses = await Lens.aggregate(pipeline).collation({ locale: "en", strength: 2 });
+    const lenses = await Lens.aggregate(pipeline).collation({
+      locale: "en",
+      strength: 2,
+    });
 
     const totalLenses = await Lens.countDocuments(matchStage);
 
@@ -288,6 +314,7 @@ exports.getLenses = async (req, res, next) => {
 exports.deleteLens = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const lens = await Lens.findById(id);
 
     if (!lens) {
       return res.status(404).json({
@@ -297,16 +324,22 @@ exports.deleteLens = async (req, res, next) => {
       });
     }
 
-    const deleteRecord = await Lens.deleteOne({ _id: id });
-
-    if (!deleteRecord.deletedCount >= 1) {
-      res.status(201).json({
-        status: "success",
-        message: "Lens deleted successfully",
+    if (lens.creator.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        status: "error",
+        message: "You do not have permission to delete this lens",
         data: null,
       });
     }
+    await Lens.deleteOne({ _id: id });
+
+    res.status(201).json({
+      status: "success",
+      message: "Lens deleted successfully",
+      data: null,
+    });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       status: "error",
       message: "Internal server error",
@@ -343,7 +376,6 @@ exports.addCommentToLens = async (req, res) => {
       data: populatedComment,
     });
   } catch (error) {
-
     res.status(500).json({
       status: "error",
       message: "Internal server error",
@@ -425,6 +457,131 @@ exports.getCommentsForLens = async (req, res) => {
       total: totalComments,
       page: parseInt(page),
       limit: limitStage,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+exports.createSuggestion = async (req, res) => {
+  try {
+    const { userId, category, suggestionText, attachmentUrl } = req.body;
+    const { id } = req.params;
+    if (!userId || !category || !suggestionText) {
+      return res
+        .status(400)
+        .json({ message: "All required fields must be filled" });
+    }
+    const lens = await Lens.findById(id);
+    if (!lens) {
+      return res.status(404).json({
+        status: "error",
+        message: "Lens not found",
+        data: null,
+      });
+    }
+
+    const newSuggestion = new Suggestion({
+      userId,
+      category,
+      suggestionText,
+      attachmentUrl,
+      lensId: id,
+    });
+
+    await newSuggestion.save();
+    lens.suggestions.push(newSuggestion._id);
+
+    await lens.save();
+    res.status(201).json({
+      status: "success",
+      data: newSuggestion,
+    });
+  } catch (error) {
+    console.error("Error creating suggestion:", error);
+    res.status(500).json({ message: "Failed to create suggestion" });
+  }
+};
+
+exports.getSuggestionsForLens = async (req, res) => {
+  const { id } = req.params;
+  const { sort, page = 1, limit = 10, suggestion } = req.query;
+
+  let sortStage = {};
+  let skip = (parseInt(page) - 1) * parseInt(limit);
+  let limitStage = parseInt(limit);
+
+  if (sort === "latest") {
+    sortStage = { createdAt: -1 };
+  } else if (sort === "oldest") {
+    sortStage = { createdAt: 1 };
+  }
+
+  try {
+    const lens = await Lens.findById(id);
+    if (!lens) {
+      return res.status(404).json({
+        status: "error",
+        message: "Lens not found",
+        data: null,
+      });
+    }
+
+    const totalSuggestions = await Suggestion.countDocuments({
+      _id: { $in: lens.suggestions },
+    });
+
+    const suggestions = await Suggestion.find({
+      _id: { $in: lens.suggestions },
+    })
+      .populate("userId")
+      .sort(sortStage)
+      .skip(skip)
+      .limit(limitStage);
+
+    res.status(200).json({
+      status: "success",
+      data: suggestions,
+      total: totalSuggestions,
+      page: parseInt(page),
+      limit: limitStage,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+exports.deleteSuggestionFromLens = async (req, res) => {
+  const { id, suggestionId } = req.params;
+  try {
+    const lens = await Lens.findById(id);
+    if (!lens) {
+      return res.status(404).json({
+        status: "error",
+        message: "Lens not found",
+        data: null,
+      });
+    }
+
+    lens.suggestions = lens.suggestions.filter(
+      (suggestion) => suggestion.toString() !== suggestionId
+    );
+    await lens.save();
+
+    await Suggestion.findByIdAndDelete(suggestionId);
+
+    res.status(200).json({
+      status: "success",
+      message: "Suggestion deleted successfully",
+      data: null,
     });
   } catch (error) {
     res.status(500).json({

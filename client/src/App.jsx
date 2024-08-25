@@ -18,12 +18,12 @@ const LazyHome = lazy(() => import("./pages/Home"));
 const LazyUserProfile = lazy(() => import("./pages/UserProfile"));
 const LazyLensCreation = lazy(() => import("./pages/LensCreation"));
 const LazyEditLens = lazy(() => import("./pages/EditLens"));
+const LazySuggestions = lazy(() => import("./pages/Suggestions"));
 
 const App = () => {
   const defaultTheme = theme;
 
   const { user, authCheckComplete, loading } = useAuthContext();
-
   return (
     <>
       {authCheckComplete && (
@@ -49,7 +49,7 @@ const App = () => {
                     )}
                     <Toaster
                       position="top-right"
-                      containerStyle={{ zIndex: 99999 }}
+                      containerStyle={{ zIndex: 1000000 }}
                     />
                     <Routes>
                       <Route path="/" element={<LazyHome />} />
@@ -94,6 +94,11 @@ const App = () => {
                       <Route
                         path="/user/:id/lenses"
                         element={<LazyYourLenses />}
+                      />
+
+                      <Route
+                        path="/lens/:id/suggestions"
+                        element={<LazySuggestions />}
                       />
                     </Routes>
                   </ScrollToTop>

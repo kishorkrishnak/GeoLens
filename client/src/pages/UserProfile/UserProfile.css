@@ -1,27 +1,7 @@
-.userProfile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-}
-
 .userProfileContainer {
   margin-top: 8vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   padding: 2rem 0;
-  width: 60%;
-  box-shadow: 0 2px 40px 0 rgba(0, 0, 0, 0.19);
-  height: 100%;
   margin-bottom: 2rem;
-}
-.userProfileContainer > img {
-  width: 150px;
-  border-radius: 999px;
 }
 
 .userProfileContainer__Details {
@@ -60,18 +40,16 @@
 }
 
 @media (max-width: 768px) {
-
   .userProfileContainer__Details {
     width: 100%;
     margin-top: 1rem;
     border-radius: 26px;
     padding: 2rem 1.4rem;
   }
-  
+
   .userProfileContainer {
     width: 100%;
     box-shadow: none;
-    padding: 0;
   }
 
   .userProfileContainer__DetailsRow > input {

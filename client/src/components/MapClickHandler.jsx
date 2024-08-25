@@ -1,7 +1,7 @@
 import { useMapEvents } from "react-leaflet";
 import { useMapContext } from "../contexts/MapContext";
 
-function MapClickHandler() {
+const MapClickHandler = () => {
   const {
     modalVisible,
     setMarkerData,
@@ -23,6 +23,6 @@ function MapClickHandler() {
   });
 
   return null;
-}
+};
 
 export default MapClickHandler;

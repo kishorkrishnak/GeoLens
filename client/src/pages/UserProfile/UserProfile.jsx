@@ -1,15 +1,14 @@
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import { Button, IconButton } from "@mui/material";
+import { Box, Button, Container, IconButton, Paper } from "@mui/material";
 import { useState } from "react";
 import Footer from "../../components/Footer/Footer";
 import HtmlInput from "../../components/HtmlInput";
 import Navbar from "../../components/Navbar/Navbar";
-import {useAuthContext} from "../../contexts/AuthContext";
-
+import { useAuthContext } from "../../contexts/AuthContext";
 import "./UserProfile.css";
 
-function UserProfile() {
+const UserProfile = () => {
   const [editProfile, setEditProfile] = useState(false);
   const { user, logoutUser, setUser } = useAuthContext();
 
@@ -20,9 +19,36 @@ function UserProfile() {
     <>
       <Navbar />
 
-      <div className="userProfile">
-        <div className="userProfileContainer">
-          <img src={user?.image} alt="profile" />
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        component={"main"}
+      >
+        <Container
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            height: "100%",
+            padding: "2rem 0",
+          }}
+          component={Paper}
+          maxWidth="md"
+          elevation={2}
+          className="userProfileContainer"
+        >
+          <img
+            style={{
+              height: "150px",
+              borderRadius: 100000,
+            }}
+            src={user?.image}
+            alt="profile"
+          />
 
           <div className="userProfileContainer__Details">
             <div className="userProfileContainer__DetailsHeading">
@@ -89,11 +115,11 @@ function UserProfile() {
               Save
             </Button>
           )}
-        </div>
-      </div>
+        </Container>
+      </Box>
       <Footer />
     </>
   );
-}
+};
 
 export default UserProfile;
