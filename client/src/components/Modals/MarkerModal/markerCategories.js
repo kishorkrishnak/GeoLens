@@ -73,8 +73,6 @@ const marker_categories = [
   { id: 63, sub_category: "Historic Sites", category: "Attractions" },
   { id: 64, sub_category: "Monuments", category: "Attractions" },
   { id: 65, sub_category: "Botanical Gardens", category: "Attractions" },
-
-
 ];
 
-export default marker_categories
+export default marker_categories;

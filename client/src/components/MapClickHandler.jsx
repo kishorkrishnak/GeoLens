@@ -8,17 +8,20 @@ const MapClickHandler = () => {
     markerData,
     setModalVisible,
     setMarkerModalOperation,
+    popupOpen,
   } = useMapContext();
 
   useMapEvents({
     click: ({ latlng: { lat, lng } }) => {
-      setMarkerModalOperation("create");
+      if (!popupOpen) {
+        setMarkerModalOperation("create");
 
-      //add marker only if markermodal is not visible
-      if (!modalVisible) {
-        setMarkerData({ ...markerData, lat, lng });
+        //add marker only if markermodal is not visible
+        if (!modalVisible) {
+          setMarkerData({ ...markerData, lat, lng });
+        }
+        setModalVisible(true);
       }
-      setModalVisible(true);
     },
   });
 

@@ -1,11 +1,21 @@
-import { Edit, ThumbDown, ThumbUp } from "@mui/icons-material/";
+import {
+  Edit,
+  ThumbDown,
+  ThumbDownOutlined,
+  ThumbUp,
+  ThumbUpOutlined,
+} from "@mui/icons-material/";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Box, Stack, Typography } from "@mui/material";
 import L from "leaflet";
-import { useMemo, useRef } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
+import { useMemo, useRef, useState } from "react";
 import { Marker, Popup, Tooltip } from "react-leaflet";
+import { useAuthContext } from "../../contexts/AuthContext";
 import { useMapContext } from "../../contexts/MapContext";
+
+import toast from "react-hot-toast";
+import { dislikeMarker, likeMarker } from "../../api/marker";
+import createNumberedIcon from "./MarkerIcons/NumberedIcon";
 const MarkerComponent = ({ marker, index, totalMarkers }) => {
   const {
     updateMarkerPosition,
@@ -18,11 +28,13 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
     setMarkerData,
   } = useMapContext();
 
+  const { user } = useAuthContext();
+  const [markerData, setMarkerDataState] = useState(marker);
+
   const markerRef = useRef(null);
   const eventHandlers = useMemo(
     () => ({
       async dragend() {
-        console.log("end");
         const markerElement = markerRef.current;
         if (markerElement != null) {
           const coordinates = markerElement.getLatLng();
@@ -47,6 +59,38 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
     e.stopPropagation();
   };
 
+  const handleLike = async (e) => {
+    e.stopPropagation();
+    if (isLiked) return;
+
+    try {
+      const response = await likeMarker(marker._id);
+      if (response.data.status === "success") {
+        setMarkerDataState(response.data?.data);
+        toast.success("Marker liked");
+      } else throw new Error("Error liking the marker");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleDislike = async (e) => {
+    e.stopPropagation();
+    if (isDisliked) return;
+    try {
+      const response = await dislikeMarker(marker._id);
+      if (response.data.status === "success") {
+        setMarkerDataState(response.data?.data);
+        toast.success("Marker disliked");
+      } else throw new Error("Error disliking the marker");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const isLiked = markerData.likes.includes(user._id);
+  const isDisliked = markerData.dislikes.includes(user._id);
+
   let markerColor;
   if (index === 0) {
     markerColor = "green";
@@ -56,28 +100,9 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
     markerColor = "blue";
   }
 
-  const customIcon = L.divIcon({
-    className: "custom-icon",
-    html: renderToStaticMarkup(
-      <div
-        style={{
-          backgroundColor: markerColor,
-          width: "30px",
-          height: "30px",
-          borderRadius: "50%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          color: "white",
-          fontWeight: "bold",
-        }}
-      >
-        {index + 1}
-      </div>
-    ),
-  });
+  const numberedIcon = createNumberedIcon(index, markerColor);
 
-  const icon = routingMode ? customIcon : new L.Icon.Default();
+  const icon = routingMode ? numberedIcon : new L.Icon.Default();
   const position = marker.location.coordinates;
 
   return (
@@ -87,6 +112,7 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
       draggable={isLensCreator}
       icon={icon}
       position={position}
+
     >
       <Tooltip permanent={routingMode}>{marker.title}</Tooltip>
 
@@ -120,21 +146,41 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
             gap: 3,
           }}
         >
-          <Typography variant="body1" noWrap>
-            <ThumbUp
-              fontSize="small"
-              color="primary"
-              sx={{ verticalAlign: "middle", marginRight: 1.5 }}
-            />
-            {marker?.upvotes}
+          <Typography variant="body1">
+            {isLiked ? (
+              <ThumbUp
+                sx={{ verticalAlign: "middle", marginRight: 1.5 }}
+                fontSize="small"
+                color="primary"
+                onClick={handleLike}
+              />
+            ) : (
+              <ThumbUpOutlined
+                sx={{ verticalAlign: "middle", marginRight: 1.5 }}
+                fontSize="small"
+                color="primary"
+                onClick={handleLike}
+              />
+            )}
+            {markerData.likes.length}
           </Typography>
-          <Typography variant="body1" noWrap>
-            <ThumbDown
-              fontSize="small"
-              color="primary"
-              sx={{ verticalAlign: "middle", marginRight: 1.5 }}
-            />
-            {marker?.downvotes}
+          <Typography variant="body1">
+            {isDisliked ? (
+              <ThumbDown
+                sx={{ verticalAlign: "middle", marginRight: 1.5 }}
+                fontSize="small"
+                color="primary"
+                onClick={handleDislike}
+              />
+            ) : (
+              <ThumbDownOutlined
+                sx={{ verticalAlign: "middle", marginRight: 1.5 }}
+                fontSize="small"
+                color="primary"
+                onClick={handleDislike}
+              />
+            )}
+            {markerData.dislikes.length}
           </Typography>
         </Box>
         {isLensCreator && (

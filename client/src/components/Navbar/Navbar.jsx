@@ -22,10 +22,12 @@ const pages = [
   {
     label: "Explore",
     link: "/lenses",
+    protected: false,
   },
   {
-    label: "About",
-    link: "/about",
+    label: "Create Lens",
+    link: "/lens/new",
+    protected: true,
   },
 ];
 
@@ -58,6 +60,10 @@ const Navbar = ({ home }) => {
     {
       setting: "Your Lenses",
       action: () => navigate(`/user/${user?._id}/lenses`),
+    },
+    {
+      setting: "Liked Lenses",
+      action: () => navigate(`/user/${user?._id}/lenses/liked`),
     },
     {
       setting: "Logout",
@@ -147,6 +153,8 @@ const Navbar = ({ home }) => {
                 <MenuItem
                   key={page.label}
                   onClick={() => {
+                    if (page.protected && !user._id)
+                      return toast.error("You must be logged in");
                     navigate(page.link);
                     handleCloseNavMenu();
                   }}

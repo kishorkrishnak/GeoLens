@@ -1,4 +1,4 @@
-import { Box, Button, Stack, TextField } from "@mui/material";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { Modal } from "react-responsive-modal";
 import { useAuthContext } from "../../../../contexts/AuthContext";
 import { useState } from "react";
@@ -78,6 +78,9 @@ const SuggestCorrectionModal = ({ lensId }) => {
           alignItems="flex-start"
           padding={2}
         >
+          <Typography variant="h5" color="success">
+            Suggest a Correction
+          </Typography>
           <Box
             sx={{
               my: 3,

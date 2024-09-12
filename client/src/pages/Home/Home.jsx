@@ -3,9 +3,9 @@ import Footer from "../../components/Footer/Footer";
 import Navbar from "../../components/Navbar/Navbar";
 import CreateYourLens from "./Sections/CreateYourLens";
 import Cta from "./Sections/Cta.jsx";
+import FeaturedLenses from "./Sections/FeaturedLenses.jsx";
 import Hero from "./Sections/Hero";
 import HowItWorks from "./Sections/HowItWorks";
-import TopLenses from "./Sections/TopLenses.jsx";
 
 const Home = () => {
   return (
@@ -21,7 +21,7 @@ const Home = () => {
       <Hero />
       <HowItWorks />
       <CreateYourLens />
-      <TopLenses />
+      <FeaturedLenses />
       <Cta />
       <Footer />
     </Box>

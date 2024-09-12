@@ -10,10 +10,7 @@ const EditLens = ({ state }) => {
     <LensCreationProvider operation={operation}>
       <Routes>
         <Route path="/" element={<SelectCenter operation={operation} />} />
-        <Route
-          path="/bounds"
-          element={<DrawBounds operation={operation} />}
-        />
+        <Route path="/bounds" element={<DrawBounds operation={operation} />} />
         <Route
           path="/details"
           element={<LensDetails operation={operation} />}

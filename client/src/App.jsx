@@ -18,6 +18,7 @@ const LazyHome = lazy(() => import("./pages/Home"));
 const LazyUserProfile = lazy(() => import("./pages/UserProfile"));
 const LazyLensCreation = lazy(() => import("./pages/LensCreation"));
 const LazyEditLens = lazy(() => import("./pages/EditLens"));
+const LazyLikedLenses = lazy(() => import("./pages/LikedLenses"));
 const LazySuggestions = lazy(() => import("./pages/Suggestions"));
 
 const App = () => {
@@ -66,7 +67,6 @@ const App = () => {
                           />
                         }
                       />
-
                       <Route
                         path="/lens/edit/:id/*"
                         element={
@@ -79,9 +79,7 @@ const App = () => {
                           />
                         }
                       />
-
                       <Route path="/lens/:id" element={<LazyLens />} />
-
                       <Route
                         path="/user/:id"
                         element={
@@ -94,8 +92,11 @@ const App = () => {
                       <Route
                         path="/user/:id/lenses"
                         element={<LazyYourLenses />}
+                      />{" "}
+                      <Route
+                        path="/user/:id/lenses/liked"
+                        element={<LazyLikedLenses />}
                       />
-
                       <Route
                         path="/lens/:id/suggestions"
                         element={<LazySuggestions />}

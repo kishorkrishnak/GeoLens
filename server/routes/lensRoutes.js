@@ -13,6 +13,10 @@ const {
   createSuggestion,
   getSuggestionsForLens,
   deleteSuggestionFromLens,
+  likeLens,
+  dislikeLens,
+  markSuggestionAsRead,
+  updateSuggestion,
 } = require("../controllers/lensController");
 const { protect } = require("../middlewares/protect");
 
@@ -34,5 +38,8 @@ router.delete(
   protect,
   deleteSuggestionFromLens
 );
+router.put("/:id/suggestion/:suggestionId", protect, updateSuggestion);
+router.post("/:id/like", protect, likeLens);
+router.delete("/:id/like", protect, dislikeLens);
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const oauth2Client = require("../utils");
+const oauth2Client = require("../utils/oauth2client");
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {

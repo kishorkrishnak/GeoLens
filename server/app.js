@@ -15,6 +15,7 @@ const app = express();
 const authRouter = require("./routes/authRoutes");
 const lensRouter = require("./routes/lensRoutes");
 const markerRouter = require("./routes/markerRoutes");
+const userRouter = require("./routes/userRoutes");
 
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -44,6 +45,7 @@ app.use("/api/v1", limiter);
 app.use("/api/v1/auth/", authRouter);
 app.use("/api/v1/lens/", lensRouter);
 app.use("/api/v1/marker/", markerRouter);
+app.use("/api/v1/user/", userRouter);
 
 const port = process.env.PORT || 5000;
 
@@ -62,6 +64,6 @@ process.on("unhandledRejection", (err) => {
   console.log(err);
   console.log("App SHUTTING DOWN...");
   server.close(() => {
-    process.exit(1);
+    process.exit(1); 
   });
 });

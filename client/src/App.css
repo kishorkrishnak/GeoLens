@@ -7,15 +7,16 @@
 body {
   font-family: "Inter Variable", sans-serif;
   background-color: #fafaff;
+  overflow: visible !important;
 }
 
 .map {
   width: 100%;
   min-height: 100vh;
-  overflow: hidden;
   z-index: 1;
   cursor: crosshair;
 }
+
 .sr-only {
   display: none;
 }

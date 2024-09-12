@@ -33,9 +33,7 @@ const MapComponent = ({ operation }) => {
         className="map"
         center={centerLatLong}
         zoom={14}
-        minZoom={13}
         scrollWheelZoom={true}
-        maxBoundsViscosity={1}
       >
         <RecenterMap lat={centerLatLong[0]} lng={centerLatLong[1]} />
         <TileLayer
@@ -65,9 +63,8 @@ const MapComponent = ({ operation }) => {
         >
           <Popup permanent>
             <Typography variant="h6">
-              This will be the center of your map and your map will be locked to
-              this particular region. Add markers for all your favorite spots in
-              this region :D
+              This will be the center of your map and your map will be focused around this particular region. Add markers for all your favorite spots in
+              this region 😊
             </Typography>
           </Popup>
         </Marker>

@@ -174,7 +174,7 @@ const CommentsModal = ({ lensId }) => {
               }}
             >
               <TextField
-                label="Comment"
+                label="Add Comment"
                 placeholder="Add your comment"
                 variant="outlined"
                 fullWidth

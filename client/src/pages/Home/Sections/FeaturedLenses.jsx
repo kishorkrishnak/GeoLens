@@ -1,10 +1,10 @@
 import { Box, Container, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getLenses } from "../../../api/lens";
 import LensesGrid from "../../../components/LensesGrid";
 import { useAuthContext } from "../../../contexts/AuthContext";
 
-const TopLenses = () => {
+const FeaturedLenses = () => {
   const [lenses, setLenses] = useState([]);
   const { setLoading } = useAuthContext();
 
@@ -15,6 +15,7 @@ const TopLenses = () => {
         const response = await getLenses({
           sort: "popular",
           limit: 3,
+          // featured: true,
         });
         setLenses(response.data.data);
       } catch (error) {
@@ -29,7 +30,7 @@ const TopLenses = () => {
 
   return (
     <Box
-    component={"section"}
+      component={"section"}
       sx={{
         margin: "3rem 0.5rem",
         minHeight: "45vh",
@@ -41,15 +42,26 @@ const TopLenses = () => {
       }}
     >
       <Typography variant="h4" fontWeight={500} marginBottom={4}>
-        Top lenses this week
+        Featured Lenses
       </Typography>
-      {lenses && (
-        <Container>
+
+      <Container>
+        {lenses && lenses?.length > 0 ? (
           <LensesGrid lenses={lenses} />
-        </Container>
-      )}
+        ) : (
+          <Typography
+            width={"fit-content"}
+            marginX={"auto"}
+            variant="h6"
+            fontWeight={500}
+            marginTop={4}
+          >
+            No Featured Lenses
+          </Typography>
+        )}
+      </Container>
     </Box>
   );
 };
 
-export default TopLenses;
+export default FeaturedLenses;

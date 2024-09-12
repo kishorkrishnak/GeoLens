@@ -14,6 +14,7 @@ export const MapProvider = ({ children }) => {
   const [correctionsModalVisible, setCorrectionsModalVisible] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [routingMode, setRoutingMode] = useState(false);
+  const [popupOpen, setPopupOpen] = useState(false);
   const [isLensCreator, setIsLensCreator] = useState(false);
   const [clientGeoCoordinates, setClientGeoCoordinates] = useState([]);
   const [lens, setLens] = useState(null);
@@ -70,7 +71,7 @@ export const MapProvider = ({ children }) => {
     };
 
     const response = await createMarker(newMarker);
-
+    console.log(response);
     setLens({
       ...lens,
       markers: [...lens.markers, response.data.data],
@@ -97,10 +98,10 @@ export const MapProvider = ({ children }) => {
         toast.success("Marker deleted");
         setRoutingMode(false);
       } else {
-        throw new Error();
+        throw new Error("Error while deleting marker");
       }
     } catch (error) {
-      toast.success("Error while deleting marker");
+      toast.error("Error while deleting marker");
     }
   };
 
@@ -218,6 +219,8 @@ export const MapProvider = ({ children }) => {
     tileLayers,
     currentTileLayer,
     setCurrentTileLayer,
+    popupOpen,
+    setPopupOpen,
   };
 
   return (

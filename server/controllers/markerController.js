@@ -13,7 +13,7 @@ exports.createMarker = async (req, res, next) => {
       });
     }
 
-    const newMarker = await Marker.create({
+    const newMarker = new Marker({
       title,
       description,
       location,
@@ -26,6 +26,7 @@ exports.createMarker = async (req, res, next) => {
       },
     });
 
+    await newMarker.save();
     const lens = await Lens.findById(lensId);
 
     if (!lens) {
@@ -40,17 +41,15 @@ exports.createMarker = async (req, res, next) => {
 
     await lens.save();
 
-    res.status(201).json({
+    const markerData = newMarker.toObject();
+    markerData.location.coordinates.reverse();
+
+    res.status(200).json({
       status: "success",
-      data: {
-        ...newMarker,
-        location: {
-          ...newMarker.location,
-          coordinates: newMarker.location.coordinates.reverse(),
-        },
-      },
+      data: markerData,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       status: "error",
       message: "Internal server error",
@@ -129,10 +128,98 @@ exports.deleteMarker = async (req, res, next) => {
 
     await Marker.findByIdAndDelete(id);
 
-    res.status(204).json({
+    res.status(200).json({
       status: "success",
       message: "Marker deleted successfully",
       data: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+exports.likeMarker = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const marker = await Marker.findById(id);
+
+    if (!marker) {
+      return res.status(404).json({
+        status: "error",
+        message: "Invalid marker id",
+        data: null,
+      });
+    }
+    if (marker.likes.includes(userId)) {
+      return res.status(409).json({
+        status: "error",
+        message: "You have already liked this marker",
+        data: null,
+      });
+    }
+
+    marker.likes.push(userId);
+
+    await marker.save();
+
+   const updatedMarker =   await Marker.findByIdAndUpdate(
+      id,
+      { $pull: { dislikes: userId } },
+      { new: true }
+    );
+
+    res.status(201).json({
+      status: "success",
+      message: "Marker liked succesfully",
+      data: updatedMarker,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+exports.dislikeMarker = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const marker = await Marker.findById(id);
+
+    if (!marker) {
+      return res.status(404).json({
+        status: "error",
+        message: "Invalid marker id",
+        data: null,
+      });
+    }
+    if (marker.dislikes.includes(userId)) {
+      return res.status(404).json({
+        status: "error",
+        message: "You have already disliked this marker",
+        data: null,
+      });
+    }
+    marker.dislikes.push(userId);
+
+    await marker.save();
+    const updatedMarker = await Marker.findByIdAndUpdate(
+      id,
+      { $pull: { likes: userId } },
+      { new: true }
+    );
+
+    res.status(201).json({
+      status: "success",
+      message: "Marker disliked succesfully",
+      data: updatedMarker ,
     });
   } catch (error) {
     res.status(500).json({

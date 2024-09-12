@@ -103,7 +103,7 @@ const MarkerModal = () => {
             />
             <Autocomplete
               options={markerCategories}
-              groupBy={(option) => option.category} 
+              groupBy={(option) => option.category}
               value={
                 markerCategories.find(
                   (option) => option.sub_category === markerData.category
@@ -113,12 +113,12 @@ const MarkerModal = () => {
                 if (v) {
                   setMarkerData({
                     ...markerData,
-                   category: v.sub_category,
+                    category: v.sub_category,
                   });
                 } else {
                   setMarkerData({
                     ...markerData,
-                   category: "",
+                    category: "",
                   });
                 }
               }}

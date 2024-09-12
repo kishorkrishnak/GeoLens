@@ -1,7 +1,6 @@
 import SearchIcon from "@mui/icons-material/Search";
 import {
   Box,
-  Button,
   Container,
   FormControl,
   InputLabel,
@@ -12,48 +11,21 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
-import { deleteLens, getLenses } from "../../api/lens";
+import { useParams } from "react-router-dom";
+import { getLenses } from "../../api/lens";
 import noResultsImg from "../../assets/images/noresults.png";
 import Footer from "../../components/Footer/Footer";
 import LensesGrid from "../../components/LensesGrid";
-import ConfirmationModal from "../../components/Modals/ConfirmationModal/ConfirmationModal";
 import Navbar from "../../components/Navbar/Navbar";
 import { useAuthContext } from "../../contexts/AuthContext";
-import useModal from "../../hooks/useModal";
 
-const YourLenses = () => {
+const LikedLenses = () => {
   const [lenses, setLenses] = useState([]);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("popular");
-  const navigate = useNavigate();
   const { id } = useParams();
 
   const { setLoading } = useAuthContext();
-  const { isShowing, toggle } = useModal();
-  const [lensIdToDelete, setLensIdToDelete] = useState(null);
-
-  const deleteLensById = async () => {
-    setLoading(true);
-    try {
-      const response = await deleteLens(lensIdToDelete);
-      if (response.data.status === "success") {
-        const updatedLenses = lenses.filter(
-          (lens) => lens._id !== lensIdToDelete
-        );
-        setLenses([...updatedLenses]);
-        toast.success("Lens deleted successfully");
-      } else {
-        toast.error("Error while deleting lens");
-      }
-    } catch (error) {
-      console.error("Error fetching lenses data:", error);
-    } finally {
-      setLoading(false);
-      toggle();
-    }
-  };
 
   useEffect(() => {
     const fetchLenses = async () => {
@@ -62,6 +34,7 @@ const YourLenses = () => {
         const response = await getLenses({
           search,
           sort,
+          likedOnly: true,
           creatorId: id,
         });
         setLenses(response.data.data);
@@ -89,7 +62,7 @@ const YourLenses = () => {
       <Container sx={{ flexGrow: 1, paddingY: { xs: 5, md: 6 } }}>
         <Box>
           <Typography variant="h4" gutterBottom>
-            Manage Your Lenses
+            Lenses You Liked
           </Typography>
 
           <Stack
@@ -120,25 +93,10 @@ const YourLenses = () => {
                 <MenuItem value="oldest">Oldest</MenuItem>
               </Select>
             </FormControl>
-            <Button
-              onClick={() => {
-                navigate("/lens/new");
-              }}
-              fullWidth={true}
-              color="primary"
-              variant="contained"
-            >
-              Create New Lens
-            </Button>
           </Stack>
 
           {lenses.length > 0 ? (
-            <LensesGrid
-              toggle={toggle}
-              setLensIdToDelete={setLensIdToDelete}
-              allowEdit
-              lenses={lenses}
-            />
+            <LensesGrid lenses={lenses} />
           ) : (
             <Box
               sx={{
@@ -162,16 +120,10 @@ const YourLenses = () => {
             </Box>
           )}
         </Box>
-        <ConfirmationModal
-          title={"Are you sure want to delete this lens?"}
-          isOpen={isShowing}
-          onClose={() => toggle()}
-          onConfirm={() => deleteLensById(lensIdToDelete)}
-        />
       </Container>
       <Footer />
     </Box>
   );
 };
 
-export default YourLenses;
+export default LikedLenses;

@@ -142,6 +142,7 @@ exports.updateLens = async (req, res, next) => {
   try {
     const lensId = req.params.id;
     const updatedLensDetails = req.body;
+
     const updatedLens = await Lens.findByIdAndUpdate(
       lensId,
       updatedLensDetails,
@@ -182,6 +183,8 @@ exports.getLenses = async (req, res, next) => {
     distance,
     sort,
     search,
+    featured,
+    likedOnly,
     page = 1,
     limit = 10,
     clientLat,
@@ -201,7 +204,11 @@ exports.getLenses = async (req, res, next) => {
     sortStage = { views: -1, likes: -1, createdAt: -1 };
   }
 
-  if (creatorId) matchStage.creator = new mongoose.Types.ObjectId(creatorId);
+  if (likedOnly) matchStage.likes = new mongoose.Types.ObjectId(creatorId);
+
+  if (creatorId && !likedOnly) matchStage.creator = new mongoose.Types.ObjectId(creatorId);
+
+  if (featured) matchStage.featured = true;
 
   if (country) {
     matchStage["address.components.country"] = {
@@ -331,6 +338,15 @@ exports.deleteLens = async (req, res, next) => {
         data: null,
       });
     }
+
+    await User.findByIdAndUpdate(
+      req.user._id,
+      { $pull: { lensesCreated: id } },
+      { new: true }
+    );
+
+    await Suggestion.deleteMany({ lensId: id });
+
     await Lens.deleteOne({ _id: id });
 
     res.status(201).json({
@@ -509,7 +525,7 @@ exports.createSuggestion = async (req, res) => {
 
 exports.getSuggestionsForLens = async (req, res) => {
   const { id } = req.params;
-  const { sort, page = 1, limit = 10, suggestion } = req.query;
+  const { sort, page = 1, limit = 10, category } = req.query;
 
   let sortStage = {};
   let skip = (parseInt(page) - 1) * parseInt(limit);
@@ -531,13 +547,17 @@ exports.getSuggestionsForLens = async (req, res) => {
       });
     }
 
-    const totalSuggestions = await Suggestion.countDocuments({
+    let filter = {
       _id: { $in: lens.suggestions },
-    });
+    };
 
-    const suggestions = await Suggestion.find({
-      _id: { $in: lens.suggestions },
-    })
+    if (category) {
+      filter.category = category;
+    }
+
+    const totalSuggestions = await Suggestion.countDocuments(filter);
+
+    const suggestions = await Suggestion.find(filter)
       .populate("userId")
       .sort(sortStage)
       .skip(skip)
@@ -581,6 +601,114 @@ exports.deleteSuggestionFromLens = async (req, res) => {
     res.status(200).json({
       status: "success",
       message: "Suggestion deleted successfully",
+      data: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+exports.updateSuggestion = async (req, res) => {
+  const { suggestionId } = req.params;
+  const updatedSuggestionDetails = req.body;
+
+  try {
+    const updatedSuggestion = await Suggestion.findByIdAndUpdate(
+      suggestionId,
+      updatedSuggestionDetails,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    res.status(200).json({
+      status: "success",
+      message: "Suggestion updated successfully",
+      data: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+exports.likeLens = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const lens = await Lens.findById(id);
+
+    if (!lens) {
+      return res.status(404).json({
+        status: "error",
+        message: "Invalid lens id",
+        data: null,
+      });
+    }
+    if (lens.likes.includes(userId)) {
+      return res.status(409).json({
+        status: "error",
+        message: "You have already likes this lens",
+        data: null,
+      });
+    }
+
+    lens.likes.push(userId);
+
+    await lens.save();
+
+    res.status(201).json({
+      status: "success",
+      message: "Lens liked succesfully",
+      data: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+exports.dislikeLens = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const lens = await Lens.findById(id);
+
+    if (!lens) {
+      return res.status(404).json({
+        status: "error",
+        message: "Invalid lens id",
+        data: null,
+      });
+    }
+    if (!lens.likes.includes(userId)) {
+      return res.status(404).json({
+        status: "error",
+        message: "You have not liked this lens",
+        data: null,
+      });
+    }
+
+    await Lens.findByIdAndUpdate(
+      id,
+      { $pull: { likes: userId } },
+      { new: true }
+    );
+
+    res.status(201).json({
+      status: "success",
+      message: "Lens disliked succesfully",
       data: null,
     });
   } catch (error) {

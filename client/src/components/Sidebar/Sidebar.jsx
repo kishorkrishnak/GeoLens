@@ -152,8 +152,8 @@ const Sidebar = () => {
             transition: "opacity 0.2s ease 0.1s",
           }}
         >
-          <LensStats />
-          <ShareButton lensId={id} />
+          <LensStats lensId={id}/>
+          <ShareButton lensId={id} markers={lens.markers} />
           <CreatorCard creator={user} />
         </Box>
       </Box>

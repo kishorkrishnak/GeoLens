@@ -6,8 +6,8 @@ const MapBoundsEnforcer = ({ maxBounds }) => {
 
   useEffect(() => {
     map.setMaxBounds(maxBounds);
-    map.setMinZoom(map.getBoundsZoom(maxBounds));
-  }, [map, maxBounds]);
+    map.setMinZoom(map.getBoundsZoom(maxBounds, false));
+  }, [maxBounds, map]);
 
   return null;
 };

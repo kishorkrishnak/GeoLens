@@ -106,7 +106,7 @@ const Lenses = () => {
           >
             <TextField
               label="Search"
-              placeholder="Names, places, keywords"
+              placeholder="Enter keyword"
               variant="outlined"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -179,7 +179,6 @@ const Lenses = () => {
                 <MenuItem value="10">&lt; 10 km</MenuItem>
                 <MenuItem value="100">&lt; 100 km</MenuItem>
                 <MenuItem value="500">&lt; 500 km</MenuItem>
-                <MenuItem value="1000">&gt; 1000 km</MenuItem>
               </Select>
             </FormControl>
           </Stack>

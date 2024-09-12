@@ -3,13 +3,15 @@ import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import MapBoundsEnforcer from "../../../components/MapBoundsEnforcer";
 import MapClickHandler from "../../../components/MapClickHandler";
+import createCentreIcon from "../../../components/Marker/MarkerIcons/CentreIcon";
 import CommentsModal from "../../../components/Modals/CommentsModal/CommentsModal";
 import MarkerModal from "../../../components/Modals/MarkerModal/MarkerModal";
+import SuggestCorrectionModal from "../../../components/Modals/SuggestCorrectionModal/CommentsModal/SuggestCorrectionModal";
+import PopupObserver from "../../../components/PopupObserver";
 import RecenterMap from "../../../components/RecenterMap";
 import RoutingMachine from "../../../components/RoutingMachine/RoutingMachine";
 import { useMapContext } from "../../../contexts/MapContext";
 import Markers from "./Markers";
-import SuggestCorrectionModal from "../../../components/Modals/SuggestCorrectionModal/CommentsModal/SuggestCorrectionModal";
 
 const Map = () => {
   const { routingMode, lens, selectedMarkerCategory, currentTileLayer } =
@@ -32,7 +34,9 @@ const Map = () => {
       ? marker.category === selectedMarkerCategory
       : true
   );
-  console.log(currentTileLayer)
+
+  const centreIcon = createCentreIcon();
+
   return (
     <>
       <MapContainer
@@ -42,7 +46,6 @@ const Map = () => {
         scrollWheelZoom={true}
         zoomControl={false}
         maxBoundsViscosity={1}
-        autoPan={false}
       >
         {/* forcefully recenter map and update maxbounds when state changes */}
         <RecenterMap lat={centerCoordinates[0]} lng={centerCoordinates[1]} />
@@ -55,7 +58,7 @@ const Map = () => {
 
         <Markers markers={filteredMarkers} />
 
-        <Marker position={centerCoordinates}>
+        <Marker icon={centreIcon} position={centerCoordinates}>
           <Popup permanent>
             <Typography variant="h6">Centre point of this Lens</Typography>
             <Typography variant="subtitle2">
@@ -68,6 +71,10 @@ const Map = () => {
         <CommentsModal lensId={lens._id} />
         <SuggestCorrectionModal lensId={lens._id} />
         {routingMode && <RoutingMachine waypoints={wayPoints} />}
+
+        {/* to prevent marker modal opening if popup is opened */}
+        <PopupObserver />
+
         <MapClickHandler />
       </MapContainer>
     </>

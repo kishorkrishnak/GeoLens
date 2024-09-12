@@ -19,7 +19,7 @@ const SelectedLatLng = () => {
       }
     };
 
-    reverseGeoCodeSelectedPoint();
+    if (markerData.lat && markerData.lng) reverseGeoCodeSelectedPoint();
   }, [markerData.lat, markerData.lng]);
 
   return (
