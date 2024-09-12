@@ -43,6 +43,7 @@ const Map = () => {
         className="map"
         center={centerCoordinates}
         zoom={14}
+        minZoom={10}
         scrollWheelZoom={true}
         zoomControl={false}
         maxBoundsViscosity={1}
