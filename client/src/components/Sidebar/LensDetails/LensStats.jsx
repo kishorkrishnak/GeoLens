@@ -83,7 +83,7 @@ const LensStats = ({ lensId }) => {
         variant="body1"
         noWrap
       >
-        {lens.likes.includes(user._id) ? (
+        {lens.likes.includes(user?._id) ? (
           <ThumbUp
             color="primary"
             onClick={dislikeLensById}
