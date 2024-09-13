@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useMap } from "react-leaflet";
 import { useMapContext } from "../contexts/MapContext";
 
@@ -14,23 +14,15 @@ const MapBoundsEnforcer = () => {
   ];
 
   const map = useMap();
-  const prevMaxBoundsRef = useRef();
 
   useEffect(() => {
     if (maxBounds) {
-      map.setMaxBounds(maxBounds);
       const wantedZoom = map.getBoundsZoom(maxBounds, false);
-
+      map.setMaxBounds(maxBounds);
       setTimeout(() => {
         map.setMinZoom(wantedZoom);
-      }, 800);
-
-      if (
-        JSON.stringify(maxBounds) !== JSON.stringify(prevMaxBoundsRef.current)
-      ) {
-        map.fitBounds(maxBounds);
-        prevMaxBoundsRef.current = maxBounds;
-      }
+      }, 1000);
+      // map.fitBounds(maxBounds);
     }
   }, [maxBounds]);
 

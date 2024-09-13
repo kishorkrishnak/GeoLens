@@ -59,7 +59,7 @@ const Map = () => {
         id="lens-map"
         center={centerCoordinates}
         zoom={14}
-        minZoom={10}
+        minZoom={12}
         scrollWheelZoom={true}
         zoomControl={false}
         maxBoundsViscosity={1}

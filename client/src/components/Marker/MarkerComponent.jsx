@@ -1,4 +1,4 @@
-import L, { popup } from "leaflet";
+import L from "leaflet";
 import R from "leaflet-responsive-popup";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
@@ -21,6 +21,7 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
     setMarkerModalOperation,
     setMarkerData,
     popupOpen,
+    lens,
   } = useMapContext();
 
   const { user } = useAuthContext();
@@ -34,6 +35,23 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
         const markerElement = markerRef.current;
         if (markerElement != null) {
           const coordinates = markerElement.getLatLng();
+          const maxBoundsSouthWest = lens.address.circleBounds._southWest;
+          const maxBoundsNorthEast = lens.address.circleBounds._northEast;
+
+          const maxBounds = [
+            [maxBoundsSouthWest.lat, maxBoundsSouthWest.lng],
+            [maxBoundsNorthEast.lat, maxBoundsNorthEast.lng],
+          ];
+
+          const bounds = L.latLngBounds(maxBounds);
+
+          if (!bounds.contains(coordinates)) {
+            console.log(markerData);
+            markerElement.setLatLng(markerData.location.coordinates);
+
+            return toast.error("Point outside your bounded region");
+          }
+
           updateMarkerPosition(marker._id, coordinates);
         }
       },
