@@ -23,7 +23,7 @@ const MapBoundsEnforcer = () => {
 
       setTimeout(() => {
         map.setMinZoom(wantedZoom);
-      }, 500);
+      }, 800);
 
       if (
         JSON.stringify(maxBounds) !== JSON.stringify(prevMaxBoundsRef.current)

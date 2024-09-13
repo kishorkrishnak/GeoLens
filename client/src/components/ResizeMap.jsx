@@ -4,11 +4,13 @@ import { useMapContext } from "../contexts/MapContext";
 
 const ResizeMap = () => {
   const map = useMap();
-  
+
   const { sidebarCollapsed } = useMapContext();
 
   useEffect(() => {
-    map.invalidateSize();
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 500);
   }, [sidebarCollapsed, map]);
 
   return null;

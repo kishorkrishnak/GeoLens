@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import AuthContext from "./AuthContext";
 import { verifyToken } from "../../api/auth";
+import AuthContext from "./AuthContext";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [authCheckComplete, setAuthCheckComplete] = useState(false);
   const [loading, setLoading] = useState(false);
 
   //ensure auth status from server before the website loads
@@ -15,8 +14,6 @@ export const AuthProvider = ({ children }) => {
         setUser(result.data.data.user);
       } catch (error) {
         setUser(null);
-      } finally {
-        setAuthCheckComplete(true);
       }
     };
 
@@ -26,7 +23,6 @@ export const AuthProvider = ({ children }) => {
   const contextValue = {
     user,
     setUser,
-    authCheckComplete,
     loading,
     setLoading,
   };
