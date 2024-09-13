@@ -167,7 +167,7 @@ exports.likeMarker = async (req, res, next) => {
 
     await marker.save();
 
-   const updatedMarker =   await Marker.findByIdAndUpdate(
+    const updatedMarker = await Marker.findByIdAndUpdate(
       id,
       { $pull: { dislikes: userId } },
       { new: true }
@@ -219,7 +219,7 @@ exports.dislikeMarker = async (req, res, next) => {
     res.status(201).json({
       status: "success",
       message: "Marker disliked succesfully",
-      data: updatedMarker ,
+      data: updatedMarker,
     });
   } catch (error) {
     res.status(500).json({

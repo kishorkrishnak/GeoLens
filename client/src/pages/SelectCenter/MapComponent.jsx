@@ -32,7 +32,7 @@ const MapComponent = ({ operation }) => {
       <MapContainer
         className="map"
         center={centerLatLong}
-        zoom={14}
+        zoom={13}
         scrollWheelZoom={true}
       >
         <RecenterMap lat={centerLatLong[0]} lng={centerLatLong[1]} />

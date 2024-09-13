@@ -46,7 +46,6 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
           const bounds = L.latLngBounds(maxBounds);
 
           if (!bounds.contains(coordinates)) {
-            console.log(markerData);
             markerElement.setLatLng(markerData.location.coordinates);
 
             return toast.error("Point outside your bounded region");

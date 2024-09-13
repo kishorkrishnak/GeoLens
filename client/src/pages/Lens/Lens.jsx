@@ -32,7 +32,7 @@ const Lens = () => {
         <>
           {!routingMode && <TopActionBar />}
           <Sidebar />
-          <Map />
+          <Map lensId={id} />
         </>
       )}
     </div>

@@ -25,7 +25,7 @@ const CircleBoundSlider = () => {
         justifyContent: "center",
       }}
     >
-      <Typography color="black" variant="h5" fontWeight={600}>
+      <Typography color="black" variant="h5" textAlign={"center"} fontWeight={600}>
         Select the radius of your Lens
       </Typography>
       <Slider

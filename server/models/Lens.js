@@ -69,7 +69,7 @@ const LensSchema = new Schema(
         index: true,
       },
     ],
-
+   
     tags: {
       type: [String],
       default: [],

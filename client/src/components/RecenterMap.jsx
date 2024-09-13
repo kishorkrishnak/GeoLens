@@ -6,7 +6,7 @@ const RecenterMap = ({ lat, lng }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      map.flyTo([lat, lng]);
+      map.setView([lat, lng]);
     }, 500);
   }, [lat, lng, map]);
 
