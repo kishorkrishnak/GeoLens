@@ -97,7 +97,7 @@ const CommentsModal = ({ lensId }) => {
     try {
       const newComment = {
         body: comment,
-        userId: user._id,
+        userId: user?._id,
       };
       const response = await addCommentToLens(lensId, newComment);
 
@@ -164,36 +164,38 @@ const CommentsModal = ({ lensId }) => {
               </Select>
             </FormControl>
 
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 1,
-                width: "100%",
-              }}
-            >
-              <TextField
-                label="Add Comment"
-                placeholder="Add your comment"
-                variant="outlined"
-                fullWidth
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-              />
-              <Button
+            {user?.id && (
+              <Box
                 sx={{
-                  color: "white",
-                  textTransform: "none",
-                  paddingY: 1.9,
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 1,
+                  width: "100%",
                 }}
-                variant="contained"
-                color="primary"
-                onClick={handleAddComment}
               >
-                Comment
-              </Button>
-            </Box>
+                <TextField
+                  label="Add Comment"
+                  placeholder="Add your comment"
+                  variant="outlined"
+                  fullWidth
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                />
+                <Button
+                  sx={{
+                    color: "white",
+                    textTransform: "none",
+                    paddingY: 1.9,
+                  }}
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAddComment}
+                >
+                  Comment
+                </Button>
+              </Box>
+            )}
           </Box>
 
           <Comments

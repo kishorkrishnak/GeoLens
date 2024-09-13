@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import { useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet-routing-machine";
+import { useEffect } from "react";
+import { useMap } from "react-leaflet";
 
 function useRoutingMachine(waypoints) {
   const map = useMap();
@@ -29,8 +29,15 @@ function useRoutingMachine(waypoints) {
       ],
     };
 
+    const options = { profile: "mapbox/driving" };
+
     const routingControl = L.Routing.control({
       waypoints,
+      router: new L.Routing.mapbox(
+        import.meta.env.VITE_MAPBOX_API_KEY,
+        options
+      ),
+
       fitSelectedRoutes: false,
 
       //prevent map click creating markers

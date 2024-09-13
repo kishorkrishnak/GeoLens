@@ -5,7 +5,6 @@ const PopupObserver = () => {
   const { setPopupOpen } = useMapContext();
   useMapEvents({
     popupopen: () => {
-      console.log("yay");
       setPopupOpen(true);
     },
     popupclose: () => {

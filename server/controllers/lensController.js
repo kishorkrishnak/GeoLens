@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 exports.createLens = async (req, res, next) => {
   try {
     const { name, thumbnail, description, location, tags, address } = req.body;
-    const creator = req.user._id;
+    const creator = req.user?._id;
 
     if (!name || !location || !creator) {
       return res.status(400).json({
@@ -331,7 +331,7 @@ exports.deleteLens = async (req, res, next) => {
       });
     }
 
-    if (lens.creator.toString() !== req.user._id.toString()) {
+    if (lens.creator.toString() !== req.user?._id.toString()) {
       return res.status(403).json({
         status: "error",
         message: "You do not have permission to delete this lens",
@@ -340,7 +340,7 @@ exports.deleteLens = async (req, res, next) => {
     }
 
     await User.findByIdAndUpdate(
-      req.user._id,
+      req.user?._id,
       { $pull: { lensesCreated: id } },
       { new: true }
     );
@@ -643,7 +643,7 @@ exports.updateSuggestion = async (req, res) => {
 exports.likeLens = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const userId = req.user._id;
+    const userId = req.user?._id;
     const lens = await Lens.findById(id);
 
     if (!lens) {
@@ -682,7 +682,7 @@ exports.likeLens = async (req, res, next) => {
 exports.dislikeLens = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const userId = req.user._id;
+    const userId = req.user?._id;
     const lens = await Lens.findById(id);
 
     if (!lens) {

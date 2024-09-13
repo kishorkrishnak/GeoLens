@@ -153,7 +153,7 @@ const Navbar = ({ home }) => {
                 <MenuItem
                   key={page.label}
                   onClick={() => {
-                    if (page.protected && !user._id)
+                    if (page.protected && !user?._id)
                       return toast.error("You must be logged in");
                     navigate(page.link);
                     handleCloseNavMenu();

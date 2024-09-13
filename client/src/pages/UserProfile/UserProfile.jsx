@@ -85,7 +85,7 @@ const UserProfile = () => {
           />
 
           <div className="userProfileContainer__Details">
-            {user._id === id && (
+            {user?._id === id && (
               <div className="userProfileContainer__DetailsHeading">
                 <IconButton onClick={() => setEditProfile((ele) => !ele)}>
                   {editProfile ? <CloseRoundedIcon /> : <EditRoundedIcon />}

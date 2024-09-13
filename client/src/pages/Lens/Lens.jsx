@@ -9,7 +9,7 @@ import Map from "./Map/Map";
 
 const Lens = () => {
   const navigate = useNavigate();
-  const { lens, setLens } = useMapContext();
+  const { lens, setLens, routingMode } = useMapContext();
   const { id } = useParams();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const Lens = () => {
     <div className="App">
       {lens && (
         <>
-          <TopActionBar />
+          {!routingMode && <TopActionBar />}
           <Sidebar />
           <Map />
         </>

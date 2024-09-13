@@ -1,22 +1,22 @@
 import {
-  Box,
-  Button,
-  Chip,
-  Container,
-  Stack,
-  TextField,
-  Typography,
+    Box,
+    Button,
+    Chip,
+    Container,
+    Stack,
+    TextField,
+    Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import { reverseGeoCode } from "../../api/geocode";
 import { createLens, getLens, updateLens } from "../../api/lens";
 import Footer from "../../components/Footer/Footer";
 import Navbar from "../../components/Navbar/Navbar";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { handleFileUpload } from "../../utils/handleFileUpload";
 import { useLensCreationContext } from "../LensCreation/contexts/LensCreationContext";
-import { reverseGeoCode } from "../../api/geocode";
 
 const LensDetails = ({ operation }) => {
   const navigate = useNavigate();
@@ -149,7 +149,7 @@ const LensDetails = ({ operation }) => {
     setError(null);
 
     toast.success("Lens updated successfully");
-    navigate(`/user/${user._id}/lenses`);
+    navigate(`/user/${user?._id}/lenses`);
   };
 
   const handleAddTag = () => {

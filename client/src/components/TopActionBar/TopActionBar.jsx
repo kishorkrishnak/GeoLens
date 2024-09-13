@@ -1,13 +1,14 @@
 import { Stack } from "@mui/material";
-import React from "react";
+import { useAuthContext } from "../../contexts/AuthContext";
 import SuggestEdit from "./SuggestEdit/SuggestEdit";
 import TileLayerSelector from "./TileLayerSelector/TileLayerSelector";
 
 const TopActionBar = () => {
+  const { user } = useAuthContext();
   return (
     <Stack
       sx={{
-        zIndex: 100000,
+        zIndex: 100,
         position: "absolute",
         top: 10,
         right: 10,
@@ -15,7 +16,7 @@ const TopActionBar = () => {
       direction={"row"}
     >
       <TileLayerSelector />
-      <SuggestEdit />
+      {user?.id && <SuggestEdit />}
     </Stack>
   );
 };

@@ -15,6 +15,7 @@ const LensStats = ({ lensId }) => {
   const { user, setLoading } = useAuthContext();
 
   const likeLensById = async () => {
+    if (!user?._id) return;
     setLoading(true);
     try {
       const response = await likeLens(lensId);
@@ -22,7 +23,7 @@ const LensStats = ({ lensId }) => {
       if (response.data.status === "success") {
         setLens({
           ...lens,
-          likes: [...lens.likes, user._id],
+          likes: [...lens.likes, user?._id],
         });
         toast.success("Lens liked");
       } else {
@@ -36,12 +37,14 @@ const LensStats = ({ lensId }) => {
   };
 
   const dislikeLensById = async () => {
+    if (!user?._id) return;
+
     setLoading(true);
     try {
       const response = await dislikeLens(lensId);
 
       if (response.data.status === "success") {
-        const updatedLikes = lens.likes.filter((like) => like !== user._id);
+        const updatedLikes = lens.likes.filter((like) => like !== user?._id);
         setLens({
           ...lens,
           likes: updatedLikes,

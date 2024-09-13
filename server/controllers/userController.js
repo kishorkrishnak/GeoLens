@@ -5,7 +5,7 @@ exports.updateUser = async (req, res, next) => {
 
   console.log(userData);
   try {
-    const userId = req.user._id;
+    const userId = req.user?._id;
     if (!userId) {
       return res.status(401).json({
         status: "error",

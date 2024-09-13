@@ -1,5 +1,5 @@
-import { Box, Typography } from "@mui/material";
-
+import GitHubIcon from "@mui/icons-material/GitHub";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 export const Footer = () => {
   return (
     <Box
@@ -15,12 +15,13 @@ export const Footer = () => {
         top: 0,
       }}
     >
-      <Typography color="white" variant="h5">
-        GeoLens
+      <Typography color="white" variant="body1">
+        Copyright &#169; {new Date().getFullYear()} GeoLens
       </Typography>
-      <Typography color="white" variant="subtitle1">
-        {`${new Date().getFullYear()} Explore Geo`}
-      </Typography>
+
+      <IconButton target="_blank" href="https://github.com/kishorkrishnak">
+        <GitHubIcon htmlColor="white" />
+      </IconButton>
     </Box>
   );
 };

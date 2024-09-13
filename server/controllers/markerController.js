@@ -145,7 +145,7 @@ exports.deleteMarker = async (req, res, next) => {
 exports.likeMarker = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const userId = req.user._id;
+    const userId = req.user?._id;
     const marker = await Marker.findById(id);
 
     if (!marker) {
@@ -190,7 +190,7 @@ exports.likeMarker = async (req, res, next) => {
 exports.dislikeMarker = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const userId = req.user._id;
+    const userId = req.user?._id;
     const marker = await Marker.findById(id);
 
     if (!marker) {

@@ -71,7 +71,7 @@ export const MapProvider = ({ children }) => {
     };
 
     const response = await createMarker(newMarker);
-    console.log(response);
+
     setLens({
       ...lens,
       markers: [...lens.markers, response.data.data],

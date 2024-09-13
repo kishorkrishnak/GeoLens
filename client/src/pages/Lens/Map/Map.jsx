@@ -16,8 +16,13 @@ import Markers from "./Markers";
 const Map = () => {
   const { routingMode, lens, selectedMarkerCategory, currentTileLayer } =
     useMapContext();
+
   const markers = lens.markers;
-  const wayPoints = markers.map((marker) => L.latLng(marker.lat, marker.lng));
+
+  const wayPoints = markers.map((marker) =>
+    L.latLng(marker.location.coordinates[0], marker.location.coordinates[1])
+  );
+
   const centerCoordinates = lens.location.coordinates;
 
   const maxBoundsSouthWest = lens.address.circleBounds._southWest;
@@ -73,7 +78,8 @@ const Map = () => {
         <SuggestCorrectionModal lensId={lens._id} />
         {routingMode && <RoutingMachine waypoints={wayPoints} />}
 
-        {/* to prevent marker modal opening if popup is opened */}
+        {/* to prevent marker modal o
+        pening if popup is opened */}
         <PopupObserver />
 
         <MapClickHandler />

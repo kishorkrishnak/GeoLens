@@ -1,5 +1,5 @@
 import IosShareIcon from "@mui/icons-material/IosShare";
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 import toast from "react-hot-toast";
 import { useMapContext } from "../../../contexts/MapContext";
@@ -58,6 +58,7 @@ const ShareButton = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "flex-start",
+        flexDirection: sidebarCollapsed ? "column" : "row",
       }}
     >
       <Typography
@@ -77,7 +78,7 @@ const ShareButton = () => {
           sx={{
             color: "white",
             position: sidebarCollapsed ? "absolute" : "",
-            left: sidebarCollapsed ? -3.5 : "",
+            left: sidebarCollapsed ? 4 : "",
             top: sidebarCollapsed ? 50 : "",
             zIndex: 1002,
           }}
@@ -85,32 +86,37 @@ const ShareButton = () => {
           <IosShareIcon fontSize="medium" />
         </IconButton>
       </Tooltip>
-      <Typography
-        marginLeft={2}
-        sx={{
-          opacity: sidebarCollapsed ? 0 : 1,
-        }}
-        variant="body1"
-      >
-        Export
-      </Typography>
-      <Tooltip
-        title={<Typography variant="body1">Export GeoJSON</Typography>}
-        arrow
-      >
-        <IconButton
-          onClick={handleExport}
-          sx={{
-            color: "white",
-            position: sidebarCollapsed ? "absolute" : "",
-            left: sidebarCollapsed ? -3.5 : "",
-            top: sidebarCollapsed ? 50 : "",
-            zIndex: 1002,
-          }}
-        >
-          <FileDownloadIcon fontSize="medium" />
-        </IconButton>
-      </Tooltip>
+      {lens?.markers?.length > 0 && (
+        <>
+          <Typography
+            marginLeft={sidebarCollapsed ? 0 : 1}
+            sx={{
+              opacity: sidebarCollapsed ? 0 : 1,
+            }}
+            variant="body1"
+          >
+            Export
+          </Typography>
+          
+          <Tooltip
+            title={<Typography variant="body1">Export GeoJSON</Typography>}
+            arrow
+          >
+            <IconButton
+              onClick={handleExport}
+              sx={{
+                color: "white",
+                position: sidebarCollapsed ? "absolute" : "",
+                left: sidebarCollapsed ? 4 : "",
+                top: sidebarCollapsed ? 100 : "",
+                zIndex: 1002,
+              }}
+            >
+              <FileDownloadIcon fontSize="medium" />
+            </IconButton>
+          </Tooltip>
+        </>
+      )}
     </Box>
   );
 };

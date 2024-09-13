@@ -12,7 +12,7 @@ export const LensCreationProvider = ({ children, operation }) => {
 
   useEffect(() => {
     const fetchCenterCoordinates = async () => {
-      console.log('Fetching center coordinates')
+      
       try {
         const response = await getLensCenterCoordinates(id);
         const data = response.data.data;

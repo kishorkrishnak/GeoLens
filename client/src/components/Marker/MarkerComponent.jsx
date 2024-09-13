@@ -1,9 +1,9 @@
 import {
-  Edit,
-  ThumbDown,
-  ThumbDownOutlined,
-  ThumbUp,
-  ThumbUpOutlined,
+    Edit,
+    ThumbDown,
+    ThumbDownOutlined,
+    ThumbUp,
+    ThumbUpOutlined,
 } from "@mui/icons-material/";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Box, Stack, Typography } from "@mui/material";
@@ -88,8 +88,8 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
     }
   };
 
-  const isLiked = markerData.likes.includes(user._id);
-  const isDisliked = markerData.dislikes.includes(user._id);
+  const isLiked = markerData.likes.includes(user?._id);
+  const isDisliked = markerData.dislikes.includes(user?._id);
 
   let markerColor;
   if (index === 0) {
