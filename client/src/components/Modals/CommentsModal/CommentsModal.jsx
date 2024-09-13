@@ -164,7 +164,7 @@ const CommentsModal = ({ lensId }) => {
               </Select>
             </FormControl>
 
-            {user?.id && (
+            {user?._id && (
               <Box
                 sx={{
                   display: "flex",

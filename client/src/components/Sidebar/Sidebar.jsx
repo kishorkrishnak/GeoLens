@@ -1,10 +1,5 @@
 import MenuIcon from "@mui/icons-material/Menu";
-import {
-  Box,
-  Button,
-  IconButton,
-  Typography
-} from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
@@ -123,7 +118,7 @@ const Sidebar = () => {
             </Box>
 
             <MarkerFilter />
-            
+
             <Button
               sx={{
                 marginTop: 1,
@@ -152,7 +147,7 @@ const Sidebar = () => {
             transition: "opacity 0.2s ease 0.1s",
           }}
         >
-          <LensStats lensId={id}/>
+          <LensStats lensId={id} />
           <ShareButton lensId={id} markers={lens.markers} />
           <CreatorCard creator={user} />
         </Box>

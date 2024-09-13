@@ -8,8 +8,8 @@ const PopupObserver = () => {
       setPopupOpen(true);
     },
     popupclose: () => {
-        setPopupOpen(false);
-      },
+      setPopupOpen(false);
+    },
   });
 
   return null;

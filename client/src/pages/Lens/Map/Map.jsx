@@ -1,5 +1,6 @@
 import { Typography } from "@mui/material";
 import L from "leaflet";
+import { useEffect, useRef } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import MapBoundsEnforcer from "../../../components/MapBoundsEnforcer";
 import MapClickHandler from "../../../components/MapClickHandler";
@@ -9,13 +10,31 @@ import MarkerModal from "../../../components/Modals/MarkerModal/MarkerModal";
 import SuggestCorrectionModal from "../../../components/Modals/SuggestCorrectionModal/CommentsModal/SuggestCorrectionModal";
 import PopupObserver from "../../../components/PopupObserver";
 import RecenterMap from "../../../components/RecenterMap";
+import ResizeMap from "../../../components/ResizeMap";
 import RoutingMachine from "../../../components/RoutingMachine/RoutingMachine";
 import { useMapContext } from "../../../contexts/MapContext";
 import Markers from "./Markers";
 
 const Map = () => {
-  const { routingMode, lens, selectedMarkerCategory, currentTileLayer } =
-    useMapContext();
+  const {
+    routingMode,
+    lens,
+    selectedMarkerCategory,
+    currentTileLayer,
+    sidebarCollapsed,
+  } = useMapContext();
+
+  const mapContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (mapContainerRef.current) {
+      mapContainerRef.current.style.width = `calc(100vw - ${
+        sidebarCollapsed ? "50px" : "260px"
+      })`;
+
+      mapContainerRef.current.style.transition = "width 0.3s ease";
+    }
+  }, [sidebarCollapsed]);
 
   const markers = lens.markers;
 
@@ -25,15 +44,6 @@ const Map = () => {
 
   const centerCoordinates = lens.location.coordinates;
 
-  const maxBoundsSouthWest = lens.address.circleBounds._southWest;
-  const maxBoundsNorthEast = lens.address.circleBounds._northEast;
-
-  const maxBounds = [
-    [maxBoundsSouthWest.lat, maxBoundsSouthWest.lng],
-    [maxBoundsNorthEast.lat, maxBoundsNorthEast.lng],
-  ];
-
-  /* render only the markers that match the selected category */
   const filteredMarkers = markers.filter((marker) =>
     selectedMarkerCategory && selectedMarkerCategory !== "All"
       ? marker.category === selectedMarkerCategory
@@ -43,19 +53,21 @@ const Map = () => {
   const centreIcon = createCentreIcon();
 
   return (
-    <>
+    <div ref={mapContainerRef} style={{ height: "100vh", marginLeft: "auto" }}>
       <MapContainer
         className="map"
+        id="lens-map"
         center={centerCoordinates}
         zoom={14}
         minZoom={10}
         scrollWheelZoom={true}
         zoomControl={false}
         maxBoundsViscosity={1}
+        style={{ width: "100%", height: "100%" }}
       >
-        {/* forcefully recenter map and update maxbounds when state changes */}
         <RecenterMap lat={centerCoordinates[0]} lng={centerCoordinates[1]} />
-        <MapBoundsEnforcer maxBounds={maxBounds} />
+        <MapBoundsEnforcer />
+        <ResizeMap />
 
         <TileLayer
           url={currentTileLayer.url}
@@ -78,13 +90,10 @@ const Map = () => {
         <SuggestCorrectionModal lensId={lens._id} />
         {routingMode && <RoutingMachine waypoints={wayPoints} />}
 
-        {/* to prevent marker modal o
-        pening if popup is opened */}
         <PopupObserver />
-
         <MapClickHandler />
       </MapContainer>
-    </>
+    </div>
   );
 };
 

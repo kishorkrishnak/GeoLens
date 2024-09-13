@@ -5,6 +5,7 @@ import TileLayerSelector from "./TileLayerSelector/TileLayerSelector";
 
 const TopActionBar = () => {
   const { user } = useAuthContext();
+
   return (
     <Stack
       sx={{
@@ -16,7 +17,7 @@ const TopActionBar = () => {
       direction={"row"}
     >
       <TileLayerSelector />
-      {user?.id && <SuggestEdit />}
+      {user?._id && <SuggestEdit />}
     </Stack>
   );
 };

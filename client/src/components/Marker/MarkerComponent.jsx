@@ -1,21 +1,15 @@
-import {
-    Edit,
-    ThumbDown,
-    ThumbDownOutlined,
-    ThumbUp,
-    ThumbUpOutlined,
-} from "@mui/icons-material/";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { Box, Stack, Typography } from "@mui/material";
 import L from "leaflet";
-import { useMemo, useRef, useState } from "react";
-import { Marker, Popup, Tooltip } from "react-leaflet";
+import R from "leaflet-responsive-popup";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createRoot } from "react-dom/client";
+import toast from "react-hot-toast";
+import { Marker, Tooltip } from "react-leaflet";
+import { dislikeMarker, likeMarker } from "../../api/marker";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useMapContext } from "../../contexts/MapContext";
-
-import toast from "react-hot-toast";
-import { dislikeMarker, likeMarker } from "../../api/marker";
 import createNumberedIcon from "./MarkerIcons/NumberedIcon";
+import ResponsivePopup from "./ResponsivePopup";
+
 const MarkerComponent = ({ marker, index, totalMarkers }) => {
   const {
     updateMarkerPosition,
@@ -32,6 +26,7 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
   const [markerData, setMarkerDataState] = useState(marker);
 
   const markerRef = useRef(null);
+
   const eventHandlers = useMemo(
     () => ({
       async dragend() {
@@ -101,9 +96,37 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
   }
 
   const numberedIcon = createNumberedIcon(index, markerColor);
-
   const icon = routingMode ? numberedIcon : new L.Icon.Default();
   const position = marker.location.coordinates;
+
+  useEffect(() => {
+    if (markerRef.current) {
+      const popup = R.responsivePopup({
+        hasTip: true,
+        offset: [15, 20],
+        autoPanPadding: [10, 10],
+      });
+
+      // Render React component inside Leaflet popup
+      const popupContent = document.createElement("div");
+      createRoot(popupContent).render(
+        <ResponsivePopup
+          markerData={markerData}
+          isLiked={isLiked}
+          isDisliked={isDisliked}
+          handleLike={handleLike}
+          handleDislike={handleDislike}
+          handleEditClick={handleEditClick}
+          handleDeleteClick={handleDeleteClick}
+          isLensCreator={isLensCreator}
+        />
+      );
+
+      popup.setContent(popupContent);
+
+      markerRef.current.bindPopup(popup);
+    }
+  }, [markerData, isLiked, isDisliked, isLensCreator]);
 
   return (
     <Marker
@@ -112,88 +135,8 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
       draggable={isLensCreator}
       icon={icon}
       position={position}
-
     >
       <Tooltip permanent={routingMode}>{marker.title}</Tooltip>
-
-      <Popup>
-        <Typography variant="h6">{marker.title}</Typography>
-        <Typography variant="body1">{marker.description}</Typography>
-        <Typography marginBottom={2} variant="subtitle2" display={"block"}>
-          <Typography variant="span" fontWeight={600}>
-            Category:{" "}
-          </Typography>
-          {marker.category}
-        </Typography>
-
-        <Typography variant="subtitle2">
-          {marker?.address?.formatted}
-        </Typography>
-
-        {marker?.image && (
-          <img
-            src={marker.image}
-            style={{ maxWidth: "130px", borderRadius: "5px" }}
-            alt="marker-image"
-          />
-        )}
-
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-start",
-            gap: 3,
-          }}
-        >
-          <Typography variant="body1">
-            {isLiked ? (
-              <ThumbUp
-                sx={{ verticalAlign: "middle", marginRight: 1.5 }}
-                fontSize="small"
-                color="primary"
-                onClick={handleLike}
-              />
-            ) : (
-              <ThumbUpOutlined
-                sx={{ verticalAlign: "middle", marginRight: 1.5 }}
-                fontSize="small"
-                color="primary"
-                onClick={handleLike}
-              />
-            )}
-            {markerData.likes.length}
-          </Typography>
-          <Typography variant="body1">
-            {isDisliked ? (
-              <ThumbDown
-                sx={{ verticalAlign: "middle", marginRight: 1.5 }}
-                fontSize="small"
-                color="primary"
-                onClick={handleDislike}
-              />
-            ) : (
-              <ThumbDownOutlined
-                sx={{ verticalAlign: "middle", marginRight: 1.5 }}
-                fontSize="small"
-                color="primary"
-                onClick={handleDislike}
-              />
-            )}
-            {markerData.dislikes.length}
-          </Typography>
-        </Box>
-        {isLensCreator && (
-          <Stack direction={"row"} spacing={1}>
-            <Edit onClick={handleEditClick} fontSize="small" />
-            <DeleteForeverIcon
-              color="error"
-              onClick={handleDeleteClick}
-              fontSize="small"
-            />
-          </Stack>
-        )}
-      </Popup>
     </Marker>
   );
 };
