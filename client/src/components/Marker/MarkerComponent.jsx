@@ -1,4 +1,4 @@
-import L from "leaflet";
+import L, { popup } from "leaflet";
 import R from "leaflet-responsive-popup";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
@@ -20,6 +20,7 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
     setModalVisible,
     setMarkerModalOperation,
     setMarkerData,
+    popupOpen,
   } = useMapContext();
 
   const { user } = useAuthContext();
@@ -136,7 +137,7 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
       icon={icon}
       position={position}
     >
-      <Tooltip permanent={routingMode}>{marker.title}</Tooltip>
+      {!popupOpen && <Tooltip permanent={routingMode}>{marker.title}</Tooltip>}
     </Marker>
   );
 };
