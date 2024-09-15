@@ -1,11 +1,11 @@
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { Box, Button, Container, IconButton, Paper } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import { logoutUser } from "../../api/auth";
-import { updateUser } from "../../api/user";
+import { updateUser, fetchUserProfile } from "../../api/user";
 import Footer from "../../components/Footer/Footer";
 import HtmlInput from "../../components/HtmlInput";
 import Navbar from "../../components/Navbar/Navbar";
@@ -17,7 +17,34 @@ const UserProfile = () => {
   const [editProfile, setEditProfile] = useState(false);
   const { user, setUser } = useAuthContext();
   const { id } = useParams();
-  const [userName, setUserName] = useState(user?.name || "");
+  const [profileUser, setProfileUser] = useState(null);
+  const [userName, setUserName] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadUserProfile = async () => {
+      try {
+        if (user?._id === id) {
+          setProfileUser(user);
+          setUserName(user.name);
+        } else {
+          const response = await fetchUserProfile(id);
+          if (response.data.status === "success") {
+            setProfileUser(response.data.data);
+            setUserName(response.data.data.name);
+          } else {
+            toast.error("Failed to fetch user profile");
+          }
+        }
+      } catch (error) {
+        toast.error("Error loading user profile");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUserProfile();
+  }, [id, user]);
 
   const handleLogout = async () => {
     const response = await logoutUser();
@@ -40,6 +67,10 @@ const UserProfile = () => {
           ...user,
           name: userName,
         });
+        setProfileUser({
+          ...profileUser,
+          name: userName,
+        });
         toast.success("Profile updated successfully");
       } else throw new Error();
     } catch (error) {
@@ -48,6 +79,10 @@ const UserProfile = () => {
       setEditProfile(false);
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -80,7 +115,7 @@ const UserProfile = () => {
               height: "150px",
               borderRadius: 100000,
             }}
-            src={user?.image}
+            src={profileUser?.image}
             alt="profile"
           />
 
@@ -102,12 +137,11 @@ const UserProfile = () => {
                 >
                   Logout
                 </Button>
-                
               </div>
             )}
             <div className="userProfileContainer__DetailsRow">
               <p>Full Name</p>
-              {editProfile ? (
+              {editProfile && user?._id === id ? (
                 <HtmlInput
                   placeholder="studentName"
                   name="studentName"
@@ -117,24 +151,24 @@ const UserProfile = () => {
                   onChange={(e) => setUserName(e.target.value)}
                 />
               ) : (
-                <h2>{user?.name}</h2>
+                <h2>{profileUser?.name}</h2>
               )}
             </div>
             <div className="userProfileContainer__DetailsRow">
               <p>Email</p>
-              <h2>{user?.email}</h2>
+              <h2>{profileUser?.email}</h2>
             </div>
             <div className="userProfileContainer__DetailsRow">
               <p>Lenses Created</p>
-              <h2>{user?.lensesCreated?.length || 0}</h2>
+              <h2>{profileUser?.lensesCreated?.length || 0}</h2>
             </div>
             <div className="userProfileContainer__DetailsRow">
               <p>Date Joined</p>
-              <h2>{formatTimestamp(user?.dateJoined)}</h2>
+              <h2>{formatTimestamp(profileUser?.dateJoined)}</h2>
             </div>
           </div>
 
-          {editProfile && (
+          {editProfile && user?._id === id && (
             <Button
               onClick={handleUpdateUser}
               sx={{

@@ -39,3 +39,31 @@ exports.updateUser = async (req, res, next) => {
     });
   }
 };
+
+
+exports.getUserProfile = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId).select('-password');
+
+    if (!user) {
+      return res.status(404).json({
+        status: "error",
+        message: "User not found",
+        data: null,
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: "User profile fetched successfully",
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
