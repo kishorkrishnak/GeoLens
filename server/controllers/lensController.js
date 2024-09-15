@@ -206,7 +206,8 @@ exports.getLenses = async (req, res, next) => {
 
   if (likedOnly) matchStage.likes = new mongoose.Types.ObjectId(creatorId);
 
-  if (creatorId && !likedOnly) matchStage.creator = new mongoose.Types.ObjectId(creatorId);
+  if (creatorId && !likedOnly)
+    matchStage.creator = new mongoose.Types.ObjectId(creatorId);
 
   if (featured) matchStage.featured = true;
 
@@ -355,7 +356,6 @@ exports.deleteLens = async (req, res, next) => {
       data: null,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       status: "error",
       message: "Internal server error",

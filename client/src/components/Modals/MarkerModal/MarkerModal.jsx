@@ -36,7 +36,7 @@ const MarkerModal = () => {
       setLoading(false);
     }
   };
-
+  
   return (
     <Modal
       open={modalVisible}

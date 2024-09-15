@@ -29,14 +29,9 @@ function useRoutingMachine(waypoints) {
       ],
     };
 
-    const options = { profile: "mapbox/driving" };
-
     const routingControl = L.Routing.control({
       waypoints,
-      router: new L.Routing.mapbox(
-        import.meta.env.VITE_MAPBOX_API_KEY,
-        options
-      ),
+      router: new L.Routing.mapbox(import.meta.env.VITE_MAPBOX_API_KEY),
 
       fitSelectedRoutes: false,
 

@@ -8,7 +8,7 @@ import {
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Box, Stack, Typography } from "@mui/material";
 
-const ResponsivePopup = ({
+const CustomPopup = ({
   markerData,
   isLiked,
   isDisliked,
@@ -19,34 +19,43 @@ const ResponsivePopup = ({
   isLensCreator,
 }) => {
   return (
-    <div>
-      <Typography variant="h6">{markerData.title}</Typography>
-      <Typography variant="body1">{markerData.description}</Typography>
-      <Typography marginBottom={2} variant="subtitle2" display={"block"}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        gap: 1,
+      }}
+    >
+      <Typography variant="h5">{markerData.title}</Typography>
+      <Typography marginBottom={1} variant="subtitle2" display={"block"}>
         <Typography variant="span" fontWeight={600}>
           Category:{" "}
         </Typography>
         {markerData.category}
       </Typography>
-
-      <Typography variant="subtitle2">
-        {markerData?.address?.formatted}
+      <Typography variant="body1" marginBottom={2}>
+        {markerData.description}
       </Typography>
 
       {markerData?.image && (
         <img
           src={markerData.image}
-          style={{ maxWidth: "130px", borderRadius: "5px" }}
+          style={{ maxWidth: "160px", borderRadius: "5px" }}
           alt="marker"
         />
       )}
-
+      <Typography variant="subtitle2" fontWeight={600}>
+        {markerData?.address?.formatted}
+      </Typography>
       <Box
         sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "flex-start",
           gap: 3,
+          marginTop: 1,
         }}
       >
         <Typography variant="body1">
@@ -88,7 +97,7 @@ const ResponsivePopup = ({
       </Box>
 
       {isLensCreator && (
-        <Stack direction={"row"} spacing={1}>
+        <Stack marginTop={1} direction={"row"} spacing={1}>
           <Edit onClick={handleEditClick} fontSize="small" />
           <DeleteForeverIcon
             color="error"
@@ -97,8 +106,8 @@ const ResponsivePopup = ({
           />
         </Stack>
       )}
-    </div>
+    </Box>
   );
 };
 
-export default ResponsivePopup;
+export default CustomPopup;

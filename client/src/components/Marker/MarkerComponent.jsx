@@ -1,14 +1,14 @@
 import L from "leaflet";
-import R from "leaflet-responsive-popup";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { createRoot } from "react-dom/client";
+import { useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { Marker, Tooltip } from "react-leaflet";
+import Modal from "react-responsive-modal";
 import { dislikeMarker, likeMarker } from "../../api/marker";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useMapContext } from "../../contexts/MapContext";
+import CustomPopup from "./CustomPopup";
 import createNumberedIcon from "./MarkerIcons/NumberedIcon";
-import ResponsivePopup from "./ResponsivePopup";
+import "./PopupModal.css";
 
 const MarkerComponent = ({ marker, index, totalMarkers }) => {
   const {
@@ -20,21 +20,25 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
     setModalVisible,
     setMarkerModalOperation,
     setMarkerData,
-    popupOpen,
     lens,
   } = useMapContext();
 
   const { user } = useAuthContext();
   const [markerData, setMarkerDataState] = useState(marker);
+  const [open, setOpen] = useState(false);
 
   const markerRef = useRef(null);
 
   const eventHandlers = useMemo(
     () => ({
+      click() {
+        setOpen(true);
+      },
       async dragend() {
         const markerElement = markerRef.current;
         if (markerElement != null) {
           const coordinates = markerElement.getLatLng();
+
           const maxBoundsSouthWest = lens.address.circleBounds._southWest;
           const maxBoundsNorthEast = lens.address.circleBounds._northEast;
 
@@ -47,7 +51,6 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
 
           if (!bounds.contains(coordinates)) {
             markerElement.setLatLng(markerData.location.coordinates);
-
             return toast.error("Point outside your bounded region");
           }
 
@@ -55,7 +58,12 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
         }
       },
     }),
-    [marker._id]
+    [
+      marker._id,
+      markerData.location.coordinates,
+      lens.address.circleBounds,
+      updateMarkerPosition,
+    ]
   );
 
   const handleDeleteClick = (e) => {
@@ -74,6 +82,7 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
 
   const handleLike = async (e) => {
     e.stopPropagation();
+    if (!user?._id) return toast.error("Login to like this lens");
     if (isLiked) return;
 
     try {
@@ -88,6 +97,8 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
   };
 
   const handleDislike = async (e) => {
+    if (!user?._id) return toast.error("Login to dislike this lens");
+
     e.stopPropagation();
     if (isDisliked) return;
     try {
@@ -117,18 +128,33 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
   const icon = routingMode ? numberedIcon : new L.Icon.Default();
   const position = marker.location.coordinates;
 
-  useEffect(() => {
-    if (markerRef.current) {
-      const popup = R.responsivePopup({
-        hasTip: true,
-        offset: [15, 20],
-        autoPanPadding: [10, 10],
-      });
+  function handleClose() {
+    setOpen(false);
+  }
 
-      // Render React component inside Leaflet popup
-      const popupContent = document.createElement("div");
-      createRoot(popupContent).render(
-        <ResponsivePopup
+  const tooltipRef = useRef(null);
+
+  return (
+    <>
+      <Marker
+        eventHandlers={eventHandlers}
+        ref={markerRef}
+        draggable={isLensCreator}
+        icon={icon}
+        position={position}
+      >
+        {!open && <Tooltip ref={tooltipRef}>{marker.title}</Tooltip>}
+      </Marker>
+
+      <Modal
+        classNames={{
+          modal: "popup-modal",
+        }}
+        center
+        open={open}
+        onClose={handleClose}
+      >
+        <CustomPopup
           markerData={markerData}
           isLiked={isLiked}
           isDisliked={isDisliked}
@@ -138,24 +164,8 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
           handleDeleteClick={handleDeleteClick}
           isLensCreator={isLensCreator}
         />
-      );
-
-      popup.setContent(popupContent);
-
-      markerRef.current.bindPopup(popup);
-    }
-  }, [markerData, isLiked, isDisliked, isLensCreator]);
-
-  return (
-    <Marker
-      eventHandlers={eventHandlers}
-      ref={markerRef}
-      draggable={isLensCreator}
-      icon={icon}
-      position={position}
-    >
-      {!popupOpen && <Tooltip permanent={routingMode}>{marker.title}</Tooltip>}
-    </Marker>
+      </Modal>
+    </>
   );
 };
 

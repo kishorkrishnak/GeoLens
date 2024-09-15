@@ -7,7 +7,8 @@ import MapComponent from "./MapComponent";
 const SelectCenter = ({ operation }) => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const navigationUrl = operation==="edit" ?`/lens/edit/${id}/bounds` :`/lens/new/bounds`
+  const navigationUrl =
+    operation === "edit" ? `/lens/edit/${id}/bounds` : `/lens/new/bounds`;
 
   return (
     <div className="App">

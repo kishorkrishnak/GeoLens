@@ -8,6 +8,7 @@ import { googleAuth } from "../api/auth";
 
 const GoogleLogin = () => {
   const { setUser, setLoading } = useAuthContext();
+  
   const responseGoogle = async (authResult) => {
     try {
       setLoading(true);

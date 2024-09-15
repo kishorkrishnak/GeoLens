@@ -1,9 +1,13 @@
 import { Typography } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { useEffect, useState } from "react";
+import {
+  LayerGroup,
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+} from "react-leaflet";
 import MapBoundsEnforcer from "../../../components/MapBoundsEnforcer";
-import ResizeMap from "../../../components/ResizeMap";
-
 import MapClickHandler from "../../../components/MapClickHandler";
 import createCentreIcon from "../../../components/Marker/MarkerIcons/CentreIcon";
 import CommentsModal from "../../../components/Modals/CommentsModal/CommentsModal";
@@ -15,25 +19,14 @@ import MarkerRoutes from "./MarkerRoutes";
 import Markers from "./Markers";
 
 const Map = () => {
-  const { lens, selectedMarkerCategory, currentTileLayer, sidebarCollapsed } =
-    useMapContext();
+  const { lens, selectedMarkerCategory, currentTileLayer } = useMapContext();
 
-  const mapContainerRef = useRef(null);
   const [mapKey, setMapKey] = useState(0);
-
-  useEffect(() => {
-    if (mapContainerRef.current) {
-      mapContainerRef.current.style.width = `calc(100vw - ${
-        sidebarCollapsed ? "50px" : "260px"
-      })`;
-      mapContainerRef.current.style.transition = "width 0.3s ease";
-    }
-  }, [sidebarCollapsed]);
 
   useEffect(() => {
     // Force re-creation of MapContainer when lens changes
     setMapKey((prevKey) => prevKey + 1);
-  }, [lens]);
+  }, [lens._id]);
 
   const markers = lens.markers;
 
@@ -44,31 +37,27 @@ const Map = () => {
       : true
   );
   const centreIcon = createCentreIcon();
-  
+
   return (
-    <div ref={mapContainerRef} style={{ height: "100vh", marginLeft: "auto" }}>
-      <MapContainer
-        key={mapKey}
-        className="map"
-        id="lens-map"
-        center={centerCoordinates}
-        zoom={14}
-        scrollWheelZoom={true}
-        zoomControl={false}
-        maxBoundsViscosity={1}
-        style={{ width: "100%", height: "100%" }}
-      >
-        {/* <RecenterMap lat={centerCoordinates[0]} lng={centerCoordinates[1]} /> */}
-        <MapBoundsEnforcer />
-        <ResizeMap />
+    <MapContainer
+      key={mapKey}
+      className="map"
+      center={centerCoordinates}
+      zoom={14}
+      scrollWheelZoom={true}
+      zoomControl={false}
+      maxBoundsViscosity={1}
+    >
+      <MapBoundsEnforcer />
 
-        <TileLayer
-          url={currentTileLayer.url}
-          attribution={currentTileLayer.attribution}
-        />
+      <TileLayer
+        url={currentTileLayer.url}
+        attribution={currentTileLayer.attribution}
+      />
 
-        <Markers markers={filteredMarkers} />
+      <Markers markers={filteredMarkers} />
 
+      <LayerGroup>
         <Marker icon={centreIcon} position={centerCoordinates}>
           <Popup permanent>
             <Typography variant="h6">Centre point of this Lens</Typography>
@@ -77,17 +66,16 @@ const Map = () => {
             </Typography>
           </Popup>
         </Marker>
+      </LayerGroup>
+      <MarkerModal lensId={lens._id} />
+      <CommentsModal lensId={lens._id} />
+      <SuggestCorrectionModal lensId={lens._id} />
 
-        <MarkerModal lensId={lens._id} />
-        <CommentsModal lensId={lens._id} />
-        <SuggestCorrectionModal lensId={lens._id} />
+      <MarkerRoutes />
 
-        <MarkerRoutes />
-
-        <PopupObserver />
-        <MapClickHandler />
-      </MapContainer>
-    </div>
+      <PopupObserver />
+      <MapClickHandler />
+    </MapContainer>
   );
 };
 

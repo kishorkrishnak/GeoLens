@@ -3,7 +3,6 @@ const User = require("../models/User");
 exports.updateUser = async (req, res, next) => {
   const userData = req.body;
 
-  console.log(userData);
   try {
     const userId = req.user?._id;
     if (!userId) {
@@ -33,7 +32,6 @@ exports.updateUser = async (req, res, next) => {
       data: updatedUser,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       status: "error",
       message: "Internal server error",

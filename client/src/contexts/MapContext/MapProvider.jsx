@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { reverseGeoCode } from "../../api/geocode";
 import { createMarker, deleteMarker, updateMarker } from "../../api/marker";
+import { tileLayerData } from "../../utils/data";
 import { useAuthContext } from "../AuthContext";
 import MapContext from "./MapContext";
-import { reverseGeoCode } from "../../api/geocode";
-import { tileLayerData } from "../../utils/data";
 
 export const MapProvider = ({ children }) => {
   const { user } = useAuthContext();
@@ -111,7 +111,17 @@ export const MapProvider = ({ children }) => {
     }
 
     try {
-      const response = await updateMarker(markerIdToUpdate, markerData);
+      const location = {
+        type: "Point",
+        coordinates: [markerData.lng, markerData.lat],
+      };
+      
+      const updatedMarkerData = {
+        ...markerData,
+        location,
+      };
+
+      const response = await updateMarker(markerIdToUpdate, updatedMarkerData);
       if (response.data.status === "success") {
         const updatedMarkers = lens.markers.map((marker) => {
           if (marker._id === markerIdToUpdate) {

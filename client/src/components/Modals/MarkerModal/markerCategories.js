@@ -20,6 +20,8 @@ const marker_categories = [
   { id: 14, sub_category: "Theaters", category: "Culture & Entertainment" },
   { id: 15, sub_category: "Cinemas", category: "Culture & Entertainment" },
   { id: 16, sub_category: "Parks", category: "Outdoor Activities" },
+  { id: 68, sub_category: "Sports Grounds", category: "Outdoor Activities" },
+
   { id: 17, sub_category: "Hiking Trails", category: "Outdoor Activities" },
   { id: 18, sub_category: "Beaches", category: "Outdoor Activities" },
   { id: 19, sub_category: "Campgrounds", category: "Outdoor Activities" },

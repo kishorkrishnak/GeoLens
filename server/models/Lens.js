@@ -69,7 +69,7 @@ const LensSchema = new Schema(
         index: true,
       },
     ],
-   
+
     tags: {
       type: [String],
       default: [],
@@ -129,7 +129,7 @@ LensSchema.pre(
       if (doc && doc.comments && doc.comments.length > 0) {
         await mongoose
           .model("Comment")
-          .deleteMany({ _id: { $in: doc.markers } });
+          .deleteMany({ _id: { $in: doc.comments } });
       }
       next();
     } catch (error) {
