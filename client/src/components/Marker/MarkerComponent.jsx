@@ -143,7 +143,7 @@ const MarkerComponent = ({ marker, index, totalMarkers }) => {
         icon={icon}
         position={position}
       >
-        {!open && <Tooltip ref={tooltipRef}>{marker.title}</Tooltip>}
+        {!open && <Tooltip  ref={tooltipRef}>{marker.title}</Tooltip>}
       </Marker>
 
       <Modal

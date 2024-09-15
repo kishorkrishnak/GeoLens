@@ -3,7 +3,7 @@ function formatMarkersToGeoJSON(markers) {
     type: "Feature",
     geometry: {
       type: "Point",
-      coordinates: marker.location.coordinates, 
+      coordinates: marker.location.coordinates,
     },
     properties: {
       title: marker.title,
