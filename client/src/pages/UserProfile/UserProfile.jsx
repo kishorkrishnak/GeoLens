@@ -84,12 +84,22 @@ const UserProfile = () => {
   }
 
   return (
-    <>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <Navbar />
-
+      <Container sx={{ flexGrow: 1}}>
       <Box
         sx={{
+          width: "100%",
           display: "flex",
+          
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -182,8 +192,10 @@ const UserProfile = () => {
           )}
         </Container>
       </Box>
+      </Container>
+
       <Footer />
-    </>
+    </Box>
   );
 };
 

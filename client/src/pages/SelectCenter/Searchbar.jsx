@@ -8,7 +8,7 @@ const Searchbar = ({ operation }) => {
   const { setCenterLatLong } = useLensCreationContext();
 
   const searchEventHandler = ({ location: { x, y } }) => {
-    setCenterLatLong([y,x]);
+    setCenterLatLong([y, x]);
   };
 
   useMapEvent({
@@ -26,7 +26,7 @@ const Searchbar = ({ operation }) => {
       animateZoom={true}
       autoClose={false}
       searchLabel={`${
-        operation === "create" ? "Select" : "Change"
+        operation === "create" ? "Search" : "Change"
       } the centre point of your Lens`}
       keepResult={true}
     />
