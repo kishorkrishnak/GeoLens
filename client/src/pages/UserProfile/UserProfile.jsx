@@ -1,11 +1,11 @@
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { Box, Button, Container, IconButton, Paper } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import { logoutUser } from "../../api/auth";
-import { updateUser, fetchUserProfile } from "../../api/user";
+import { fetchUserProfile, updateUser } from "../../api/user";
 import Footer from "../../components/Footer/Footer";
 import HtmlInput from "../../components/HtmlInput";
 import Navbar from "../../components/Navbar/Navbar";
@@ -15,11 +15,10 @@ import "./UserProfile.css";
 
 const UserProfile = () => {
   const [editProfile, setEditProfile] = useState(false);
-  const { user, setUser } = useAuthContext();
+  const { user, setUser, loading, setLoading } = useAuthContext();
   const { id } = useParams();
   const [profileUser, setProfileUser] = useState(null);
   const [userName, setUserName] = useState("");
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadUserProfile = async () => {
